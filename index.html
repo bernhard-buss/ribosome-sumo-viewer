@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ribosome SUMO Viewer</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/molstar@5.12.0/build/viewer/molstar.css">
+<style>
+  :root { --ink: #1f2328; --muted: #5b6370; --line: #d9dde3; --bg: #f6f7f9; --panel: #ffffff; --accent: #332288; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; color: var(--ink); background: var(--bg);
+         display: flex; flex-direction: column; }
+  header { padding: 10px 16px; background: var(--panel); border-bottom: 1px solid var(--line); display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  header h1 { font-size: 17px; margin: 0; }
+  header .sub { color: var(--muted); font-size: 13px; }
+  main { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 430px; }
+  #stage { position: relative; min-height: 380px; background: #fff; }
+  #viewer { position: absolute; inset: 0; }
+  #busy { position: absolute; left: 12px; top: 12px; z-index: 5; background: rgba(255,255,255,.92); border: 1px solid var(--line); border-radius: 6px;
+          padding: 6px 10px; font-size: 13px; color: var(--muted); }
+  #busy[hidden] { display: none; }
+  /* the scene is one MolViewSpec snapshot: its snapshot picker has nothing to pick */
+  .msp-state-snapshot-viewport-controls { display: none !important; }
+  aside { background: var(--panel); border-left: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; overflow-y: auto; }
+  aside select { font: inherit; font-size: 13px; padding: 4px 7px; border: 1px solid var(--line); border-radius: 5px; background: #fff; color: var(--ink); max-width: 100%; }
+  .block { padding: 10px 14px; border-bottom: 1px solid var(--line); }
+  .block h2 { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; font-weight: 600; }
+  .seg { display: flex; flex-wrap: wrap; gap: 4px; }
+  .seg button { font: inherit; font-size: 12.5px; padding: 4px 9px; border: 1px solid var(--line); background: #fff; border-radius: 5px; cursor: pointer; color: var(--ink); }
+  .seg button:hover { border-color: #9aa3af; }
+  .seg button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .legend { margin-top: 8px; font-size: 12px; color: var(--muted); }
+  .legend .bar { height: 12px; border: 1px solid #9aa3af; border-radius: 2px; }
+  .legend .ticks { display: flex; justify-content: space-between; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .legend .keys { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; }
+  .block[hidden] { display: none; }
+  .user { display: flex; gap: 10px; align-items: flex-start; font-size: 12.5px; color: var(--muted); }
+  .user button { font: inherit; font-size: 12.5px; padding: 4px 9px; border: 1px solid var(--line); background: #fff; border-radius: 5px; cursor: pointer; white-space: nowrap; color: var(--ink); }
+  .user button:hover { border-color: #9aa3af; }
+  .user code { background: #eef0f3; padding: 0 3px; border-radius: 3px; }
+  .note { font-size: 11.5px; color: var(--muted); margin-top: 6px; }
+  #userblock.drag { outline: 2px dashed var(--accent); outline-offset: -4px; }
+  .dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; border: 1px solid rgba(0,0,0,.35); vertical-align: -1px; margin-right: 5px; }
+  .filters { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .filters input[type=search], .filters select { font: inherit; font-size: 13px; padding: 4px 7px; border: 1px solid var(--line); border-radius: 5px; background: #fff; color: var(--ink); }
+  .filters input[type=search] { width: 130px; }
+  .filters label { font-size: 13px; white-space: nowrap; }
+  #count { color: var(--muted); font-size: 12px; margin-left: auto; }
+  #tablewrap { flex: 1 0 240px; overflow: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  thead th { position: sticky; top: 0; background: #f0f2f5; text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line); cursor: pointer; white-space: nowrap; user-select: none; font-weight: 600; }
+  thead th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tbody td { padding: 4px 8px; border-bottom: 1px solid #eef0f3; white-space: nowrap; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover { background: #f3f4f8; }
+  tbody tr.sel { background: #e7e4f4; }
+  tbody tr.off { color: #98a0ab; cursor: default; }
+  #detail { font-size: 13px; }
+  #detail .name { font-weight: 600; font-size: 14px; }
+  #detail dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 6px 0 0; }
+  #detail dt { color: var(--muted); } #detail dd { margin: 0; }
+  #detail a, footer a { color: var(--accent); }
+  footer { padding: 7px 16px; background: var(--panel); border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+  .hdr-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .verchip { font-size: 12px; color: var(--muted); text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; white-space: nowrap; }
+  .verchip:hover { border-color: #9aa3af; color: var(--ink); }
+  #vernew { margin-left: 6px; background: var(--accent); color: #fff; border-radius: 999px; padding: 0 6px; font-size: 10.5px; }
+  #vernew[hidden] { display: none; }
+  #helpbtn, #hclose { font: inherit; font-size: 13px; padding: 4px 12px; border: 1px solid var(--line); background: #fff; border-radius: 5px; cursor: pointer; color: var(--ink); }
+  #helpbtn:hover, #hclose:hover { border-color: #9aa3af; }
+  a.hl, span.hl { color: var(--accent); text-decoration: none; font-weight: 400; font-size: 13px; margin-left: 3px; cursor: pointer; letter-spacing: 0; text-transform: none; }
+  a.hl:hover { text-decoration: underline; }
+  .stagehelp { position: absolute; left: 12px; top: 12px; z-index: 4; font-size: 12px; color: var(--muted); background: rgba(255,255,255,.88); border: 1px solid var(--line);
+               border-radius: 999px; padding: 2px 10px; text-decoration: none; }
+  .stagehelp:hover { color: var(--accent); border-color: #9aa3af; }
+  #busy:not([hidden]) ~ .stagehelp { display: none; }
+  dialog#help { width: min(1020px, 96vw); height: min(780px, 92vh); padding: 0; border: 1px solid var(--line); border-radius: 10px; color: var(--ink);
+                box-shadow: 0 18px 60px rgba(20, 24, 32, .28); }
+  dialog#help::backdrop { background: rgba(20, 24, 32, .42); }
+  .hwrap { display: grid; grid-template-rows: auto minmax(0, 1fr); height: 100%; }
+  .hbar { display: flex; gap: 12px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+  .hbar strong { font-size: 15px; }
+  #hsearch { flex: 1; max-width: 340px; font: inherit; font-size: 13px; padding: 5px 9px; border: 1px solid var(--line); border-radius: 5px; }
+  .hkeys { margin-left: auto; font-size: 12px; color: var(--muted); white-space: nowrap; }
+  kbd { font: 11.5px ui-monospace, SFMono-Regular, Menlo, monospace; border: 1px solid #c7ccd4; border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: #f6f7f9; }
+  .hbody { display: grid; grid-template-columns: 236px minmax(0, 1fr); min-height: 0; }
+  .hnav { border-right: 1px solid var(--line); overflow: auto; padding: 10px 8px; background: #fafbfc; }
+  .hnav button { display: block; width: 100%; text-align: left; font: inherit; font-size: 13.5px; padding: 6px 10px; border: 0; background: none; border-radius: 6px; cursor: pointer; color: var(--ink); }
+  .hnav button:hover { background: #eef0f4; }
+  .hnav button.active { background: var(--accent); color: #fff; }
+  .hnav a { display: block; padding: 3px 10px 3px 24px; font-size: 12.5px; color: var(--muted); text-decoration: none; border-radius: 5px; }
+  .hnav a:hover { color: var(--accent); background: #f1f0f8; }
+  .hcontent { overflow: auto; padding: 14px 26px 30px; font-size: 14px; line-height: 1.55; }
+  .hcontent h2 { font-size: 18px; margin: 4px 0 10px; }
+  .hcontent h3 { font-size: 14.5px; margin: 0 0 4px; }
+  .hcontent p { margin: 0 0 8px; max-width: 72ch; } .hcontent ol, .hcontent ul { margin: 0 0 8px; padding-left: 22px; max-width: 72ch; } .hcontent li { margin-bottom: 4px; }
+  .hcontent a { color: var(--accent); }
+  .hcontent code { background: #eef0f3; padding: 0 4px; border-radius: 3px; font-size: 12.5px; }
+  .hcontent article { scroll-margin-top: 10px; padding: 8px 10px; margin: 0 -10px 6px; border-radius: 8px; }
+  .hcontent article.flash { animation: hflash 1.8s ease-out; }
+  @keyframes hflash { from { background: #e7e2f6; } to { background: transparent; } }
+  @media (prefers-reduced-motion: reduce) { .hcontent article.flash { animation: none; background: #f3f0fa; } }
+  .htable { border-collapse: collapse; width: 100%; max-width: 78ch; font-size: 13px; margin: 2px 0 8px; }
+  .htable th { position: static; background: #f0f2f5; text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line); cursor: default; }
+  .htable td { padding: 5px 8px; border-bottom: 1px solid #eef0f3; white-space: normal; vertical-align: top; }
+  .htable td:first-child { white-space: nowrap; }
+  .htable small { color: var(--muted); }
+  .dim { color: var(--muted); }
+  #hresults .hit { display: block; padding: 8px 10px; margin: 0 -10px 4px; border-radius: 8px; text-decoration: none; color: var(--ink); }
+  #hresults .hit:hover { background: #f1f0f8; }
+  #hresults .hit b { color: var(--accent); } #hresults .hit small { color: var(--muted); display: block; }
+  #hresults mark { background: #f3e6b3; }
+  @media (max-width: 720px) {
+    .hbody { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
+    .hnav { display: flex; gap: 4px; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: 6px 8px; }
+    .hnav button { width: auto; white-space: nowrap; } .hnav a { display: none; } .hkeys { display: none; } .hcontent { padding: 12px 16px 24px; }
+  }
+  @media (max-width: 900px) {
+    body { height: auto; } main { grid-template-columns: 1fr; }
+    #stage { height: 62vh; } aside { border-left: 0; border-top: 1px solid var(--line); } #tablewrap { max-height: 60vh; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Ribosome SUMO Viewer</h1>
+  <span class="sub">SUMO2/3 acceptor sites of the ribosomal proteins on the human 80S ribosome, in control, MG132 and heat shock</span>
+  <span class="hdr-right">
+    <a class="verchip" href="#help/changelog" data-help="changelog" title="Version — open the changelog"><span id="ver"></span><span id="vernew" hidden>new</span></a>
+    <button id="helpbtn" data-help="" title="Help (press ?)">Help</button>
+  </span>
+</header>
+<main>
+  <div id="stage"><div id="viewer"></div><div id="busy">Loading the structure…</div><a class="stagehelp" href="#help/view/mouse" data-help="view/mouse" title="Help: mouse and touch controls">ⓘ rotate · zoom · move</a></div>
+  <aside>
+    <div class="block">
+      <h2>Colour the sites by <a class="hl" href="#help/colour/mg132" data-help="colour/mg132" title="Help: this colouring" id="sitehelp">ⓘ</a></h2>
+      <div class="seg" id="modes"></div>
+      <div id="legend" class="legend"></div>
+    </div>
+    <div class="block" id="protblock" hidden>
+      <h2>Colour the proteins by <a class="hl" href="#help/colour/proteins" data-help="colour/proteins" title="Help: protein colouring">ⓘ</a></h2>
+      <select id="pmodes" aria-label="Colour the proteins by"></select>
+      <div id="plegend" class="legend"></div>
+    </div>
+    <div class="block">
+      <h2>View <a class="hl" href="#help/view/views" data-help="view/views" title="Help: the six standard views">ⓘ</a></h2>
+      <div class="seg" id="views"></div>
+    </div>
+    <div class="block" id="userblock">
+      <h2>Your data <a class="hl" href="#help/data/format" data-help="data/format" title="Help: loading your own table">ⓘ</a></h2>
+      <div class="user">
+        <button id="pick">Load a table…</button>
+        <input type="file" id="file" accept=".csv,.tsv,.txt" hidden>
+        <span id="userinfo">CSV or TSV with a <code>gene</code> or <code>protein</code> (UniProt) column and value columns; add a <code>position</code> column for per-lysine values. <a href="#" id="example">Example</a></span>
+      </div>
+      <div class="note">The file is read by this page in your browser. It is not uploaded or stored.</div>
+    </div>
+    <div class="block">
+      <div class="filters">
+        <input type="search" id="q" placeholder="Protein, e.g. RACK1" aria-label="Filter by protein">
+        <select id="fsub" aria-label="Subunit"><option value="">both subunits</option><option>40S</option><option>60S</option></select>
+        <select id="fenv" aria-label="Environment"><option value="">any environment</option><option>exposed</option><option>rRNA contact</option><option>buried</option><option>not modelled</option></select>
+        <label><input type="checkbox" id="fsig"> MG132 q &lt; 0.05</label>
+        <span id="count"></span><a class="hl" href="#help/table/filters" data-help="table/filters" title="Help: filtering and sorting the site table">ⓘ</a>
+      </div>
+    </div>
+    <div id="tablewrap">
+      <table>
+        <thead><tr>
+          <th data-k="label">Site</th><th data-k="subunit">Subunit</th><th data-k="environment">Environment <a class="hl" href="#help/env/classes" data-help="env/classes" title="Help: the four environments">ⓘ</a></th>
+          <th data-k="lfc_mg132" class="num" title="log2 fold change, MG132 vs control">log2 FC</th>
+          <th data-k="q_mg132" class="num" title="q-value, MG132 vs control">q <a class="hl" href="#help/colour/significance" data-help="colour/significance" title="Help: q-values">ⓘ</a></th>
+          <th data-k="z_hs" class="num" title="Z-score in heat shock">Z heat</th>
+          <th data-k="user" class="num" id="uth" hidden></th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="block" id="detail">Select a site in the table, or hover over a coloured lysine in the structure. <a class="hl" href="#help/table/details" data-help="table/details" title="Help: the site details">ⓘ</a></div>
+  </aside>
+</main>
+<footer>
+  Sites and quantification: Hendriks et al., <a href="https://doi.org/10.1038/s41467-018-04957-4">Nat Commun 9:2456 (2018)</a>, CC BY 4.0 ·
+  Structure: <a href="https://www.rcsb.org/structure/8QOI">PDB 8QOI</a> (Holvec et al., Nat Struct Mol Biol 2024), fetched from the PDB by your browser ·
+  Rendering: <a href="https://molstar.org">Mol*</a>. Nothing is uploaded.
+</footer>
+
+<dialog id="help" aria-labelledby="helptitle">
+  <div class="hwrap">
+    <div class="hbar">
+      <strong id="helptitle">Help</strong>
+      <input type="search" id="hsearch" placeholder="Search the help…" aria-label="Search the help">
+      <span class="hkeys"><kbd>?</kbd> opens · <kbd>Esc</kbd> closes</span>
+      <button id="hclose" aria-label="Close help">Close</button>
+    </div>
+    <div class="hbody">
+      <nav class="hnav" id="hnav" aria-label="Help topics"></nav>
+      <div class="hcontent" id="hcontent">
+        <div id="hresults" hidden></div>
+
+        <section data-topic="start" data-title="Quick start">
+          <article data-entry="what"><h3>What this shows</h3>
+            <p>The human 80S ribosome with the SUMO2/3 acceptor lysines of its proteins. <span data-n="sites"></span> sites on <span data-n="proteins"></span> ribosomal proteins are listed; <span data-n="modelled"></span> of them have coordinates in the structure and are drawn as enlarged, coloured residues. Each site carries its response to proteasome inhibition (MG132) and to heat shock, and a description of where the lysine sits in the assembled ribosome.</p></article>
+          <article data-entry="steps"><h3>Five steps</h3>
+            <ol>
+              <li><b>Look around.</b> Drag to rotate, scroll to zoom. <a data-help="view/mouse" href="#help/view/mouse">All controls</a>.</li>
+              <li><b>Choose what the colours mean</b> under <i>Colour the sites by</i>. The default is the MG132 fold change. <a data-help="colour/mg132" href="#help/colour/mg132">Colourings</a>.</li>
+              <li><b>Jump to a standard view</b> — the 40S or 60S solvent side, the two faces between the subunits, top, bottom. <a data-help="view/views" href="#help/view/views">Views</a>.</li>
+              <li><b>Find a site.</b> Type a protein name above the table, sort by a column, click a row: the structure centres on that lysine and its details appear below the table. <a data-help="table/select" href="#help/table/select">Table</a>.</li>
+              <li><b>Add your own numbers.</b> <i>Load a table…</i> colours proteins or sites with values from a file on your computer; the file stays on your computer. <a data-help="data/format" href="#help/data/format">Your data</a>.</li>
+            </ol></article>
+          <article data-entry="reading"><h3>Reading the picture</h3>
+            <p>Every atom is drawn as a sphere. rRNA is light grey, the proteins of the small (40S) subunit sand, those of the large (60S) subunit blue-grey. SUMO sites are drawn larger and in colour, so that a single lysine remains visible when the whole ribosome is in view.</p>
+            <p>The enlargement is a marker, not the size of the residue. A site that is buried inside the particle shows only where its marker reaches the surface, or not at all; the table lists it all the same, and selecting it moves the view to its position.</p></article>
+          <article data-entry="keys"><h3>Keyboard</h3>
+            <p><kbd>?</kbd> opens this help, <kbd>Esc</kbd> closes it. Every <span class="hl">ⓘ</span> on the page opens the help at the entry for the control next to it. The address of an open entry (for example <code>#help/env/classes</code>) can be copied and shared.</p></article>
+        </section>
+
+        <section data-topic="view" data-title="The structure view" hidden>
+          <article data-entry="mouse"><h3>Mouse and touch controls</h3>
+            <table class="htable"><tr><th>Action</th><th>Mouse</th><th>Touch</th></tr>
+              <tr><td>Rotate</td><td>drag with the left button</td><td>drag with one finger</td></tr>
+              <tr><td>Zoom</td><td>scroll wheel</td><td>pinch with two fingers</td></tr>
+              <tr><td>Move sideways</td><td>drag with the right button, or <kbd>Ctrl</kbd> + drag</td><td>drag with two fingers</td></tr>
+              <tr><td>Identify a residue</td><td colspan="2">hover over it: protein, chain and residue appear at the bottom right of the structure; on a SUMO site also its name, environment and MG132 response</td></tr>
+              <tr><td>Centre on a residue</td><td colspan="2">click it</td></tr></table>
+            <p>The complete list of key and mouse bindings is under <i>Settings / Controls Info</i> in the toolbar at the right edge of the structure.</p></article>
+          <article data-entry="views"><h3>The six standard views</h3>
+            <p>The view buttons turn the ribosome to fixed orientations, derived from the structure itself so that they mean the same for every colouring:</p>
+            <table class="htable"><tr><th>View</th><th>You look at</th></tr>
+              <tr><td>40S solvent side</td><td>the outer face of the small subunit, head at the top; the large subunit is behind it</td></tr>
+              <tr><td>60S solvent side</td><td>the outer face of the large subunit, central protuberance at the top; includes the exit of the peptide tunnel</td></tr>
+              <tr><td>mRNA entry side</td><td>both subunits side by side, from the side where the mRNA enters the small subunit (the face of uS3)</td></tr>
+              <tr><td>mRNA exit side</td><td>the opposite side</td></tr>
+              <tr><td>top</td><td>down onto the 40S head and the central protuberance</td></tr>
+              <tr><td>bottom</td><td>up from below</td></tr></table>
+            <p>The subunit axis runs through the centres of the two subunits; "up" is the 40S head (the position of RACK1) or, for the 60S view, the central protuberance (5S rRNA).</p></article>
+          <article data-entry="toolbar"><h3>The toolbar at the right edge</h3>
+            <p>These buttons belong to Mol*, the program that draws the structure. From the top: <i>Reset Zoom</i> brings the whole ribosome back into view; <i>Screenshot</i> saves the current picture as an image; <i>Toggle Controls Panel</i> opens Mol*'s own panels (sequence, components, measurements) for anything this page does not offer; <i>Toggle Full Screen</i>; <i>Settings / Controls Info</i>; <i>Illumination</i>.</p>
+            <p>Changes made in Mol*'s panels are replaced when a colouring is chosen or a table is loaded.</p></article>
+          <article data-entry="selection"><h3>The selected site</h3>
+            <p>Selecting a row in the table centres the view on that lysine and outlines it in green. The outline stays until another site is selected.</p></article>
+        </section>
+
+        <section data-topic="colour" data-title="Colourings" hidden>
+          <article data-entry="mg132"><h3>MG132 fold change</h3>
+            <p>The change of SUMO2/3 modification of the site after proteasome inhibition with MG132, as log2 fold change against control (HEK293 cells; Hendriks et al. 2018). A value of 3 is an 8-fold increase.</p>
+            <p>Only sites with q &lt; 0.05 are coloured, from pale sand (small change) through rose to dark indigo (large change). The scale runs from 0 to 8; larger values are shown in the colour for 8. Sites that do not change significantly are dark grey. <span data-n="sig"></span> of the <span data-n="sites"></span> sites change significantly, and every one of them increases.</p></article>
+          <article data-entry="z"><h3>Z-score in control, MG132 or heat shock</h3>
+            <p>The Z-score places a site's SUMOylation in one condition relative to the same site in the other conditions: 0 is the site's mean across control, MG132 and heat shock, positive values (rose) are above it, negative values (indigo) below, in units of the site's standard deviation. Values are those of the published data set; the scale runs from −1.5 to 1.5.</p>
+            <p>Switching between the three Z-score colourings shows the same sites under each condition: nearly all are low in control and rise with MG132; a subset rises with heat shock. A Z-score compares conditions within one site. It does not compare one site with another; the fold change does.</p>
+            <p>Sites without quantification are dark grey.</p></article>
+          <article data-entry="environment"><h3>Lysine environment</h3>
+            <p>Colours each site by where its lysine sits in the assembled ribosome: exposed, in contact with rRNA, or buried. The definitions are under <a data-help="env/classes" href="#help/env/classes">Lysine environment</a>.</p></article>
+          <article data-entry="significance"><h3>q-values and significance</h3>
+            <p>q is the false-discovery-rate estimate published with the data (three replicates per condition). A site is called significant in a condition when q &lt; 0.05. A q of 0 is printed as 0: it is the value in the source, meaning smaller than the resolution of the estimate.</p></article>
+          <article data-entry="proteins"><h3>Colouring the proteins</h3>
+            <p>By default the proteins are tinted by subunit. After a table with per-protein values has been loaded, <i>Colour the proteins by</i> appears and each protein can be coloured by one of its columns instead; the site colouring stays independent, so a protein-level measurement and the site-level response can be read together. Protein values use green scales (purple to green when they span zero) to keep them apart from the site colours. See <a data-help="data/scales" href="#help/data/scales">colour scales for your data</a>.</p></article>
+          <article data-entry="user"><h3>Your data on the sites</h3>
+            <p>When a loaded table has rows with a <code>position</code>, its columns appear as additional site colourings named <i>Your data: column</i>. Sites without a value in that column are dark grey. See <a data-help="data/format" href="#help/data/format">Your data</a>.</p></article>
+        </section>
+
+        <section data-topic="env" data-title="Lysine environment" hidden>
+          <article data-entry="classes"><h3>The four environments</h3>
+            <table class="htable"><tr><th>Environment</th><th>Definition</th><th>Sites</th></tr>
+              <tr><td><span class="dot" data-env="exposed"></span>exposed</td><td>the side-chain nitrogen (NZ) has at least 10 Å² of solvent-accessible surface in the assembled ribosome and is not within 4 Å of rRNA</td><td data-n="env:exposed"></td></tr>
+              <tr><td><span class="dot" data-env="rRNA contact"></span>rRNA contact</td><td>NZ lies within 4 Å of an rRNA atom, typically a phosphate</td><td data-n="env:rRNA contact"></td></tr>
+              <tr><td><span class="dot" data-env="buried"></span>buried</td><td>neither: NZ has less than 10 Å² of accessible surface and no rRNA contact; it is covered by protein</td><td data-n="env:buried"></td></tr>
+              <tr><td><span class="dot" style="background:#bbb"></span>not modelled</td><td>the residue is part of the protein in the structure but has no coordinates: it lies in a tail or loop too mobile to be resolved</td><td data-n="env:not modelled"></td></tr></table></article>
+          <article data-entry="meaning"><h3>What the environment tells you</h3>
+            <p>An exposed lysine, and one in an unresolved mobile segment, can be reached on an assembled ribosome. A lysine whose nitrogen is enclosed by rRNA or by neighbouring proteins cannot carry SUMO in the particle as it is modelled here; a modification found on it points to the protein outside a mature ribosome — free, during assembly or disassembly — or to a state of the ribosome that differs locally from this structure.</p>
+            <p>The detail card gives the accessible surface of NZ twice: in the assembled ribosome and in the protein taken on its own. A lysine that is exposed in the free protein and enclosed in the ribosome is covered by the assembly.</p></article>
+          <article data-entry="method"><h3>How it is computed</h3>
+            <p>From the atomic model, without water, ions and ligands. Accessible surface: a probe of 1.4 Å radius rolled over all protein and rRNA atoms (FreeSASA). rRNA contact: the smallest distance from NZ to any rRNA atom. "In the free protein" uses the atoms of that one protein chain only, in the conformation it has in the ribosome.</p></article>
+          <article data-entry="limits"><h3>Limits</h3>
+            <p>The structure is one state of the ribosome: a vacant 80S without mRNA, tRNA or factors. Surfaces that are free here can be occupied in other states, and flexible regions move. The thresholds (4 Å, 10 Å²) are conventions; the detail card shows the underlying numbers. SUMO is a protein of about 11 kDa, far larger than the probe: "exposed" means reachable by solvent, which is necessary for modification but does not prove that the conjugation machinery fits.</p></article>
+        </section>
+
+        <section data-topic="table" data-title="Site table and details" hidden>
+          <article data-entry="columns"><h3>Columns</h3>
+            <table class="htable"><tr><th>Column</th><th>Content</th></tr>
+              <tr><td>Site</td><td>gene symbol and position of the lysine in the UniProt sequence</td></tr>
+              <tr><td>Subunit</td><td>40S or 60S</td></tr>
+              <tr><td>Environment</td><td>see <a data-help="env/classes" href="#help/env/classes">the four environments</a></td></tr>
+              <tr><td>log2 FC</td><td>log2 fold change of SUMO2/3 modification, MG132 against control</td></tr>
+              <tr><td>q</td><td>q-value of that change</td></tr>
+              <tr><td>Z heat</td><td>Z-score in heat shock</td></tr>
+              <tr><td><i>your column</i></td><td>after a table is loaded: the value of the column that is shown in the structure, for the site or, failing that, for its protein</td></tr></table></article>
+          <article data-entry="filters"><h3>Filtering and sorting</h3>
+            <p>The search box keeps the sites whose name contains the text (<code>RPS3</code>, <code>RACK1 K2</code>). The two menus restrict to one subunit or one environment, the checkbox to sites that change significantly with MG132. The counter shows how many sites remain.</p>
+            <p>Click a column header to sort by it; click again to reverse. Number columns start with the largest value.</p></article>
+          <article data-entry="select"><h3>Selecting a site</h3>
+            <p>Click a row. The structure centres on the lysine and outlines it, and the details appear below the table. Rows in grey are sites that are not modelled in the structure; they have details but no position to centre on.</p></article>
+          <article data-entry="details"><h3>The site details</h3>
+            <table class="htable"><tr><th>Line</th><th>Content</th></tr>
+              <tr><td>Protein</td><td>gene symbol with a link to its UniProt entry, subunit, and the chain name in PDB 8QOI</td></tr>
+              <tr><td>Environment</td><td>the class, and the accessible surface of NZ in the assembled ribosome and in the free protein</td></tr>
+              <tr><td>Nearest rRNA</td><td>distance from NZ to the closest rRNA atom, with rRNA, nucleotide and atom</td></tr>
+              <tr><td>MG132, Heat shock</td><td>log2 fold change against control and q-value</td></tr>
+              <tr><td>Z-scores</td><td>in the three conditions, and the class used in the source analysis (both up, MG132-preferring, heat-shock-preferring, both down)</td></tr>
+              <tr><td>Your data</td><td>all values of your table for this site and its protein</td></tr></table></article>
+        </section>
+
+        <section data-topic="data" data-title="Your data" hidden>
+          <article data-entry="privacy"><h3>Where your file goes</h3>
+            <p>Nowhere. <i>Load a table…</i> hands the file to this page, which reads it inside your browser. It is not sent to a server, not written to the browser's storage, and it is gone when the page is reloaded or closed. The page itself only downloads its own files and the structure from the PDB.</p></article>
+          <article data-entry="format"><h3>File format</h3>
+            <p>A text table with one header row: CSV, TSV or semicolon-separated; the separator is detected. Decimal points or decimal commas. Drag the file onto the <i>Your data</i> box or use the button. <a href="#" id="example2">Download an example</a>.</p>
+            <table class="htable"><tr><th>Column</th><th>Header (any one of)</th><th>Content</th></tr>
+              <tr><td>protein key<br><small>one is required</small></td><td><code>gene</code>, <code>gene_name</code>, <code>symbol</code><br><code>protein</code>, <code>uniprot</code>, <code>accession</code>, <code>entry</code></td><td>gene symbol (RPS3) or UniProt accession (P23396); an isoform suffix (-2) is ignored. If both are present the accession is tried first.</td></tr>
+              <tr><td>position<br><small>optional</small></td><td><code>position</code>, <code>pos</code>, <code>site</code>, <code>lysine</code>, <code>residue</code></td><td>the lysine's position in the UniProt sequence (214 or K214). Leave the cell empty for a value that belongs to the whole protein.</td></tr>
+              <tr><td>values</td><td>every other column</td><td>numbers or text; the header becomes the name of the colouring</td></tr></table></article>
+          <article data-entry="matching"><h3>How rows are matched</h3>
+            <p>A row <b>without a position</b> is a protein value and colours the whole protein. A row <b>with a position</b> is a site value and colours that lysine if it is one of the listed SUMO sites. After loading, the box reports how many proteins and sites were matched, how many rows name a protein that is not in this structure, and how many positions are not among the listed sites.</p>
+            <p>One table may contain both kinds of rows. If a protein or site occurs twice, the last row counts.</p></article>
+          <article data-entry="scales"><h3>Colour scales</h3>
+            <table class="htable"><tr><th>Column content</th><th>Scale</th></tr>
+              <tr><td>numbers, all ≥ 0</td><td>light to dark, from 0 to the largest value (rounded up)</td></tr>
+              <tr><td>numbers spanning zero</td><td>two colours meeting at 0, symmetric around it</td></tr>
+              <tr><td>numbers, all ≤ 0</td><td>from the smallest value to 0</td></tr>
+              <tr><td>text</td><td>one colour per category; with more than eight categories the colours repeat</td></tr></table>
+            <p>A column counts as numeric when at least 80 % of its filled cells are numbers. Proteins use green scales, sites the sand-to-indigo and indigo-to-rose scales of the built-in colourings. Proteins without a value keep their subunit tint; sites without a value are dark grey. The legend under each control shows the scale in use.</p></article>
+          <article data-entry="where"><h3>Where your values appear</h3>
+            <p>In the structure and its legend; as an extra, sortable column of the site table (the site's own value, or its protein's); and in the detail card of a selected site, which lists all columns. <i>Remove</i> takes the table out again.</p></article>
+          <article data-entry="limits"><h3>Limits</h3>
+            <p>One table at a time. Site values are shown for the listed SUMO sites only, not for other lysines. Proteins that are absent from the structure — the mobile stalks, see <a data-help="methods/missing" href="#help/methods/missing">what is not shown</a> — cannot be coloured.</p></article>
+        </section>
+
+        <section data-topic="methods" data-title="Data and methods" hidden>
+          <article data-entry="sites"><h3>Sites and quantification</h3>
+            <p>Hendriks IA, Lyon D, Su D, Skotte NH, Daniel JA, Jensen LJ, Nielsen ML. <i>Site-specific characterization of endogenous SUMOylation across species and organs.</i> Nat Commun 9:2456 (2018), Supplementary Data 1, CC BY 4.0. Endogenous SUMO2/3 sites of HEK293 cells in control, after MG132 and after heat shock, in triplicate; Z-scores, log2 fold changes and q-values are used as published. The viewer shows the sites of the cytosolic ribosomal proteins that are part of the structure.</p></article>
+          <article data-entry="structure"><h3>Structure</h3>
+            <p>PDB <a href="https://www.rcsb.org/structure/8QOI" target="_blank" rel="noopener">8QOI</a>: human 80S ribosome by cryo-EM at 1.9 Å (Holvec S et al., Nat Struct Mol Biol 31:1251, 2024); 75 proteins and four rRNAs. Your browser fetches the coordinates from the PDB each time; they are not stored with this page.</p></article>
+          <article data-entry="mapping"><h3>Placing sites on the structure</h3>
+            <p>Positions are UniProt sequence positions. They are converted to residues of the structure through the alignment that the PDB entry records for each chain, and every placed site was checked against the published sequence window (the seven residues on either side of the lysine agree with the structure).</p></article>
+          <article data-entry="missing"><h3>What is not shown</h3>
+            <p>Proteins that are not part of 8QOI: the mobile stalks (uL1/RPL10A, uL10/RPLP0, P1, uL11/RPL12, uL16/RPL10) and the paralogues RPL7L1 and RPL26L1; their SUMO sites are not listed. Lysines in the ubiquitin moieties of RPS27A and UBA52, which are cleaved off before these proteins enter the ribosome. Sites of non-ribosomal proteins.</p></article>
+          <article data-entry="software"><h3>Software</h3>
+            <p>Drawn with <a href="https://molstar.org" target="_blank" rel="noopener">Mol*</a> (Sehnal et al., Nucleic Acids Res 2021) from <a href="https://molstar.org/mol-view-spec/" target="_blank" rel="noopener">MolViewSpec</a> scenes. The files <code>data/scene_*.mvsj</code> also open in the stand-alone Mol* viewer. Structural annotation with gemmi and FreeSASA. This page is one HTML file without a build step; licence MIT.</p></article>
+        </section>
+
+        <section data-topic="changelog" data-title="Changelog" hidden>
+          <div id="changelog"><p class="dim">Loading CHANGELOG.md…</p></div>
+        </section>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/molstar@5.12.0/build/viewer/molstar.js"></script>
+<script>
+const VERSION = "0.3";
+const VIEW_LABELS = { "40S_solvent": "40S solvent side", "60S_solvent": "60S solvent side", "mRNA_entry": "mRNA entry side",
+                      "mRNA_exit": "mRNA exit side", "top": "top", "bottom": "bottom" };
+const ENV_ORDER = ["exposed", "rRNA contact", "buried", "not modelled"];
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmt = (v, d = 1) => v == null ? "–" : Number(v).toFixed(d);
+const fmtQ = v => v == null ? "–" : v === 0 ? "0" : v < 0.001 ? Number(v).toExponential(1) : Number(v).toFixed(3);
+
+let viewer, meta, sites, template, selected = null, sort = { k: "lfc_mg132", dir: -1 };
+let siteMode = "mg132", protMode = "subunit";
+let user = null;   // the table the visitor loaded: { name, cols, scales, protein: Map(label_asym -> row), site: Map("asym:seq" -> row), ... }
+const TOL = ["#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#CC6677", "#AA4499"];
+const UNSET = "#7A7A7A";
+const PROT_SEQ = ["#F7F7F7", "#ACD39E", "#5AAE61", "#1B7837"], PROT_DIV = ["#762A83", "#F7F7F7", "#1B7837"];   // Tol PRGn
+
+// ---- colour scales ---------------------------------------------------------
+const hexRgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+function rampColour(v, ramp, [lo, hi]) {
+  const t = Math.min(Math.max((v - lo) / (hi - lo || 1), 0), 1) * (ramp.length - 1), i = Math.min(Math.floor(t), ramp.length - 2);
+  const a = hexRgb(ramp[i]), b = hexRgb(ramp[i + 1]);
+  return "#" + a.map((x, k) => Math.round(x + (b[k] - x) * (t - i)).toString(16).padStart(2, "0")).join("").toUpperCase();
+}
+const nice = v => { const p = Math.pow(10, Math.floor(Math.log10(Math.abs(v) || 1))); return Math.ceil(Math.abs(v) / p * 2) / 2 * p * Math.sign(v || 1); };
+function scaleFor(col, values, what) {
+  const builtin = id => meta.modes.find(m => m.id === id).legend;
+  if (col.numeric) {
+    const nums = values.filter(v => v != null), lo = Math.min(...nums), hi = Math.max(...nums);
+    const diverging = lo < 0 && hi > 0, m = nice(Math.max(Math.abs(lo), Math.abs(hi)));
+    const limits = diverging ? [-m, m] : lo >= 0 ? [0, nice(hi)] : [-nice(-lo), 0];
+    // proteins get their own (green / purple-green) ramps, so a protein colour is never read as a site colour
+    const ramp = what === "proteins" ? (diverging ? PROT_DIV : PROT_SEQ) : diverging ? builtin("z_mg132").ramp : builtin("mg132").ramp;
+    return { colourOf: v => v == null ? null : rampColour(v, ramp, limits),
+             legend: { kind: "ramp", title: `${col.name} (${what})`, ramp, limits, extra: { "no value": what === "sites" ? UNSET : null } } };
+  }
+  const cats = [...new Set(values.filter(v => v != null && v !== ""))].sort(), colours = {};
+  cats.forEach((c, i) => colours[c] = TOL[i % TOL.length]);
+  return { colourOf: v => v == null || v === "" ? null : colours[v],
+           legend: { kind: "key", title: `${col.name} (${what})` + (cats.length > TOL.length ? " — more than 8 categories, colours repeat" : ""), colours } };
+}
+
+// ---- the scene: one MolViewSpec template, re-coloured per choice ----------
+function* walk(n) { yield n; for (const c of n.children || []) yield* walk(c); }
+function colourNodes(pairs) {          // [[selector, colour]] -> one colour node per colour
+  const by = new Map();
+  for (const [sel, col] of pairs) if (col) (by.get(col) || by.set(col, []).get(col)).push(sel);
+  return [...by].map(([color, selector]) => ({ kind: "color", params: { color, selector } }));
+}
+function buildScene() {
+  const sc = structuredClone(template), nodes = [...walk(sc.root)];
+  for (const n of nodes) if (n.params && n.params.uri && !/^[a-z]+:/i.test(n.params.uri)) n.params.uri = new URL("data/" + n.params.uri, location.href).href;
+  const comps = nodes.filter(n => n.kind === "component");
+  const rep = c => c.children.find(n => n.kind === "representation");
+  const protRep = rep(comps.find(c => c.params.selector === "protein")), siteRep = rep(comps.find(c => Array.isArray(c.params.selector)));
+  const fromUri = siteRep.children.find(n => n.kind === "color_from_uri");
+  if (siteMode.startsWith("user:")) {
+    const col = siteMode.slice(5), sc2 = user.scales.site[col];
+    siteRep.children = siteRep.children.filter(n => n !== fromUri).concat(colourNodes(
+      [...user.site].map(([k, row]) => [{ label_asym_id: k.split(":")[0], label_seq_id: +k.split(":")[1] }, sc2.colourOf(row[col])])));
+  } else fromUri.params.field_name = "color_" + siteMode;
+  if (protMode.startsWith("user:")) {
+    const col = protMode.slice(5), sc2 = user.scales.protein[col];
+    protRep.children.push(...colourNodes([...user.protein].map(([asym, row]) => [{ label_asym_id: asym }, sc2.colourOf(row[col])])));
+  }
+  return sc;
+}
+async function applyScene(keepCamera = true) {
+  $("busy").hidden = false; $("busy").textContent = "Loading the structure…";
+  try {
+    await viewer.loadMvsData(JSON.stringify(buildScene()), "mvsj", { replaceExisting: true, keepCamera });
+  } catch (e) { $("busy").textContent = "Could not load the structure: " + e.message; console.error(e); return; }
+  $("busy").hidden = true;
+  renderControls();
+}
+
+function legendHtml(L, withBase) {
+  let h = `<div>${esc(L.title)}</div>`;
+  const keys = Object.entries(L.kind === "key" ? L.colours : (L.extra || {})).filter(([, c]) => c);
+  if (L.kind === "ramp") {
+    const [lo, hi] = L.limits, mid = +((lo + hi) / 2).toPrecision(3);
+    h += `<div class="bar" style="background:linear-gradient(to right, ${L.ramp.join(", ")})"></div>
+          <div class="ticks"><span>${lo}</span><span>${mid}</span><span>${hi}</span></div>`;
+  }
+  const base = withBase ? [["rRNA", meta.base.rRNA], ["40S proteins", meta.base.prot_40S], ["60S proteins", meta.base.prot_60S]] : [];
+  return h + `<div class="keys">` + keys.concat(base).map(([k, c]) => `<span><span class="dot" style="background:${c}"></span>${esc(k)}</span>`).join("") + `</div>`;
+}
+function renderControls() {
+  const siteCols = user ? user.cols.filter(c => c.site) : [], protCols = user ? user.cols.filter(c => c.protein) : [];
+  $("modes").innerHTML = meta.modes.map(m => [m.id, m.label]).concat(siteCols.map(c => ["user:" + c.name, "Your data: " + c.name]))
+    .map(([id, label]) => `<button data-id="${esc(id)}" aria-pressed="${id === siteMode}">${esc(label)}</button>`).join("");
+  const sl = siteMode.startsWith("user:") ? user.scales.site[siteMode.slice(5)].legend : meta.modes.find(m => m.id === siteMode).legend;
+  $("legend").innerHTML = legendHtml(sl, protMode === "subunit");
+  const st = siteMode.startsWith("user:") ? "colour/user" : siteMode.startsWith("z_") ? "colour/z" : "colour/" + siteMode;
+  $("sitehelp").dataset.help = st; $("sitehelp").href = "#help/" + st;
+  $("protblock").hidden = !protCols.length;
+  $("pmodes").innerHTML = [["subunit", "Subunit (40S / 60S)"]].concat(protCols.map(c => ["user:" + c.name, "Your data: " + c.name]))
+    .map(([id, label]) => `<option value="${esc(id)}"${id === protMode ? " selected" : ""}>${esc(label)}</option>`).join("");
+  $("plegend").innerHTML = protMode.startsWith("user:") ? legendHtml(user.scales.protein[protMode.slice(5)].legend, false) +
+    `<div class="keys"><span><span class="dot" style="background:${meta.base.prot_60S}"></span>no value (60S)</span><span><span class="dot" style="background:${meta.base.prot_40S}"></span>no value (40S)</span></div>` : "";
+}
+
+// ---- your data: a table read locally ---------------------------------------
+function parseTable(text) {
+  const first = text.split(/\r?\n/, 1)[0], delim = ["\t", ";", ","].sort((a, b) => first.split(b).length - first.split(a).length)[0];
+  const rows = []; let row = [], cell = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) { if (c === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += c; }
+    else if (c === '"') q = true;
+    else if (c === delim) { row.push(cell); cell = ""; }
+    else if (c === "\n" || c === "\r") { if (c === "\r" && text[i + 1] === "\n") i++; row.push(cell); cell = ""; if (row.some(x => x !== "")) rows.push(row); row = []; }
+    else cell += c;
+  }
+  row.push(cell); if (row.some(x => x !== "")) rows.push(row);
+  return rows;
+}
+function loadUserTable(name, text) {
+  const rows = parseTable(text.replace(/^﻿/, ""));
+  if (rows.length < 2) throw new Error("the file has no data rows");
+  const head = rows[0].map(h => h.trim()), find = re => head.findIndex(h => re.test(h));
+  const iGene = find(/^(gene|gene[ _]?name|symbol)$/i), iAcc = find(/^(protein|uniprot|uniprot[ _]?id|accession|entry)$/i),
+        iPos = find(/^(position|pos|site|lysine|residue)$/i);
+  if (iGene < 0 && iAcc < 0) throw new Error("no gene or protein (UniProt accession) column found");
+  const prot = meta.chains.filter(c => c.kind === "protein");
+  const byGene = new Map(prot.map(c => [String(c.gene).toUpperCase(), c])), byAcc = new Map(prot.map(c => [String(c.protein).toUpperCase(), c]));
+  const bySite = new Map(sites.filter(s => s.label_seq != null).map(s => [s.label_asym + "|" + s.position, s]));
+  const valueIdx = head.map((h, i) => i).filter(i => i !== iGene && i !== iAcc && i !== iPos && head[i]);
+  const cols = valueIdx.map(i => { const v = rows.slice(1).map(r => (r[i] ?? "").trim()).filter(x => x !== "");
+    return { name: head[i], i, numeric: v.length > 0 && v.filter(x => isFinite(+x.replace(",", "."))).length >= 0.8 * v.length }; });
+  const u = { name, cols, protein: new Map(), site: new Map(), rows: rows.length - 1, unmatched: 0, offList: 0 };
+  for (const r of rows.slice(1)) {
+    const chain = (iAcc >= 0 && byAcc.get((r[iAcc] || "").trim().toUpperCase().replace(/-\d+$/, ""))) || (iGene >= 0 && byGene.get((r[iGene] || "").trim().toUpperCase()));
+    if (!chain) { u.unmatched++; continue; }
+    const rec = {}; for (const c of cols) { const raw = (r[c.i] ?? "").trim(); rec[c.name] = raw === "" ? null : c.numeric ? (isFinite(+raw.replace(",", ".")) ? +raw.replace(",", ".") : null) : raw; }
+    const pos = iPos >= 0 ? parseInt(String(r[iPos]).replace(/^[Kk]/, ""), 10) : NaN;
+    if (isFinite(pos)) { const s = bySite.get(chain.label_asym + "|" + pos); if (s) u.site.set(s.label_asym + ":" + s.label_seq, rec); else u.offList++; }
+    else u.protein.set(chain.label_asym, rec);
+  }
+  for (const c of cols) { c.protein = [...u.protein.values()].some(r => r[c.name] != null); c.site = [...u.site.values()].some(r => r[c.name] != null); }
+  u.scales = { protein: {}, site: {} };
+  for (const c of cols) {
+    if (c.protein) u.scales.protein[c.name] = scaleFor(c, [...u.protein.values()].map(r => r[c.name]), "proteins");
+    if (c.site) u.scales.site[c.name] = scaleFor(c, [...u.site.values()].map(r => r[c.name]), "sites");
+  }
+  if (!u.protein.size && !u.site.size) throw new Error("no row matched a ribosomal protein of this structure");
+  return u;
+}
+function userValue(s, col) {           // the visitor's value for a table row: the site's own, else its protein's
+  if (!user || !col) return null;
+  const a = user.site.get(s.label_asym + ":" + s.label_seq), b = user.protein.get(s.label_asym);
+  return (a && a[col] != null) ? a[col] : (b ? b[col] : null);
+}
+const userCol = () => !user ? null : siteMode.startsWith("user:") ? siteMode.slice(5) : protMode.startsWith("user:") ? protMode.slice(5) : (user.cols.find(c => c.protein || c.site) || {}).name;
+function setUser(u) {
+  user = u; siteMode = siteMode.startsWith("user:") ? "mg132" : siteMode; protMode = "subunit";
+  if (u) {
+    const pc = u.cols.find(c => c.protein), sc = u.cols.find(c => c.site);
+    if (pc) protMode = "user:" + pc.name; else if (sc) siteMode = "user:" + sc.name;
+    const bits = [`${u.protein.size} protein${u.protein.size === 1 ? "" : "s"}`, `${u.site.size} site${u.site.size === 1 ? "" : "s"}`];
+    const miss = [u.unmatched ? `${u.unmatched} row${u.unmatched === 1 ? "" : "s"} not in this structure` : "", u.offList ? `${u.offList} position${u.offList === 1 ? "" : "s"} not among the listed sites` : ""].filter(Boolean);
+    $("userinfo").innerHTML = `<b>${esc(u.name)}</b>: ${bits.join(", ")} matched${miss.length ? " (" + miss.join("; ") + ")" : ""}. <a href="#" id="clear">Remove</a>`;
+    $("pick").textContent = "Load another…";
+  } else { $("userinfo").innerHTML = USER_HINT; $("pick").textContent = "Load a table…"; }
+  renderTable(); applyScene(true);
+}
+
+function setView(v) {
+  viewer.plugin.canvas3d.requestCameraReset({ durationMs: 350, snapshot: { target: v.target, position: v.position, up: v.up, radius: meta.radius } });
+}
+
+function focusSite(s) {
+  if (s.x == null) return;
+  viewer.structureInteractivity({ elements: { label_asym_id: s.label_asym, label_seq_id: s.label_seq }, action: "select" });
+  viewer.plugin.canvas3d.camera.focus([s.x, s.y, s.z], 28, 350);
+}
+
+function visibleSites() {
+  const q = $("q").value.trim().toUpperCase(), sub = $("fsub").value, env = $("fenv").value, sig = $("fsig").checked;
+  const rows = sites.filter(s => (!q || s.label.toUpperCase().includes(q)) && (!sub || s.subunit === sub) &&
+                                 (!env || s.environment === env) && (!sig || s.sig_mg132));
+  const k = sort.k, uc = userCol();
+  rows.sort((a, b) => {
+    let x = k === "user" ? userValue(a, uc) : a[k], y = k === "user" ? userValue(b, uc) : b[k];
+    if (k === "label") { x = a.gene; y = b.gene; if (x === y) return (a.position - b.position) * sort.dir; }
+    if (k === "environment") { x = ENV_ORDER.indexOf(x); y = ENV_ORDER.indexOf(y); }
+    if (x == null) return 1; if (y == null) return -1;
+    return (x < y ? -1 : x > y ? 1 : a.gene.localeCompare(b.gene) || a.position - b.position) * sort.dir;
+  });
+  return rows;
+}
+
+function renderTable() {
+  const rows = visibleSites(), envCol = meta.modes.find(m => m.id === "environment").legend.colours, uc = userCol();
+  $("rows").innerHTML = rows.map(s => `<tr data-i="${s.i}" class="${s.x == null ? "off" : ""}${selected === s.i ? " sel" : ""}"
+      ${s.x == null ? 'title="Not modelled in the structure (mobile segment)"' : ""}>
+      <td>${esc(s.gene)} K${s.position}</td><td>${s.subunit}</td>
+      <td><span class="dot" style="background:${envCol[s.environment] || "#bbb"}"></span>${esc(s.environment)}</td>
+      <td class="num">${fmt(s.lfc_mg132)}</td><td class="num">${fmtQ(s.q_mg132)}</td><td class="num">${fmt(s.z_hs, 2)}</td>
+      ${uc ? `<td class="num">${esc(userValue(s, uc) ?? "–")}</td>` : ""}</tr>`).join("");
+  $("uth").hidden = !uc; $("uth").textContent = uc || ""; $("uth").title = uc ? "Your data: " + uc : "";
+  $("count").textContent = `${rows.length} of ${sites.length} sites`;
+}
+
+function renderDetail(s) {
+  const rows = [
+    ["Protein", `<a href="https://www.uniprot.org/uniprotkb/${esc(s.protein)}" target="_blank" rel="noopener">${esc(s.gene)} (${esc(s.protein)})</a>, ${s.subunit} subunit, chain ${esc(s.chain)}`],
+    ["Environment", esc(s.environment) + (s.sasa_nz_complex != null ? ` · NZ surface ${fmt(s.sasa_nz_complex)} Å² assembled, ${fmt(s.sasa_nz_free)} Å² in the free protein` : "")],
+    ["Nearest rRNA", s.dist_rna != null ? `${fmt(s.dist_rna)} Å (${esc(s.nearest_rna)})` : "–"],
+    ["MG132", `log2 FC ${fmt(s.lfc_mg132)}, q ${fmtQ(s.q_mg132)}${s.sig_mg132 ? "" : " (not significant)"}`],
+    ["Heat shock", `log2 FC ${fmt(s.lfc_hs)}, q ${fmtQ(s.q_hs)}${s.sig_hs ? "" : " (not significant)"}`],
+    ["Z-scores", `control ${fmt(s.z_ctrl, 2)} · MG132 ${fmt(s.z_mg132, 2)} · heat ${fmt(s.z_hs, 2)}` + (s.quadrant ? ` · ${esc(s.quadrant)}` : "")],
+  ];
+  if (user) {
+    const a = user.site.get(s.label_asym + ":" + s.label_seq) || {}, b = user.protein.get(s.label_asym) || {};
+    const vals = user.cols.map(c => [c.name, a[c.name] ?? b[c.name]]).filter(([, v]) => v != null);
+    if (vals.length) rows.push(["Your data", vals.map(([k, v]) => `${esc(k)} ${esc(v)}`).join(" · ")]);
+  }
+  $("detail").innerHTML = `<div class="name">${esc(s.gene)} K${s.position} <a class="hl" href="#help/table/details" data-help="table/details" title="Help: the site details">ⓘ</a></div><dl>` + rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("") + `</dl>`;
+}
+
+function select(i) {
+  const s = sites[i]; selected = i; renderDetail(s); focusSite(s);
+  for (const tr of $("rows").children) tr.classList.toggle("sel", +tr.dataset.i === i);
+}
+
+// ---- help: topics, entries, context links, search, changelog -----------------
+// A help target is "topic" or "topic/entry"; every ⓘ on the page carries one in data-help,
+// and the same string after "#help/" in the address opens that entry directly.
+const help = $("help"), HELP_TOPIC_KEY = "rsv_help_topic", SEEN_KEY = "rsv_seen_version";
+const store = { get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} } };
+const topics = () => [...help.querySelectorAll("section[data-topic]")];
+const entryId = (t, e) => `h-${t}-${e}`;
+function helpNav(active) {
+  $("hnav").innerHTML = topics().map(sec => {
+    const t = sec.dataset.topic, on = t === active;
+    return `<button data-topic="${t}" class="${on ? "active" : ""}"${on ? ' aria-current="true"' : ""}>${esc(sec.dataset.title)}</button>` +
+      (on ? [...sec.querySelectorAll("article[data-entry]")].map(a => `<a href="#help/${t}/${a.dataset.entry}" data-help="${t}/${a.dataset.entry}">${esc(a.querySelector("h3").textContent)}</a>`).join("") : "");
+  }).join("");
+}
+function openHelp(target = "") {
+  let [topic, entry] = String(target).split("/");
+  if (!help.querySelector(`section[data-topic="${topic}"]`)) { topic = store.get(HELP_TOPIC_KEY); entry = null; }
+  if (!help.querySelector(`section[data-topic="${topic}"]`)) topic = "start";
+  $("hsearch").value = ""; $("hresults").hidden = true;
+  for (const sec of topics()) sec.hidden = sec.dataset.topic !== topic;
+  helpNav(topic); store.set(HELP_TOPIC_KEY, topic);
+  loadChangelog();
+  if (topic === "changelog") { store.set(SEEN_KEY, VERSION); $("vernew").hidden = true; }
+  if (!help.open) help.showModal();
+  const art = entry && document.getElementById(entryId(topic, entry));
+  if (art) { art.scrollIntoView({ block: "start" }); art.classList.remove("flash"); void art.offsetWidth; art.classList.add("flash"); }
+  else $("hcontent").scrollTop = 0;
+  history.replaceState(null, "", "#help/" + topic + (art ? "/" + entry : ""));
+}
+function helpSearch(q) {
+  const res = $("hresults"); q = q.trim().toLowerCase();
+  if (q.length < 2) { res.hidden = true; for (const sec of topics()) sec.hidden = sec.dataset.topic !== (help.querySelector(".hnav .active") || {}).dataset?.topic; return; }
+  const hits = [];
+  for (const sec of topics()) for (const a of sec.querySelectorAll("article[data-entry]")) {
+    const text = a.textContent.replace(/\s+/g, " "), i = text.toLowerCase().indexOf(q);
+    if (i < 0) continue;
+    const from = Math.max(0, i - 60), snip = esc(text.slice(from, i)) + "<mark>" + esc(text.slice(i, i + q.length)) + "</mark>" + esc(text.slice(i + q.length, i + q.length + 90));
+    hits.push(`<a class="hit" href="#help/${sec.dataset.topic}/${a.dataset.entry}" data-help="${sec.dataset.topic}/${a.dataset.entry}">
+      <b>${esc(a.querySelector("h3").textContent)}</b><small>${esc(sec.dataset.title)}</small>${from ? "…" : ""}${snip}…</a>`);
+  }
+  for (const sec of topics()) sec.hidden = true;
+  res.hidden = false;
+  res.innerHTML = `<h2>${hits.length} ${hits.length === 1 ? "entry" : "entries"} for “${esc(q)}”</h2>` + (hits.join("") || `<p class="dim">Nothing found. Try a shorter word.</p>`);
+}
+// CHANGELOG.md is the one place the history is written; the page renders it.
+function mdInline(t) {
+  return esc(t).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/\*([^*]+)\*/g, "<i>$1</i>")
+    .replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+}
+function renderChangelog(md) {
+  const out = []; let para = [], list = [], open = false;
+  const flush = () => { if (para.length) { out.push(`<p>${mdInline(para.join(" "))}</p>`); para = []; } if (list.length) { out.push("<ul>" + list.map(x => `<li>${mdInline(x)}</li>`).join("") + "</ul>"); list = []; } };
+  for (const line of md.split(/\r?\n/)) {
+    let m;
+    if ((m = line.match(/^## +(.*)$/))) {
+      flush(); if (open) out.push("</article>");
+      const ver = m[1].split(/[\s—-]/)[0];
+      out.push(`<article data-entry="${esc(ver)}" id="${entryId("changelog", esc(ver))}"><h3>${mdInline(m[1])}${ver === VERSION ? ' <span class="dim">· this version</span>' : ""}</h3>`); open = true;
+    } else if (/^# /.test(line)) { flush(); }
+    else if ((m = line.match(/^[-*] +(.*)$/))) { if (para.length) flush(); list.push(m[1]); }
+    else if (/^\s+\S/.test(line) && list.length) list[list.length - 1] += " " + line.trim();
+    else if (line.trim() === "") flush();
+    else para.push(line.trim());
+  }
+  flush(); if (open) out.push("</article>");
+  return out.join("");
+}
+let changelogLoaded = false;
+function loadChangelog() {
+  if (changelogLoaded) return; changelogLoaded = true;
+  fetch("CHANGELOG.md", { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+    .then(md => { $("changelog").innerHTML = renderChangelog(md); if (help.open && !help.querySelector('section[data-topic="changelog"]').hidden) helpNav("changelog"); })
+    .catch(() => { changelogLoaded = false; $("changelog").innerHTML = `<p class="dim">The changelog could not be loaded. It is the file CHANGELOG.md next to this page.</p>`; });
+}
+function fillHelpNumbers() {
+  const n = { sites: sites.length, proteins: new Set(sites.map(s => s.gene)).size, modelled: sites.filter(s => s.x != null).length, sig: sites.filter(s => s.sig_mg132).length };
+  const envCol = meta.modes.find(m => m.id === "environment").legend.colours;
+  for (const el of help.querySelectorAll("[data-n]")) {
+    const k = el.dataset.n; el.textContent = k.startsWith("env:") ? sites.filter(s => s.environment === k.slice(4)).length : n[k];
+  }
+  for (const el of help.querySelectorAll("[data-env]")) el.style.background = envCol[el.dataset.env];
+  for (const sec of topics()) {
+    if (!sec.querySelector("h2")) sec.insertAdjacentHTML("afterbegin", `<h2>${esc(sec.dataset.title)}</h2>`);
+    for (const a of sec.querySelectorAll("article[data-entry]")) a.id = entryId(sec.dataset.topic, a.dataset.entry);
+  }
+}
+function initHelp() {
+  fillHelpNumbers();
+  document.addEventListener("click", e => {          // capture: an ⓘ inside a sortable header must not sort
+    const a = e.target.closest("[data-help]"); if (!a) return;
+    e.preventDefault(); e.stopPropagation(); openHelp(a.dataset.help);
+  }, true);
+  $("hnav").addEventListener("click", e => { const b = e.target.closest("button[data-topic]"); if (b) openHelp(b.dataset.topic); });
+  $("hclose").addEventListener("click", () => help.close());
+  help.addEventListener("click", e => { if (e.target === help) help.close(); });       // click on the backdrop
+  help.addEventListener("close", () => { if (!help.open) history.replaceState(null, "", location.pathname + location.search); });
+  $("hsearch").addEventListener("input", e => helpSearch(e.target.value));
+  document.addEventListener("keydown", e => {
+    if (e.key === "?" && !help.open && !/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) { e.preventDefault(); openHelp(); }
+  });
+  window.addEventListener("hashchange", () => { if (location.hash.startsWith("#help")) openHelp(location.hash.slice(6)); });
+  const seen = store.get(SEEN_KEY);
+  if (!seen) store.set(SEEN_KEY, VERSION); else if (seen !== VERSION) $("vernew").hidden = false;
+  if (location.hash.startsWith("#help")) openHelp(location.hash.slice(6));
+}
+
+let USER_HINT;
+async function main() {
+  $("ver").textContent = "v" + VERSION;
+  USER_HINT = $("userinfo").innerHTML;
+  [meta, sites, template] = await Promise.all(["data/meta.json", "data/sites.json", "data/scene_mg132.mvsj"].map(u => fetch(u).then(r => r.json())));
+  sites.forEach((s, i) => s.i = i);
+  initHelp();
+  $("views").innerHTML = meta.views.map(v => `<button data-id="${v.id}">${esc(VIEW_LABELS[v.id] || v.id)}</button>`).join("");
+  viewer = await molstar.Viewer.create("viewer", {
+    layoutIsExpanded: false, layoutShowControls: false, layoutShowRemoteState: false, layoutShowSequence: false,
+    layoutShowLog: false, layoutShowLeftPanel: false, viewportShowExpand: false, viewportShowSelectionMode: false,
+    viewportShowAnimation: false, viewportShowControls: true, collapseLeftPanel: true, collapseRightPanel: true,
+  });
+  window.__rsv = { viewer, get meta() { return meta; }, get sites() { return sites; }, get user() { return user; },
+                   setSiteMode: m => { siteMode = m; return applyScene(); }, setProteinMode: m => { protMode = m; return applyScene(); },
+                   loadUserText: (name, text) => setUser(loadUserTable(name, text)), buildScene, setView, select };
+  renderTable();
+  await applyScene(false);
+  setView(meta.views[0]);
+
+  $("modes").addEventListener("click", e => { const b = e.target.closest("button"); if (b && b.dataset.id !== siteMode) { siteMode = b.dataset.id; renderTable(); applyScene(); } });
+  $("pmodes").addEventListener("change", e => { protMode = e.target.value; renderTable(); applyScene(); });
+  $("views").addEventListener("click", e => { const b = e.target.closest("button"); if (b) setView(meta.views.find(v => v.id === b.dataset.id)); });
+  for (const id of ["q", "fsub", "fenv", "fsig"]) $(id).addEventListener("input", renderTable);
+  document.querySelector("thead").addEventListener("click", e => {
+    const th = e.target.closest("th"); if (!th) return;
+    sort = { k: th.dataset.k, dir: sort.k === th.dataset.k ? -sort.dir : (th.classList.contains("num") ? -1 : 1) }; renderTable();
+  });
+  $("rows").addEventListener("click", e => { const tr = e.target.closest("tr"); if (tr) select(+tr.dataset.i); });
+
+  const readFile = f => f.text().then(t => setUser(loadUserTable(f.name, t))).catch(err => { $("userinfo").innerHTML = `Could not use <b>${esc(f.name)}</b>: ${esc(err.message)}. <a href="#" id="clear">Dismiss</a>`; });
+  $("pick").addEventListener("click", () => $("file").click());
+  $("file").addEventListener("change", e => { if (e.target.files[0]) readFile(e.target.files[0]); e.target.value = ""; });
+  const ub = $("userblock");
+  ub.addEventListener("dragover", e => { e.preventDefault(); ub.classList.add("drag"); });
+  ub.addEventListener("dragleave", () => ub.classList.remove("drag"));
+  ub.addEventListener("drop", e => { e.preventDefault(); ub.classList.remove("drag"); if (e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); });
+  ub.addEventListener("click", e => {
+    if (e.target.id === "clear") { e.preventDefault(); setUser(null); }
+    if (e.target.id === "example") { e.preventDefault(); downloadExample(); }
+  });
+  $("example2").addEventListener("click", e => { e.preventDefault(); downloadExample(); });
+}
+function downloadExample() {
+  {
+    {
+      const prot = meta.chains.filter(c => c.kind === "protein").slice(0, 6), s0 = sites.find(x => x.label_seq != null);
+      const csv = "gene,protein,position,my_value,my_group\n" + prot.map((c, i) => `${c.gene},${c.protein},,${i + 1},${i % 2 ? "B" : "A"}`).join("\n") +
+                  `\n${s0.gene},${s0.protein},${s0.position},3.5,A\n`;
+      const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "ribosome_sumo_viewer_example.csv"; a.click();
+    }
+  }
+}
+main().catch(e => { $("busy").hidden = false; $("busy").textContent = "Error: " + e.message; console.error(e); });
+</script>
+</body>
+</html>
