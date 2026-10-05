@@ -9,6 +9,80 @@
  "particles": [
   "1"
  ],
+ "sumo": {
+  "pdb_id": "1WM3",
+  "colour": "#117733",
+  "node": {
+   "kind": "download",
+   "params": {
+    "url": "https://models.rcsb.org/1wm3.bcif"
+   },
+   "children": [
+    {
+     "kind": "parse",
+     "params": {
+      "format": "bcif"
+     },
+     "children": [
+      {
+       "kind": "structure",
+       "params": {
+        "type": "model"
+       },
+       "children": [
+        {
+         "kind": "transform",
+         "params": {
+          "rotation": [
+           1,
+           0,
+           0,
+           0,
+           1,
+           0,
+           0,
+           0,
+           1
+          ],
+          "translation": [
+           0,
+           0,
+           0
+          ]
+         }
+        },
+        {
+         "kind": "component",
+         "params": {
+          "selector": "polymer"
+         },
+         "children": [
+          {
+           "kind": "representation",
+           "params": {
+            "type": "spacefill"
+           },
+           "children": [
+            {
+             "kind": "color",
+             "params": {
+              "color": "#117733"
+             }
+            }
+           ]
+          }
+         ],
+         "custom": {
+          "rsv": "sumo"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
  "base_other": null,
  "partners": [
   {
@@ -756,6 +830,25 @@
     },
     "extra": {
      "none": "#7A7A7A"
+    }
+   }
+  },
+  {
+   "id": "room",
+   "label": "Room for SUMO",
+   "group": "Position",
+   "legend": {
+    "kind": "key",
+    "title": "Room for a SUMO at the lysine, in this structure as it is",
+    "colours": {
+     "room": "#44AA99",
+     "tight": "#DDCC77",
+     "none": "#332288"
+    },
+    "labels": {
+     "room": "room",
+     "tight": "tight",
+     "none": "none"
     }
    }
   },

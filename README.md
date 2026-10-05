@@ -32,9 +32,22 @@ structure, with a link that opens that structure at the site.
 Everything runs in the browser. The structure is fetched from the PDB by the
 browser; nothing is uploaded.
 
+## Room for SUMO
+
+An exposed lysine can be reached by water, which does not say whether a SUMO
+fits there. For every site in every structure the viewer gives the share of
+placements of the SUMO2 core (PDB [1WM3](https://www.rcsb.org/structure/1WM3)),
+on its flexible tether, that overlap nothing: *room*, *tight* or *none*. The
+same placements are tested without the partners, without the other ribosome
+and on the subunit alone, which names what takes the room away. The colouring
+*Room for SUMO* paints the classes, and the details of a site can draw a SUMO
+at one of the placements that fit. The model is checked on a crystal structure
+of a SUMO2 conjugate ([3UIO](https://www.rcsb.org/structure/3UIO)); the help
+topic *Room for SUMO* has the method and its limits.
+
 ## Help and versions
 
-The **Help** button (or the `?` key) opens the in-page help: eight topics, a
+The **Help** button (or the `?` key) opens the in-page help: nine topics, a
 search box, and the changelog. Every ⓘ on the page opens the help at the entry
 for the control next to it, and an open entry has its own address
 (`#help/topic/entry`) that can be shared.
@@ -77,7 +90,7 @@ not stored, and it is gone when the page is closed.
 |---|---|
 | `data/structures.json` | the structures of the menu |
 | `data/placement.json` | the environment of every site in every structure |
-| `data/<PDB code>/sites.json` | one row per site: protein, position, structural annotation (environment, region, hotspot, nearest partner), quantification, other modifications |
+| `data/<PDB code>/sites.json` | one row per site: protein, position, structural annotation (environment, region, hotspot, nearest partner, room for SUMO with a placement), quantification, other modifications |
 | `data/<PDB code>/stats.json` | the stored test results shown in the Statistics window |
 | `data/<PDB code>/annotations.json` | per-residue colours and tooltips for the structure view |
 | `data/<PDB code>/scene_*.mvsj` | one [MolViewSpec](https://molstar.org/mol-view-spec/) scene per colouring |

@@ -4,6 +4,24 @@ The version next to the title is raised with every change of what the viewer can
 Changes of the data files are listed with the version that shipped them. This file is
 the only place the history is written; the Changelog page of the in-page help renders it.
 
+## 0.6 — 2026-10-05
+Room for SUMO. For every site in every structure the viewer now says whether a SUMO fits at
+the lysine: the core of SUMO2 is placed on its tether in many ways, and the share of
+placements that overlap nothing is the measure (classes room, tight, none).
+
+- New site colouring *Room for SUMO* and matching filters, including *room taken by* the
+  partners, the other ribosome or the other subunit.
+- The detail card gives the share of placements that fit, also without the partners, on the
+  ribosome alone and on the subunit alone, and can draw a SUMO at the site: at a placement
+  that fits, or, where the room is taken, where it would sit without what is in its way.
+- The Statistics window has a section *Room for SUMO* for every structure: the classes among
+  sites and other lysines, the sites by environment, the tests on the mature 80S, and the
+  sites whose room something takes.
+- New help topic *Room for SUMO* (measure, method with its test on a crystal structure of a
+  SUMO2 conjugate, what takes the room, showing a SUMO, limits).
+- Data: `fit`, `room`, `room_taken_by` and a placement per site in `data/<PDB code>/sites.json`;
+  a `room` section in `stats.json`; the parameters in `data/structures.json`.
+
 ## 0.5 — 2026-10-05
 Seven structures. A *Structure* menu offers, beside the mature 80S, a decoding and an idle
 80S, a pair of collided ribosomes, two pre-60S particles and a pre-40S particle. Each has its

@@ -254,13 +254,14 @@
         <section data-topic="start" data-title="Quick start">
           <article data-entry="what"><h3>What this shows</h3>
             <p>The human ribosome with the SUMO2/3 acceptor lysines of its proteins, on a choice of structures: the mature 80S, translating and idle ribosomes, two collided ribosomes, and assembly intermediates of both subunits. On the structure shown now (<span data-struct="short"></span>, PDB <span data-struct="id"></span>) <span data-n="sites"></span> sites on <span data-n="proteins"></span> ribosomal proteins are listed; <span data-n="modelled"></span> of them have coordinates and are drawn as enlarged, coloured residues. Each site carries its response to proteasome inhibition (MG132) and to heat shock, and a description of where the lysine sits in the particle.</p></article>
-          <article data-entry="steps"><h3>Six steps</h3>
+          <article data-entry="steps"><h3>Seven steps</h3>
             <ol>
               <li><b>Choose a structure</b> under <i>Structure</i>; the page opens on the mature 80S. <a data-help="structures/choose" href="#help/structures/choose">Structures</a>.</li>
               <li><b>Look around.</b> Drag to rotate, scroll to zoom. <a data-help="view/mouse" href="#help/view/mouse">All controls</a>.</li>
               <li><b>Choose what the colours mean</b> under <i>Colour the sites by</i>. The default is the MG132 fold change. <a data-help="colour/mg132" href="#help/colour/mg132">Colourings</a>.</li>
               <li><b>Jump to a standard view</b> — the 40S or 60S solvent side, the two faces between the subunits, top, bottom. <a data-help="view/views" href="#help/view/views">Views</a>.</li>
               <li><b>Find a site.</b> Type a protein name above the table, sort by a column, click a row: the structure centres on that lysine and its details appear below the table. <a data-help="table/select" href="#help/table/select">Table</a>.</li>
+              <li><b>Ask whether a SUMO fits.</b> The colouring <i>Room for SUMO</i> shows at which sites a SUMO has space; the details of a site can draw one there. <a data-help="room/what" href="#help/room/what">Room for SUMO</a>.</li>
               <li><b>Add your own numbers.</b> <i>Load a table…</i> colours proteins or sites with values from a file on your computer; the file stays on your computer. <a data-help="data/format" href="#help/data/format">Your data</a>.</li>
             </ol></article>
           <article data-entry="reading"><h3>Reading the picture</h3>
@@ -336,6 +337,8 @@
             <p>Colours each site by where its lysine sits in the structure shown: exposed, in contact with rRNA, or buried. The definitions are under <a data-help="env/classes" href="#help/env/classes">Lysine environment</a>.</p></article>
           <article data-entry="environment_ref"><h3>Environment in the mature 80S</h3>
             <p>Offered for every structure other than the mature 80S. Each site is painted with the environment that the same lysine has in the mature ribosome; a site that has no coordinates there, or whose protein is not part of it, is dark grey. Compare with <i>Lysine environment</i> to see which lysines change: see <a data-help="structures/compare" href="#help/structures/compare">Comparing with the mature 80S</a>.</p></article>
+          <article data-entry="room"><h3>Room for SUMO</h3>
+            <p>Colours each site by whether a SUMO fits at its lysine in the structure shown: room, tight or none; sites without a resolved side chain are dark grey. What the classes mean and how they are computed is under <a data-help="room/what" href="#help/room/what">Room for SUMO</a>.</p></article>
           <article data-entry="partner"><h3>Near a partner</h3>
             <p>Offered when the structure holds partners. Sites within <span data-s="partner_near"></span> Å of a factor are wine red, of a tRNA green, of the mRNA indigo, and of the other ribosome of a disome rose; all other sites are dark grey. A site near several is given the colour of the nearest. The site colours differ from the colours of the partners themselves so that a site remains visible against the factor it touches. Definitions: <a data-help="structures/partners" href="#help/structures/partners">Factors, tRNA and mRNA</a>.</p></article>
           <article data-entry="region"><h3>Region</h3>
@@ -368,6 +371,28 @@
             <p>Each structure is one state of the ribosome, prepared and selected for a particular question; surfaces that are free in it can be occupied in other states, and flexible regions move. The mature 80S is vacant: no mRNA, tRNA or factors. The thresholds (4 Å, 10 Å²) are conventions; the detail card shows the underlying numbers. SUMO is a protein of about 11 kDa, far larger than the probe: "exposed" means reachable by solvent, which is necessary for modification but does not prove that the conjugation machinery fits.</p></article>
         </section>
 
+        <section data-topic="room" data-title="Room for SUMO" hidden>
+          <article data-entry="what"><h3>What it measures</h3>
+            <p>An exposed lysine can be reached by water. SUMO is a protein of 93 residues, and the lysine environment does not say whether it fits. <i>Room for SUMO</i> asks exactly that: the folded core of SUMO2 is placed at the lysine in <span data-s="fit.placements" data-fmt="n"></span> ways, and the share of placements that overlap nothing is the measure.</p>
+            <table class="htable"><tr><th>Class</th><th>Share of placements that fit</th><th>Reading</th></tr>
+              <tr><td><span class="dot" data-env="exposed"></span>room</td><td>at least <span data-s="fit.room" data-fmt="pct"></span></td><td>a SUMO can sit at this lysine in the structure as it is</td></tr>
+              <tr><td><span class="dot" data-env="rRNA contact"></span>tight</td><td>between the two</td><td>a few placements fit; a small movement decides</td></tr>
+              <tr><td><span class="dot" data-env="buried"></span>none</td><td>fewer than <span data-s="fit.none" data-fmt="pct"></span></td><td>this lysine cannot carry SUMO in this state unless the structure gives way</td></tr></table>
+            <p>The share is computed for every structure of the menu, so one site can have room in an assembly intermediate and none in the mature ribosome. The detail card of a site gives the share, and the colouring <i>Room for SUMO</i> paints the classes.</p></article>
+          <article data-entry="method"><h3>How it is computed</h3>
+            <p>The core of SUMO2 (residues 17–88, PDB <a href="https://www.rcsb.org/structure/1WM3" target="_blank" rel="noopener"><span data-s="fit.sumo"></span></a>) is rigid. The five residues after it and the bond to the lysine form a flexible tether. A placement fits when three things hold: the last residue of the core lies <span data-s="fit.tether.0"></span> to <span data-s="fit.tether.1"></span> Å from the lysine's nitrogen; the tether has a way out, that is, there is room for the glycine bonded to the nitrogen and the straight line from there to the core is free; and no backbone or Cβ atom of the core comes within <span data-s="fit.clash"></span> Å of an atom of the structure. Placements are combinations of tether directions, tether lengths and orientations of the core, the same set at every lysine.</p>
+            <p>The test is lenient: side chains of SUMO are not tested, because they can rearrange. A class <i>none</i> is therefore the firm statement; a class <i>room</i> says that the backbone of SUMO has space, which is necessary, not sufficient.</p>
+            <p>The model was tested on a crystal structure of SUMO2 conjugated to RanGAP1 (PDB <a href="https://www.rcsb.org/structure/3UIO" target="_blank" rel="noopener">3UIO</a>): the SUMO seen there passes the test, its tether measures <span data-s="fit.check.tether" data-fmt="1"></span> Å, and <span data-s="fit.check.fit_complex" data-fmt="pct"></span> of the placements fit with the enzymes of that structure bound, <span data-s="fit.check.fit_target" data-fmt="pct"></span> on RanGAP1 alone.</p></article>
+          <article data-entry="taken"><h3>What takes the room away</h3>
+            <p>The same placements are tested four times, each time with less of the structure: as it is; without the partners (factors, tRNA, mRNA); without the other ribosome of a disome; and on the lysine's own subunit alone. When a site has no room in the structure as it is and gains room once something is taken away, that something is named: <i>room taken by its partners</i>, <i>by the other ribosome</i>, <i>by the other subunit</i>. The third menu above the table filters by it.</p>
+            <p>A site whose room the other subunit takes can carry SUMO on a free subunit but not in the assembled ribosome: a SUMO there stands in the way of the subunits joining, or has to be removed first. The same holds for the factor or the neighbouring ribosome.</p></article>
+          <article data-entry="show"><h3>Showing a SUMO</h3>
+            <p>In the detail card of a site with a possible placement, <i>Show a SUMO here</i> draws the core of SUMO2 in green at one of the placements that fit, one from the middle of the possible directions. It is an example, not a prediction: with <span data-n="sites"></span> sites and thousands of possible placements each, the picture shows where a SUMO can be, not where it is. The tether is not drawn, so the SUMO sits up to <span data-s="fit.tether.1"></span> Å from the lysine.</p>
+            <p>For a site whose room is taken, the button draws the SUMO where it would sit without what is in its way; it then overlaps that partner, ribosome or subunit in the picture. One SUMO is drawn at a time; choosing another structure removes it.</p></article>
+          <article data-entry="limits"><h3>Limits</h3>
+            <p>The structures are rigid here; parts that move in the cell can make room or take it. Segments without coordinates are not there to collide with, so room near a mobile tail is overestimated. One SUMO is placed; a chain of several needs more space, so <i>none</i> for one SUMO holds for a chain as well. Room for SUMO does not mean room for the enzymes that attach it.</p></article>
+        </section>
+
         <section data-topic="table" data-title="Site table and details" hidden>
           <article data-entry="columns"><h3>Columns</h3>
             <table class="htable"><tr><th>Column</th><th>Content</th></tr>
@@ -379,7 +404,7 @@
               <tr><td>Z heat</td><td>Z-score in heat shock</td></tr>
               <tr><td><i>your column</i></td><td>after a table is loaded: the value of the column that is shown in the structure, for the site or, failing that, for its protein</td></tr></table></article>
           <article data-entry="filters"><h3>Filtering and sorting</h3>
-            <p>The search box keeps the sites whose name contains the text (<code>RPS3</code>, <code>RACK1 K2</code>). The first menu restricts to a subunit or one of its regions, the second to one environment, the third to sites in a hotspot (any, or one in particular), at the subunit interface, near a partner, on one ribosome of the disome, changed against the mature 80S, or with another modification recorded; it offers what applies to the structure shown. The checkbox keeps the sites that change significantly with MG132. The counter shows how many sites remain.</p>
+            <p>The search box keeps the sites whose name contains the text (<code>RPS3</code>, <code>RACK1 K2</code>). The first menu restricts to a subunit or one of its regions, the second to one environment, the third to sites in a hotspot (any, or one in particular), at the subunit interface, near a partner, on one ribosome of the disome, by room for SUMO or by what takes that room, changed against the mature 80S, or with another modification recorded; it offers what applies to the structure shown. The checkbox keeps the sites that change significantly with MG132. The counter shows how many sites remain.</p>
             <p>The <i>Show</i> buttons of the Statistics window set these filters and the matching colouring for you.</p>
             <p>Click a column header to sort by it; click again to reverse. Number columns start with the largest value.</p></article>
           <article data-entry="select"><h3>Selecting a site</h3>
@@ -388,6 +413,7 @@
             <table class="htable"><tr><th>Line</th><th>Content</th></tr>
               <tr><td>Protein</td><td>gene symbol with a link to its UniProt entry, subunit, and the chain name in the PDB entry shown</td></tr>
               <tr><td>Environment</td><td>the class, and the accessible surface of NZ in the structure shown and in the free protein</td></tr>
+              <tr><td>Room for SUMO</td><td>the class and the share of placements of a SUMO that fit at this lysine, also without the partners, on this ribosome alone and on the subunit alone where these differ; the button draws a SUMO at the site. See <a data-help="room/what" href="#help/room/what">Room for SUMO</a></td></tr>
               <tr><td>Nearest rRNA</td><td>distance from NZ to the closest rRNA atom, with rRNA, nucleotide and atom</td></tr>
               <tr><td>Partner</td><td>the nearest factor, tRNA, mRNA or other ribosome within <span data-s="partner_near"></span> Å, with the distance; see <a data-help="structures/partners" href="#help/structures/partners">partners</a></td></tr>
               <tr><td>Region</td><td>the region, the distance from NZ to the other subunit, and the hotspot the site belongs to, if any</td></tr>
@@ -431,6 +457,9 @@
           <article data-entry="comod"><h3>Other modifications</h3>
             <p>From the cross-link and modified-residue records of UniProt for the proteins of the structure. The table gives, per modification, the number of lysines that carry it, how many of them are SUMO sites, and the odds ratio against the lysines without it. UniProt's own SUMO records are not used here: they largely come from the same kind of experiment as the site catalogue.</p>
             <p>A lysine found modified in one proteomics experiment is more likely to be found in another, whatever the modifier. An overlap therefore shows that the same lysines are used; it does not show that one modification depends on the other.</p></article>
+          <article data-entry="room"><h3>Room for SUMO</h3>
+            <p>The first table counts the classes room, tight and none among the MG132-responsive sites, the other sites and the other lysines of the same proteins, for lysines with a resolved side chain in the structure shown. The second gives the classes of the sites by the environment of their lysine: an exposed lysine need not have room for a SUMO. For the mature 80S a third table tests the differences (Fisher's exact test). The last table lists the sites that have room only when the partners, the other ribosome or the other subunit are taken away, with the share of placements that fit with and without it; a click on a row selects the site.</p>
+            <p>Definitions and the test of the model: <a data-help="room/method" href="#help/room/method">how it is computed</a>.</p></article>
           <article data-entry="limits"><h3>Limits</h3>
             <p>Sites on one protein are not independent observations, so a single heavily modified protein can carry a result; the tests "with proteins as units" guard against this where it matters. Lysines that mass spectrometry cannot detect are counted as unmodified. Each structure is one state of the ribosome. A p-value near 0.05 in a table of many tests is weak evidence.</p></article>
         </section>
@@ -484,7 +513,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/molstar@5.12.0/build/viewer/molstar.js"></script>
 <script>
-const VERSION = "0.5";
+const VERSION = "0.6";
 const VIEW_LABELS = { "40S_solvent": "40S solvent side", "60S_solvent": "60S solvent side", "mRNA_entry": "mRNA entry side",
                       "mRNA_exit": "mRNA exit side", "top": "top", "bottom": "bottom",
                       "side_40S": "40S side", "side_60S": "60S side", "across_1": "edge-on, first side", "across_2": "edge-on, second side",
@@ -508,6 +537,12 @@ const multi = () => meta.particles.length > 1;
 const refId = () => structures.find(x => x.reference).id;
 const modelledEnv = e => e != null && e !== "not modelled";
 let PARTNER_NEAR = "";   // distance (Å) that counts as near a partner; read from the data
+let FIT = null;           // parameters of the room-for-SUMO calculation (structures.json), null if the data has none
+let sumoAt = null;        // key (label|particle) of the site at which a SUMO is drawn, or null
+const sumoPose = s => s.room_taken_by && s.pose_without ? s.pose_without : s.pose;   // where it would sit without what is in its way, else a placement that fits
+const siteKey = s => s.label + "|" + (s.particle ?? "");
+const pct1 = v => v == null ? "–" : (100 * v).toFixed(v < 0.0995 ? 1 : 0) + " %";
+const TAKEN_SHORT = { "a partner": "its partners", "the other ribosome": "the other ribosome", "the other subunit": "the other subunit" };
 const TOL = ["#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#CC6677", "#AA4499"];
 const UNSET = "#7A7A7A";
 const PROT_SEQ = ["#F7F7F7", "#ACD39E", "#5AAE61", "#1B7837"], PROT_DIV = ["#762A83", "#F7F7F7", "#1B7837"];   // Tol PRGn
@@ -559,6 +594,14 @@ function buildScene(camera) {
     siteRep.children = siteRep.children.filter(n => n !== fromUri).concat(colourNodes(
       [...user.site].map(([k, row]) => [{ label_asym_id: k.split(":")[0], label_seq_id: +k.split(":")[1] }, sc2.colourOf(row[col])])));
   } else fromUri.params.field_name = "color_" + siteMode;
+  const ss = sumoAt != null && meta.sumo && sites.find(x => siteKey(x) === sumoAt);
+  if (ss && sumoPose(ss)) {                              // a SUMO at the chosen site: the stored placement as a transform
+    const v = sumoPose(ss).split(" ").map(Number), node = structuredClone(meta.sumo.node);
+    const tf = [...walk(node)].find(n => n.kind === "transform");
+    tf.params.rotation = [v[0], v[3], v[6], v[1], v[4], v[7], v[2], v[5], v[8]];     // stored row by row, wanted column by column
+    tf.params.translation = [v[9], v[10], v[11]];
+    sc.root.children.push(node);
+  }
   if (protMode.startsWith("user:")) {
     const col = protMode.slice(5), sc2 = user.scales.protein[col];
     const own = new Set(meta.chains.filter(c => c.role === "rp").map(c => c.label_asym));
@@ -594,10 +637,11 @@ function legendHtml(L, withBase) {
     h += `<div class="bar" style="background:linear-gradient(to right, ${L.ramp.join(", ")})"></div>
           <div class="ticks"><span>${lo}</span><span>${mid}</span><span>${hi}</span></div>`;
   }
-  const has = sub => meta.chains.some(c => c.role === "rp" && c.subunit === sub);
-  const base = (withBase ? [["rRNA", meta.base.rRNA], has("40S") && ["40S proteins", meta.base.prot_40S], has("60S") && ["60S proteins", meta.base.prot_60S]].filter(Boolean) : [])
-    .concat(withBase && meta.base_other ? [[`${meta.particles[0]} ribosome (paler)`, meta.base_other.prot_60S]] : [])
-    .concat(showPartners ? meta.partners.map(q => [q.label, q.colour]) : []);
+  const has = sub => meta.chains.some(c => c.role === "rp" && c.subunit === sub), bySub = protMode === "subunit";
+  const base = (withBase ? [["rRNA", meta.base.rRNA], bySub && has("40S") && ["40S proteins", meta.base.prot_40S], bySub && has("60S") && ["60S proteins", meta.base.prot_60S]].filter(Boolean) : [])
+    .concat(withBase && bySub && meta.base_other ? [[`${meta.particles[0]} ribosome (paler)`, meta.base_other.prot_60S]] : [])
+    .concat(withBase && showPartners ? meta.partners.map(q => [q.label, q.colour]) : [])
+    .concat(withBase && sumoAt != null && meta.sumo ? [["SUMO placed at the selected site", meta.sumo.colour]] : []);
   const row = list => list.length ? `<div class="keys">` + list.map(([k, c]) => `<span><span class="dot" style="background:${c}"></span>${esc((L.labels || {})[k] || k)}</span>`).join("") + `</div>` : "";
   return h + row(keys) + row(base);       // the site colours, then what the particle itself is drawn in
 }
@@ -609,7 +653,7 @@ function renderControls() {
       meta.modes.filter(m => (m.group || "") === g).map(m => btn([m.id, m.label])).join("")).join("") +
     (siteCols.length ? `<span class="grp">Your data</span>` + siteCols.map(c => btn(["user:" + c.name, c.name])).join("") : "");
   const sl = siteMode.startsWith("user:") ? user.scales.site[siteMode.slice(5)].legend : meta.modes.find(m => m.id === siteMode).legend;
-  $("legend").innerHTML = legendHtml(sl, protMode === "subunit");
+  $("legend").innerHTML = legendHtml(sl, true);
   const st = siteMode.startsWith("user:") ? "colour/user" : siteMode.startsWith("z_") ? "colour/z" : "colour/" + siteMode;
   $("partnerswrap").hidden = !meta.partners.length;
   $("partnerslabel").textContent = "Show " + meta.partners.map(q => q.label).join(", ").replace(/, ([^,]*)$/, " and $1");
@@ -707,7 +751,9 @@ function visibleSites() {
                    : more.startsWith("comod:") ? (s.other_mods || "").split(", ").includes(more.slice(6))
                    : more === "near" ? s.near_partner != null : more.startsWith("near:") ? s.near_partner === more.slice(5)
                    : more.startsWith("particle:") ? s.particle === more.slice(9)
-                   : more === "opened" ? opened(s) : more === "gained" ? gained(s) : true;
+                   : more === "opened" ? opened(s) : more === "gained" ? gained(s)
+                   : more.startsWith("room:") ? s.room === more.slice(5) : more === "taken" ? s.room_taken_by != null
+                   : more.startsWith("taken:") ? s.room_taken_by === more.slice(6) : true;
   const rows = sites.filter(s => (!q || s.label.toUpperCase().includes(q)) && (!reg || s.subunit === reg || s.region === reg) &&
                                  (!env || s.environment === env) && (!sig || s.sig_mg132) && extra(s));
   const k = sort.k, uc = userCol();
@@ -750,6 +796,16 @@ function renderDetail(s) {
   ];
   if (s.near_partner) rows.splice(3, 0, ["Partner", `${fmt(s.near_partner_dist)} Å from ${esc(s.near_partner_name)}` +
     (s.covered_by_partner ? " · covered by a partner: free on the ribosome alone" : "")]);
+  if (s.fit != null) {
+    const also = [meta.partners.length && s.fit_ribosome !== s.fit && ["without the partners", s.fit_ribosome],
+                  multi() && s.fit_particle !== s.fit_ribosome && ["on this ribosome alone", s.fit_particle],
+                  s.fit_subunit !== s.fit_particle && ["on the subunit alone", s.fit_subunit]].filter(Boolean);
+    const shown = sumoAt === siteKey(s);
+    const what = s.room_taken_by && s.pose_without ? `Show where a SUMO would sit without ${TAKEN_SHORT[s.room_taken_by]}` : "Show a SUMO here";
+    rows.splice(2, 0, [`Room for SUMO <a class="hl" href="#help/room/what" data-help="room/what" title="Help: room for SUMO">ⓘ</a>`,
+      `${esc(s.room)}: ${pct1(s.fit)} of the placements fit` + also.map(([k, v]) => ` · ${pct1(v)} ${k}`).join("") +
+      (sumoPose(s) && meta.sumo ? ` <button class="linkbtn" id="sumobtn">${shown ? "Hide the SUMO" : what}</button>` : "")]);
+  }
   if (s.other_mods) rows.push(["Also recorded", esc(s.other_mods) + " (UniProt)"]);
   const pl = placement.get(s.label);
   if (pl) rows.push([`Elsewhere <a class="hl" href="#help/structures/sites" data-help="structures/sites" title="Help: one site in several structures">ⓘ</a>`,
@@ -763,6 +819,11 @@ function renderDetail(s) {
   $("detail").innerHTML = `<div class="name">${esc(s.gene)} K${s.position}${multi() ? ` <span class="ptag">${esc(s.particle)} ribosome</span>` : ""} <a class="hl" href="#help/table/details" data-help="table/details" title="Help: the site details">ⓘ</a></div><dl>` + rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("") + `</dl>`;
 }
 
+function toggleSumo() {                                // draw (or remove) a SUMO at the selected site
+  const s = sites[selected]; if (!s) return;
+  sumoAt = sumoAt === siteKey(s) ? null : siteKey(s);
+  renderDetail(s); applyScene(true);
+}
 function select(i, focus = true) {
   const s = sites[i]; selected = i; renderDetail(s);
   if (focus) focusSite(s);
@@ -792,6 +853,9 @@ function fillFilterMenus() {
     (sites.some(s => s.interface === true) ? `<option value="interface">at the subunit interface</option>` : "") +
     (near.length ? `<option value="near">near a partner</option>` + near.map(k => `<option value="near:${esc(k)}">· near ${k === "factor" ? "a factor" : k === "other ribosome" ? "the other ribosome" : esc(k)}</option>`).join("") : "") +
     (multi() ? meta.particles.slice().reverse().map(q => `<option value="particle:${esc(q)}">on the ${esc(q)} ribosome</option>`).join("") : "") +
+    (sites.some(s => s.room) ? `<option value="room:room">room for SUMO</option><option value="room:tight">· tight</option><option value="room:none">· no room</option>` : "") +
+    (sites.some(s => s.room_taken_by) ? `<option value="taken">room for SUMO taken by something</option>` +
+      [...new Set(sites.map(s => s.room_taken_by).filter(Boolean))].sort().map(k => `<option value="taken:${esc(k)}">· by ${esc(TAKEN_SHORT[k] || k)}</option>`).join("") : "") +
     (notRef && sites.some(opened) ? `<option value="opened">exposed here, enclosed in the mature 80S</option>` : "") +
     (notRef && sites.some(gained) ? `<option value="gained">resolved here, not in the mature 80S</option>` : "") +
     (mods.length ? `<option value="comod">another modification recorded</option>` + mods.map(m => `<option value="comod:${esc(m)}">· ${esc(m)}</option>`).join("") : "");
@@ -834,7 +898,7 @@ function renderStats() {
       <td><button data-show="comod:${esc(r.modifier)}">Show</button></td></tr>`).join("");
   const nHot = stats.hotspots.reduce((n, h) => n + h.n_sites, 0);
   $("scontent").innerHTML = `
-    <div class="stoc"><a href="#s-access">Modified lysines</a><a href="#s-regions">Subunits and regions</a><a href="#s-cluster">Clustering</a><a href="#s-hot">Hotspots</a><a href="#s-comod">Other modifications</a></div>
+    <div class="stoc"><a href="#s-access">Modified lysines</a><a href="#s-regions">Subunits and regions</a><a href="#s-cluster">Clustering</a><a href="#s-hot">Hotspots</a><a href="#s-comod">Other modifications</a>${stats.room && FIT ? `<a href="#s-room">Room for SUMO</a>` : ""}</div>
     <h3 id="s-access">Modified lysines against the other lysines ${sinfo("access")}</h3>
     <p class="lead">How do the lysines that carry SUMO2/3 differ from the other lysines of the same proteins? Tinted rows: q &lt; 0.05.</p>
     ${accessTable("SUMO sites vs other lysines of the same proteins")}
@@ -856,7 +920,8 @@ function renderStats() {
     <h3 id="s-comod">Other modifications at the same lysines ${sinfo("comod")}</h3>
     <p class="lead">Are lysines that carry another modification (UniProt) SUMO sites more often than the others?</p>
     <table class="stable"><tr><th>Modification</th><th class="num">Lysines</th><th class="num">of which SUMO sites</th><th>Share that are SUMO sites</th><th>Share among the other lysines</th>
-      <th class="num">Odds ratio (95 %)</th><th class="num">q</th><th></th></tr>${com}</table>`;
+      <th class="num">Odds ratio (95 %)</th><th class="num">q</th><th></th></tr>${com}</table>
+    ${fitSection()}`;
 }
 // A structure other than the reference: what it holds, what it adds, its partners, and (for an
 // assembly intermediate) the lysines that the mature ribosome encloses.
@@ -879,7 +944,7 @@ function renderStateStats() {
   const pre = stats.precursor, FATES = ["exposed", "enclosed", "not modelled", "protein not yet in the particle"];
   const fate = (g, f) => ((pre.fates.find(r => r.group === g && r.fate === f) || {}).n || 0);
   $("scontent").innerHTML = `
-    <div class="stoc"><a href="#s-state">This structure</a>${stats.partners.length ? `<a href="#s-partners">Near the partners</a>` : ""}${pre ? `<a href="#s-pre">Against the mature 80S</a>` : ""}<a href="#s-ref">Statistics on the mature 80S</a></div>
+    <div class="stoc"><a href="#s-state">This structure</a>${stats.partners.length ? `<a href="#s-partners">Near the partners</a>` : ""}${pre ? `<a href="#s-pre">Against the mature 80S</a>` : ""}${stats.room && FIT ? `<a href="#s-room">Room for SUMO</a>` : ""}<a href="#s-ref">Statistics on the mature 80S</a></div>
     <h3 id="s-state">This structure ${sinfo("state")}</h3>
     <p class="lead">${esc(entry.label)}. It holds ${esc(ov[0].holds ? ov[0].holds.replace(";", " and the factors") : "no partner")}.${stats.fit ? ` Superposed on the mature 80S through ${stats.fit.n.toLocaleString("en")} rRNA phosphates (r.m.s.d. ${(+stats.fit.rmsd).toFixed(1)} Å).` : ""}</p>
     <table class="stable"><tr>${multi() ? "<th>Ribosome</th>" : ""}<th class="num">Ribosomal proteins</th><th class="num">Sites listed</th><th class="num">with coordinates</th><th class="num">exposed</th>
@@ -896,8 +961,33 @@ function renderStateStats() {
     ${pre.test.length ? `<p>Exposed here among those resolved: ${pre.test[0].sites_exposed} of ${pre.test[0].sites} SUMO sites and ${pre.test[0].lysines_exposed} of ${pre.test[0].lysines} other lysines (odds ratio ${(+pre.test[0].odds_ratio).toFixed(2)}, 95 % ${ci(pre.test[0].conf_low, pre.test[0].conf_high)}; Fisher p = ${fmtP(pre.test[0].p)}). <button class="linkbtn" data-show="opened">Show the sites</button></p>` : ""}
     ${pre.opened.length ? `<table class="stable"><tr><th>SUMO site enclosed in the mature 80S, exposed here</th><th class="num">NZ surface, mature (Å²)</th><th class="num">NZ surface, here (Å²)</th><th>MG132</th></tr>
       ${pre.opened.map(r => siteRow(r, `<td>${esc(r.label)}</td><td class="num">${fmt(r.nz_mature)}</td><td class="num">${fmt(r.nz_here)}</td><td>${r.sig_mg132 ? "responsive" : `<span class="dim">n.s.</span>`}</td>`)).join("")}</table>` : ""}` : ""}
+    ${fitSection()}
     <h3 id="s-ref">Statistics on the mature 80S</h3>
     <p>The comparison of modified with other lysines, the regions, the clustering tests, the hotspots and the other modifications are computed on the mature 80S. <button class="linkbtn" data-goto="${refId()}">Open the mature 80S</button></p>`;
+}
+// Room for SUMO in the structure shown: the classes among sites and other lysines, the tests (reference),
+// and the sites whose room something takes.
+function fitSection() {
+  const f = stats.room; if (!f || !FIT) return "";
+  const groups = ["SUMO sites, MG132 q < 0.05", "SUMO sites, not significant", "Other lysines"], classes = ["room", "tight", "none"];
+  const n = (g, c) => ((f.counts.find(r => r.group === g && r.room === c) || {}).n || 0), tot = g => classes.reduce((a, c) => a + n(g, c), 0);
+  const envs = ["exposed", "rRNA contact", "buried"], ne = (e, c) => ((f.by_environment.find(r => r.environment === e && r.room === c) || {}).n || 0);
+  const share = (x, t) => t ? `<span class="mbar"><i style="width:${100 * x / t}%"></i></span>${x} <span class="dim">(${pctS(x / t)})</span>` : "–";
+  const row = (name, get, t) => `<tr><td>${esc(name)}</td>${classes.map(c => `<td>${share(get(c), t)}</td>`).join("")}<td class="num">${t}</td></tr>`;
+  const tests = (f.tests || []).map(r => `<tr class="${r.p < 0.05 ? "sig" : ""}"><td>${esc(r.question)}</td><td>${r.x_a} of ${r.n_a} ${esc(r.group_a)}</td>
+      <td>${r.x_b} of ${r.n_b} ${esc(r.group_b)}</td><td class="num">${(+r.odds_ratio).toFixed(2)} (${ci(r.conf_low, r.conf_high)})</td><td class="num">${fmtP(r.p)}</td></tr>`).join("");
+  const taken = f.taken.map(r => `<tr data-site="${esc(r.label)}|${esc(r.particle ?? "")}" title="Show this site"><td>${esc(r.label)}${multi() ? `<span class="ptag">${esc(r.particle)}</span>` : ""}</td>
+      <td>${esc(TAKEN_SHORT[r.taken_by] || r.taken_by)}</td><td class="num">${pct1(r.fit)}</td><td class="num">${pct1(r.fit_without)}</td>
+      <td class="num">${fmt(r.lfc_mg132)}${r.sig_mg132 ? "" : ` <span class="dim">n.s.</span>`}</td></tr>`).join("");
+  return `<h3 id="s-room">Room for SUMO ${sinfo("room")}</h3>
+    <p class="lead">Is there room for a SUMO at the lysine? The core of SUMO2 is placed on its tether in ${FIT.placements.toLocaleString("en")} ways; a lysine has room when at least ${pctS(FIT.room)} of the placements overlap nothing, none when fewer than ${pctS(FIT.none)} do.</p>
+    <table class="stable"><tr><th>Lysines with a resolved side chain</th><th>room</th><th>tight</th><th>none</th><th class="num">all</th></tr>
+      ${groups.map(g => row(g, c => n(g, c), tot(g))).join("")}</table>
+    <table class="stable"><tr><th>SUMO sites by environment of the lysine</th><th>room</th><th>tight</th><th>none</th><th class="num">all</th></tr>
+      ${envs.map(e => row(e, c => ne(e, c), classes.reduce((a, c) => a + ne(e, c), 0))).join("")}</table>
+    ${tests ? `<table class="stable"><tr><th>Question</th><th></th><th></th><th class="num">Odds ratio (95 %)</th><th class="num">p</th></tr>${tests}</table>` : ""}
+    ${taken ? `<p class="lead">Sites that have room only when something is taken away. <button class="linkbtn" data-show="taken">Show</button></p>
+    <table class="stable"><tr><th>Site</th><th>Room taken by</th><th class="num">Placements that fit here</th><th class="num">without it</th><th class="num">MG132 log2 FC</th></tr>${taken}</table>` : ""}`;
 }
 function syncHash() {                                  // the address follows the open window
   if ($("help").open) return;                          // the help keeps its own address while it is open
@@ -914,6 +1004,7 @@ function showFromStats(what) {                       // a Show button: colouring
   if (kind === "near") { siteMode = "partner"; $("fmore").value = "near:" + value.split("|")[0]; }
   if (kind === "opened") { siteMode = "environment"; $("fmore").value = "opened"; }
   if (kind === "gained") { siteMode = "environment"; $("fmore").value = "gained"; }
+  if (kind === "taken") { siteMode = "room"; $("fmore").value = "taken"; }
   $("stats").close(); syncHash(); renderTable();
   const h = kind === "hotspot" && (stats.hotspots || []).find(x => x.hotspot === value);
   applyScene(true, h ? cameraOn([h.x, h.y, h.z], 150) : null);
@@ -1025,8 +1116,10 @@ function fillHelpNumbers() {
   }
   for (const el of help.querySelectorAll("[data-env]")) el.style.background = envCol[el.dataset.env];
   for (const el of help.querySelectorAll("[data-s]")) {
-    const v = el.dataset.s === "partner_near" ? PARTNER_NEAR : el.dataset.s.split(".").reduce((o, k) => o == null ? o : o[k], refStats);
-    el.textContent = typeof v === "number" && el.dataset.fmt === "n" ? v.toLocaleString("en") : v ?? "";
+    const v = el.dataset.s === "partner_near" ? PARTNER_NEAR : el.dataset.s.startsWith("fit.") ? el.dataset.s.slice(4).split(".").reduce((o, k) => o == null ? o : o[k], FIT)
+            : el.dataset.s.split(".").reduce((o, k) => o == null ? o : o[k], refStats);
+    el.textContent = typeof v === "number" && el.dataset.fmt === "n" ? v.toLocaleString("en") : typeof v === "number" && el.dataset.fmt === "pct" ? pctS(v)
+                   : typeof v === "number" && el.dataset.fmt === "1" ? v.toFixed(1) : v ?? "";
   }
   for (const el of help.querySelectorAll("[data-struct]")) el.textContent = el.dataset.struct === "id" ? sid : entry[el.dataset.struct];
   $("hstructs").innerHTML = `<table class="htable"><tr><th>Structure</th><th>PDB</th><th>What it is</th><th>Sites listed</th><th>with coordinates</th></tr>` +
@@ -1085,7 +1178,7 @@ async function loadStructure_(id, opts = {}) {
   const got = await Promise.all(["meta.json", "sites.json", "scene_mg132.mvsj", "stats.json"].map(get));
   if (seq !== loadSeq) return;                         // another structure was chosen meanwhile
   [meta, sites, template, stats] = got;
-  sid = id; entry = structures.find(x => x.id === id); selected = null;
+  sid = id; entry = structures.find(x => x.id === id); selected = null; sumoAt = null;
   sites.forEach((s, i) => s.i = i);
   if (!siteMode.startsWith("user:") && !meta.modes.some(m => m.id === siteMode)) siteMode = "mg132";
   $("structure").value = id;
@@ -1113,7 +1206,7 @@ async function main() {
   USER_HINT = $("userinfo").innerHTML; DETAIL_HINT = $("detail").innerHTML;
   const json = u => fetch(u).then(r => { if (!r.ok) throw new Error(`${u}: ${r.status}`); return r.json(); });
   const [index, rows] = await Promise.all([json("data/structures.json"), json("data/placement.json")]);
-  structures = index.structures; PARTNER_NEAR = index.partner_near;
+  structures = index.structures; PARTNER_NEAR = index.partner_near; FIT = index.sumo_fit || null;
   placement = new Map(rows.map(r => [r.label, r]));
   refStats = await json(`data/${index.reference}/stats.json`);
   $("structure").innerHTML = Object.entries(STRUCT_GROUPS).map(([g, label]) => `<optgroup label="${esc(label)}">` +
@@ -1127,7 +1220,8 @@ async function main() {
                    get structures() { return structures; }, get structure() { return sid; }, setStructure: (id, opts) => loadStructure(id, opts),
                    setPartners: on => { showPartners = on; $("partners").checked = on; return applyScene(); },
                    setSiteMode: m => { siteMode = m; return applyScene(); }, setProteinMode: m => { protMode = m; return applyScene(); },
-                   loadUserText: (name, text) => { userRaw = { name, text }; setUser(loadUserTable(name, text)); }, buildScene, setView, select };
+                   loadUserText: (name, text) => { userRaw = { name, text }; setUser(loadUserTable(name, text)); }, buildScene, setView, select,
+                   toggleSumo, get sumoAt() { return sumoAt; } };
   initHelp();
   initStats();
   const deep = location.hash;                          // loadStructure rewrites the address
@@ -1146,6 +1240,7 @@ async function main() {
     sort = { k: th.dataset.k, dir: sort.k === th.dataset.k ? -sort.dir : (th.classList.contains("num") ? -1 : 1) }; renderTable();
   });
   $("rows").addEventListener("click", e => { const tr = e.target.closest("tr"); if (tr) select(+tr.dataset.i); });
+  $("detail").addEventListener("click", e => { if (e.target.id === "sumobtn") toggleSumo(); });
 
   const readFile = f => f.text().then(t => { const u = loadUserTable(f.name, t); userRaw = { name: f.name, text: t }; setUser(u); }).catch(err => { $("userinfo").innerHTML = `Could not use <b>${esc(f.name)}</b>: ${esc(err.message)}. <a href="#" id="clear">Dismiss</a>`; });
   $("pick").addEventListener("click", () => $("file").click());

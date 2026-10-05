@@ -19,6 +19,14 @@
   `buildScene()` re-colours it for the chosen site colouring / protein colouring and reloads
   it with `loadMvsData`. Its components are named in `custom.rsv`: `rrna`, `proteins`,
   `partners` (factors, tRNA, mRNA; removed when the checkbox is off), `sites`.
+- Room for SUMO: `sites.json` carries `fit` (share of placements that fit), `fit_ribosome`,
+  `fit_particle`, `fit_subunit`, `room`, `room_taken_by`, `pose` (a placement that fits: 9
+  rotation values row by row + 3 translation values) and `pose_without` (for a site whose room
+  is taken: a placement that becomes possible once what takes it is removed);
+  `meta.sumo.node` is the MolViewSpec subtree of a SUMO, to which `buildScene()` adds the
+  transform of the site in `sumoAt` (MVS wants the rotation column by column). The parameters
+  are in `structures.json` → `sumo_fit` (`FIT` in the page); `stats.json` has a `room` section
+  (`fit` in a state's `stats.json` is the superposition on the reference).
 - `stats.json` has `kind: "reference"` (five analyses, `renderStats`) or `kind: "state"`
   (overview, partner tests, precursor comparison, `renderStateStats`).
 - **Help is part of every feature.** A feature is done when (1) it has an entry in the help
@@ -31,7 +39,8 @@
   (`buildScene(camera)`); setting the camera after `loadMvsData` races with the camera the reload restores.
 - Test hook: `window.__rsv` (`viewer`, `meta`, `sites`, `user`, `setSiteMode`,
   `setProteinMode`, `loadUserText(name, text)`, `buildScene`, `setView`, `select`, `stats`, `openStats`,
-  `showFromStats("hotspot:H1")`, `structures`, `structure`, `setStructure(id, {site})`, `setPartners(bool)`).
+  `showFromStats("hotspot:H1")`, `structures`, `structure`, `setStructure(id, {site})`, `setPartners(bool)`,
+  `toggleSumo()` (at the selected site), `sumoAt`).
 - Check after changes: `node --check` on the extracted script; load the page from a static
   server; no console errors; a deep link such as `#help/env/classes` opens that entry;
   `?s=9RPV#stats` opens the statistics of the disome; switching structures keeps the
