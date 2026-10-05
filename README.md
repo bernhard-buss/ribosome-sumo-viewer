@@ -3,18 +3,38 @@
 **Open the viewer:** https://bernhard-buss.github.io/ribosome-sumo-viewer/
 
 A single-page browser viewer for the SUMO2/3 acceptor sites of the cytosolic
-ribosomal proteins on the human 80S ribosome. Each modified lysine is shown on
-the structure and coloured by its response to proteasome inhibition (MG132) or
-heat shock, or by its environment in the assembled ribosome (exposed, in
+ribosomal proteins on structures of the human ribosome. Each modified lysine is
+shown on the structure and coloured by its response to proteasome inhibition
+(MG132) or heat shock, or by its environment in the particle (exposed, in
 contact with rRNA, buried). A table lists every site; selecting a row centres
 the structure on that lysine.
+
+## Structures
+
+The *Structure* menu offers seven states of the ribosome; the address takes the
+PDB code (`?s=8G60`), and without it the page opens on the mature 80S.
+
+| Structure | PDB | What it is |
+|---|---|---|
+| Mature 80S | [8QOI](https://www.rcsb.org/structure/8QOI) | vacant ribosome at 1.9 Å; the reference for the statistics |
+| Decoding 80S | [8G60](https://www.rcsb.org/structure/8G60) | translating: mRNA, A- and P-site tRNA, eEF1A; resolves the L1 stalk |
+| Idle 80S | [8XSX](https://www.rcsb.org/structure/8XSX) | with eEF2, SERBP1, EBP1 and E-site tRNA |
+| Collided disome | [9RPV](https://www.rcsb.org/structure/9RPV) | a stalled ribosome and the one that ran into it, with ZAK and EDF1 |
+| Nucleolar pre-60S | [8FKV](https://www.rcsb.org/structure/8FKV) | early assembly intermediate of the large subunit |
+| Nuclear pre-60S | [8FLE](https://www.rcsb.org/structure/8FLE) | late nuclear assembly intermediate of the large subunit |
+| Late pre-40S | [6ZXG](https://www.rcsb.org/structure/6ZXG) | late assembly intermediate of the small subunit |
+
+All single particles are superposed on the mature 80S, so the view buttons show
+the same face in each. Factors, tRNA and mRNA are drawn in their own colours and
+can be hidden. The details of a site give its environment in every other
+structure, with a link that opens that structure at the site.
 
 Everything runs in the browser. The structure is fetched from the PDB by the
 browser; nothing is uploaded.
 
 ## Help and versions
 
-The **Help** button (or the `?` key) opens the in-page help: seven topics, a
+The **Help** button (or the `?` key) opens the in-page help: eight topics, a
 search box, and the changelog. Every ⓘ on the page opens the help at the entry
 for the control next to it, and an open entry has its own address
 (`#help/topic/entry`) that can be shared.
@@ -30,8 +50,11 @@ analysis behind the data: the modified lysines against the other lysines of the
 same proteins, the subunits and four regions of the ribosome, spatial
 clustering tested by random draws, the hotspots of MG132-responsive sites, and
 other modifications recorded at the same lysines in UniProt. *Show* buttons set
-the matching colouring and filter. The results are stored in `data/stats.json`;
-the page displays them and does not recompute them.
+the matching colouring and filter. For the other structures the window shows
+what that state adds: the sites near its factors, tRNA and mRNA tested against
+the other lysines, and for the assembly intermediates the fate of the lysines
+that the mature ribosome encloses. The results are stored in
+`data/<PDB code>/stats.json`; the page displays them and does not recompute them.
 
 ## Your own data
 
@@ -52,11 +75,13 @@ not stored, and it is gone when the page is closed.
 
 | File | Content |
 |---|---|
-| `data/sites.json` | one row per site: protein, position, structural annotation (environment, region, hotspot), quantification, other modifications |
-| `data/stats.json` | the stored test results shown in the Statistics window |
-| `data/annotations.json` | per-residue colours and tooltips for the structure view |
-| `data/scene_*.mvsj` | one [MolViewSpec](https://molstar.org/mol-view-spec/) scene per colouring |
-| `data/meta.json` | colourings, legends and the six standard views |
+| `data/structures.json` | the structures of the menu |
+| `data/placement.json` | the environment of every site in every structure |
+| `data/<PDB code>/sites.json` | one row per site: protein, position, structural annotation (environment, region, hotspot, nearest partner), quantification, other modifications |
+| `data/<PDB code>/stats.json` | the stored test results shown in the Statistics window |
+| `data/<PDB code>/annotations.json` | per-residue colours and tooltips for the structure view |
+| `data/<PDB code>/scene_*.mvsj` | one [MolViewSpec](https://molstar.org/mol-view-spec/) scene per colouring |
+| `data/<PDB code>/meta.json` | chains, colourings, legends, partners and the standard views |
 
 Sources:
 
@@ -65,16 +90,19 @@ Sources:
   Nat Commun 9:2456 (2018), Supplementary Data 1 (CC BY 4.0). HEK293 cells;
   control, MG132 and heat shock; Z-scores, log2 fold changes and q-values as
   published.
-- **Structure** — PDB [8QOI](https://www.rcsb.org/structure/8QOI), human 80S
-  ribosome at 1.9 Å (Holvec S et al., Nat Struct Mol Biol 31:1251, 2024).
+- **Structures** — the PDB entries of the table above; the reference is
+  [8QOI](https://www.rcsb.org/structure/8QOI), human 80S ribosome at 1.9 Å
+  (Holvec S et al., Nat Struct Mol Biol 31:1251, 2024). The publication of each
+  entry is linked from its PDB page.
 - **Other modifications** — the cross-link and modified-residue records of
   UniProt (CC BY 4.0) for the proteins of the structure.
-- **Structural annotation** — computed from 8QOI: a lysine is *rRNA contact*
-  when its side-chain nitrogen (NZ) is within 4 Å of an rRNA atom, *exposed*
-  when it is not and its NZ has ≥ 10 Å² of solvent-accessible surface in the
-  assembled particle, *buried* otherwise, and *not modelled* when the residue
-  has no coordinates. Sites on proteins absent from 8QOI (the mobile stalks)
-  are not listed.
+- **Structural annotation** — computed from each structure: a lysine is *rRNA
+  contact* when its side-chain nitrogen (NZ) is within 4 Å of an rRNA atom,
+  *exposed* when it is not and its NZ has ≥ 10 Å² of solvent-accessible surface
+  in the particle, *buried* otherwise, and *not modelled* when the residue has
+  no coordinates. A site is *near a partner* when its NZ is within 10 Å of a
+  factor, a tRNA, the mRNA or the other ribosome of the disome. A structure
+  lists the sites of the ribosomal proteins it contains.
 
 ## Development
 

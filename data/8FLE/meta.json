@@ -1,0 +1,848 @@
+{
+ "pdb_id": "8FLE",
+ "base": {
+  "rRNA": "#E4E4E4",
+  "prot_40S": "#D8CFC0",
+  "prot_60S": "#C6D0DA"
+ },
+ "radius": 170.94102437804165,
+ "particles": [
+  "1"
+ ],
+ "base_other": null,
+ "partners": [
+  {
+   "role": "factor",
+   "label": "factors",
+   "colour": "#999933",
+   "members": [
+    "EIF6",
+    "GTPBP4",
+    "LLPH",
+    "MRTO4",
+    "NIFK",
+    "NOP53",
+    "PES1",
+    "RSL24D1",
+    "ZNF593"
+   ]
+  }
+ ],
+ "chains": [
+  {
+   "label_asym": "A",
+   "chain": "BE",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P27635",
+   "gene": "RPL10",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "B",
+   "chain": "L1",
+   "kind": "rna",
+   "subunit": "60S",
+   "protein": "",
+   "gene": "",
+   "role": "rRNA",
+   "particle": "1"
+  },
+  {
+   "label_asym": "C",
+   "chain": "L3",
+   "kind": "rna",
+   "subunit": "60S",
+   "protein": "",
+   "gene": "",
+   "role": "rRNA",
+   "particle": "1"
+  },
+  {
+   "label_asym": "D",
+   "chain": "L4",
+   "kind": "rna",
+   "subunit": "60S",
+   "protein": "",
+   "gene": "",
+   "role": "rRNA",
+   "particle": "1"
+  },
+  {
+   "label_asym": "E",
+   "chain": "L5",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P62913",
+   "gene": "RPL11",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "F",
+   "chain": "L6",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P26373",
+   "gene": "RPL13",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "G",
+   "chain": "L7",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P40429",
+   "gene": "RPL13A",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "H",
+   "chain": "L8",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P50914",
+   "gene": "RPL14",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "I",
+   "chain": "L9",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P61313",
+   "gene": "RPL15",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "J",
+   "chain": "LA",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P18621",
+   "gene": "RPL17",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "K",
+   "chain": "LB",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "Q07020",
+   "gene": "RPL18",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "L",
+   "chain": "LC",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "Q02543",
+   "gene": "RPL18A",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "M",
+   "chain": "LD",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P84098",
+   "gene": "RPL19",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "N",
+   "chain": "LE",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P46778",
+   "gene": "RPL21",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "O",
+   "chain": "LF",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P35268",
+   "gene": "RPL22",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "P",
+   "chain": "LG",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P62829",
+   "gene": "RPL23",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "Q",
+   "chain": "LH",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P62750",
+   "gene": "RPL23A",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "R",
+   "chain": "LI",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P61254",
+   "gene": "RPL26",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "S",
+   "chain": "LJ",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P61353",
+   "gene": "RPL27",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "T",
+   "chain": "LK",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P46776",
+   "gene": "RPL27A",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "U",
+   "chain": "LL",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P46779",
+   "gene": "RPL28",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "V",
+   "chain": "LM",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P47914",
+   "gene": "RPL29",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "W",
+   "chain": "LN",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P39023",
+   "gene": "RPL3",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "X",
+   "chain": "LO",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P62888",
+   "gene": "RPL30",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "Y",
+   "chain": "LP",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P62899",
+   "gene": "RPL31",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "Z",
+   "chain": "LQ",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P62910",
+   "gene": "RPL32",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "AA",
+   "chain": "LR",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P49207",
+   "gene": "RPL34",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "BA",
+   "chain": "LS",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P42766",
+   "gene": "RPL35",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "CA",
+   "chain": "LT",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P18077",
+   "gene": "RPL35A",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "DA",
+   "chain": "LU",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "Q9Y3U8",
+   "gene": "RPL36",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "EA",
+   "chain": "LV",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "J3KQN4",
+   "gene": "RPL36A",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "FA",
+   "chain": "LW",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P61927",
+   "gene": "RPL37",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "GA",
+   "chain": "LX",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P61513",
+   "gene": "RPL37A",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "HA",
+   "chain": "LY",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P63173",
+   "gene": "RPL38",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "IA",
+   "chain": "LZ",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P62891",
+   "gene": "RPL39",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "JA",
+   "chain": "NK",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "Q9BRT6",
+   "gene": "LLPH",
+   "role": "factor",
+   "particle": "1"
+  },
+  {
+   "label_asym": "KA",
+   "chain": "NL",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "Q9NZM5",
+   "gene": "NOP53",
+   "role": "factor",
+   "particle": "1"
+  },
+  {
+   "label_asym": "LA",
+   "chain": "NP",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "O00488",
+   "gene": "ZNF593",
+   "role": "factor",
+   "particle": "1"
+  },
+  {
+   "label_asym": "MA",
+   "chain": "SA",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P36578",
+   "gene": "RPL4",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "NA",
+   "chain": "SB",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P46777",
+   "gene": "RPL5",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "OA",
+   "chain": "SC",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "Q02878",
+   "gene": "RPL6",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "PA",
+   "chain": "SD",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P18124",
+   "gene": "RPL7",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "QA",
+   "chain": "SE",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P62424",
+   "gene": "RPL7A",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "RA",
+   "chain": "SF",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P62917",
+   "gene": "RPL8",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "SA",
+   "chain": "SG",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P32969",
+   "gene": "RPL9",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "TA",
+   "chain": "SH",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "Q9BYG3",
+   "gene": "NIFK",
+   "role": "factor",
+   "particle": "1"
+  },
+  {
+   "label_asym": "UA",
+   "chain": "SI",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "Q6DKI1",
+   "gene": "RPL7L1",
+   "role": "rp",
+   "particle": "1"
+  },
+  {
+   "label_asym": "VA",
+   "chain": "SK",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "P56537",
+   "gene": "EIF6",
+   "role": "factor",
+   "particle": "1"
+  },
+  {
+   "label_asym": "WA",
+   "chain": "SM",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "O00541",
+   "gene": "PES1",
+   "role": "factor",
+   "particle": "1"
+  },
+  {
+   "label_asym": "XA",
+   "chain": "SQ",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "Q9UKD2",
+   "gene": "MRTO4",
+   "role": "factor",
+   "particle": "1"
+  },
+  {
+   "label_asym": "YA",
+   "chain": "SR",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "Q9BZE4",
+   "gene": "GTPBP4",
+   "role": "factor",
+   "particle": "1"
+  },
+  {
+   "label_asym": "ZA",
+   "chain": "SV",
+   "kind": "protein",
+   "subunit": "60S",
+   "protein": "Q9UHA3",
+   "gene": "RSL24D1",
+   "role": "factor",
+   "particle": "1"
+  }
+ ],
+ "modes": [
+  {
+   "id": "mg132",
+   "label": "MG132 fold change",
+   "group": "Response",
+   "legend": {
+    "kind": "ramp",
+    "title": "log2 fold change, MG132 vs control (sites with q < 0.05)",
+    "ramp": [
+     "#F3E6B3",
+     "#DDCC77",
+     "#CC6677",
+     "#AA4499",
+     "#332288"
+    ],
+    "limits": [
+     0,
+     8
+    ],
+    "extra": {
+     "not significant": "#7A7A7A"
+    }
+   }
+  },
+  {
+   "id": "z_mg132",
+   "label": "Z-score, MG132",
+   "group": "Response",
+   "legend": {
+    "kind": "ramp",
+    "title": "Z-score in MG132",
+    "ramp": [
+     "#332288",
+     "#FFFFFF",
+     "#CC6677"
+    ],
+    "limits": [
+     -1.5,
+     1.5
+    ],
+    "extra": {
+     "not quantified": "#7A7A7A"
+    }
+   }
+  },
+  {
+   "id": "z_ctrl",
+   "label": "Z-score, control",
+   "group": "Response",
+   "legend": {
+    "kind": "ramp",
+    "title": "Z-score in control",
+    "ramp": [
+     "#332288",
+     "#FFFFFF",
+     "#CC6677"
+    ],
+    "limits": [
+     -1.5,
+     1.5
+    ],
+    "extra": {
+     "not quantified": "#7A7A7A"
+    }
+   }
+  },
+  {
+   "id": "z_hs",
+   "label": "Z-score, heat shock",
+   "group": "Response",
+   "legend": {
+    "kind": "ramp",
+    "title": "Z-score in heat shock",
+    "ramp": [
+     "#332288",
+     "#FFFFFF",
+     "#CC6677"
+    ],
+    "limits": [
+     -1.5,
+     1.5
+    ],
+    "extra": {
+     "not quantified": "#7A7A7A"
+    }
+   }
+  },
+  {
+   "id": "environment",
+   "label": "Lysine environment",
+   "group": "Position",
+   "legend": {
+    "kind": "key",
+    "title": "Environment of the lysine in this structure",
+    "colours": {
+     "exposed": "#44AA99",
+     "rRNA contact": "#DDCC77",
+     "buried": "#332288"
+    }
+   }
+  },
+  {
+   "id": "environment_ref",
+   "label": "Environment in the mature 80S",
+   "group": "Position",
+   "legend": {
+    "kind": "key",
+    "title": "Environment of the same lysine in the mature 80S",
+    "colours": {
+     "exposed": "#44AA99",
+     "rRNA contact": "#DDCC77",
+     "buried": "#332288"
+    },
+    "extra": {
+     "not modelled there": "#7A7A7A"
+    }
+   }
+  },
+  {
+   "id": "region",
+   "label": "Region",
+   "group": "Position",
+   "legend": {
+    "kind": "key",
+    "title": "Region of the ribosome",
+    "colours": {
+     "60S central protuberance": "#332288",
+     "60S body": "#88CCEE"
+    }
+   }
+  },
+  {
+   "id": "partner",
+   "label": "Near a partner",
+   "group": "Position",
+   "legend": {
+    "kind": "key",
+    "title": "Partner of the ribosome within 10 \u00c5 of the lysine",
+    "colours": {
+     "factor": "#882255"
+    },
+    "labels": {
+     "factor": "near a factor",
+     "tRNA": "near tRNA",
+     "mRNA": "near the mRNA",
+     "other ribosome": "near the other ribosome",
+     "none": "none near"
+    },
+    "extra": {
+     "none": "#7A7A7A"
+    }
+   }
+  },
+  {
+   "id": "hotspot",
+   "label": "Hotspots",
+   "group": "Position",
+   "legend": {
+    "kind": "key",
+    "title": "Hotspots of MG132-responsive sites (defined on the mature 80S)",
+    "colours": {
+     "H3": "#44AA99"
+    },
+    "extra": {
+     "not in a hotspot": "#7A7A7A"
+    }
+   }
+  },
+  {
+   "id": "comod",
+   "label": "Other modifications",
+   "group": "Position",
+   "legend": {
+    "kind": "key",
+    "title": "Other modification recorded at the lysine (UniProt)",
+    "colours": {
+     "acetyl": "#44AA99",
+     "succinyl": "#DDCC77"
+    },
+    "extra": {
+     "none recorded": "#7A7A7A"
+    }
+   }
+  }
+ ],
+ "views": [
+  {
+   "id": "40S_solvent",
+   "target": [
+    248.96388254900143,
+    244.64541135369893,
+    257.7839601336265
+   ],
+   "up": [
+    0.8652412213506414,
+    -0.1730273214299108,
+    -0.4705519895977922
+   ],
+   "position": [
+    355.296701248462,
+    781.2192602929925,
+    256.002227341799
+   ]
+  },
+  {
+   "id": "60S_solvent",
+   "target": [
+    248.96388254900143,
+    244.64541135369893,
+    257.7839601336265
+   ],
+   "up": [
+    0.9032412812687887,
+    -0.17769823030964796,
+    0.39061301406473425
+   ],
+   "position": [
+    142.63106384954088,
+    -291.9284375855947,
+    259.565692925454
+   ]
+  },
+  {
+   "id": "mRNA_entry",
+   "target": [
+    248.96388254900143,
+    244.64541135369893,
+    257.7839601336265
+   ],
+   "up": [
+    0.8652412213506414,
+    -0.1730273214299108,
+    -0.4705519895977922
+   ],
+   "position": [
+    501.7580631860049,
+    196.15192061204783,
+    740.4482553343355
+   ]
+  },
+  {
+   "id": "mRNA_exit",
+   "target": [
+    248.96388254900143,
+    244.64541135369893,
+    257.7839601336265
+   ],
+   "up": [
+    0.8652412213506414,
+    -0.1730273214299108,
+    -0.4705519895977922
+   ],
+   "position": [
+    -3.8302980880020527,
+    293.13890209535003,
+    -224.8803350670824
+   ]
+  },
+  {
+   "id": "top",
+   "target": [
+    248.96388254900143,
+    244.64541135369893,
+    257.7839601336265
+   ],
+   "up": [
+    -0.19438871367761543,
+    -0.9809191702437734,
+    0.003257213998055479
+   ],
+   "position": [
+    722.2605888267183,
+    149.99751512772252,
+    0.38671493371543875
+   ]
+  },
+  {
+   "id": "bottom",
+   "target": [
+    248.96388254900143,
+    244.64541135369893,
+    257.7839601336265
+   ],
+   "up": [
+    0.19438871367761543,
+    0.9809191702437734,
+    -0.003257213998055479
+   ],
+   "position": [
+    -224.33282372871543,
+    339.29330757967534,
+    515.1812053335376
+   ]
+  }
+ ]
+}

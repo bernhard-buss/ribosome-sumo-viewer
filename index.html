@@ -42,6 +42,11 @@
   .user button:hover { border-color: #9aa3af; }
   .user code { background: #eef0f3; padding: 0 3px; border-radius: 3px; }
   .note { font-size: 11.5px; color: var(--muted); margin-top: 6px; }
+  #structure { width: 100%; font-weight: 600; }
+  #structinfo a, .note a { color: var(--accent); }
+  #partnerswrap { display: block; font-size: 12.5px; margin-top: 6px; } #partnerswrap[hidden] { display: none; }
+  .ptag { font-size: 10.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 0 5px; margin-left: 4px; }
+  #detail .others a { white-space: nowrap; }
   #userblock.drag { outline: 2px dashed var(--accent); outline-offset: -4px; }
   .dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; border: 1px solid rgba(0,0,0,.35); vertical-align: -1px; margin-right: 5px; }
   .filters { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
@@ -123,8 +128,11 @@
   .stable td { padding: 5px 8px; border-bottom: 1px solid #eef0f3; white-space: normal; vertical-align: top; }
   .stable .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .stable tr.sig td { background: #f7f5fc; }
+  .stable tr[data-site] { cursor: pointer; } .stable tr[data-site]:hover td { background: #f1f0f8; }
   .stable button { font: inherit; font-size: 12px; padding: 1px 9px; border: 1px solid var(--line); background: #fff; border-radius: 5px; cursor: pointer; color: var(--accent); }
   .stable button:hover { border-color: var(--accent); }
+  .linkbtn { font: inherit; font-size: 12px; padding: 1px 9px; border: 1px solid var(--line); background: #fff; border-radius: 5px; cursor: pointer; color: var(--accent); }
+  .linkbtn:hover { border-color: var(--accent); }
   .mbar { display: inline-block; width: 70px; height: 8px; background: #eceef2; border-radius: 2px; vertical-align: 1px; margin-right: 6px; overflow: hidden; }
   .mbar i { display: block; height: 100%; background: var(--accent); }
   .mbar.other i { background: #9aa3af; }
@@ -147,7 +155,7 @@
 <body>
 <header>
   <h1>Ribosome SUMO Viewer</h1>
-  <span class="sub">SUMO2/3 acceptor sites of the ribosomal proteins on the human 80S ribosome, in control, MG132 and heat shock</span>
+  <span class="sub">SUMO2/3 acceptor sites of the ribosomal proteins on structures of the human ribosome, in control, MG132 and heat shock</span>
   <span class="hdr-right">
     <a class="verchip" href="#help/changelog" data-help="changelog" title="Version — open the changelog"><span id="ver"></span><span id="vernew" hidden>new</span></a>
     <button id="statsbtn" title="Statistics on the sites">Statistics</button>
@@ -157,6 +165,13 @@
 <main>
   <div id="stage"><div id="viewer"></div><div id="busy">Loading the structure…</div><a class="stagehelp" href="#help/view/mouse" data-help="view/mouse" title="Help: mouse and touch controls">ⓘ rotate · zoom · move</a></div>
   <aside>
+    <div class="block" id="structblock">
+      <h2>Structure <a class="hl" href="#help/structures/choose" data-help="structures/choose" title="Help: the structures">ⓘ</a></h2>
+      <select id="structure" aria-label="Structure"></select>
+      <div class="note" id="structinfo"></div>
+      <label id="partnerswrap" hidden><input type="checkbox" id="partners" checked> <span id="partnerslabel">Show factors, tRNA and mRNA</span>
+        <a class="hl" href="#help/structures/partners" data-help="structures/partners" title="Help: partners of the ribosome">ⓘ</a></label>
+    </div>
     <div class="block">
       <h2>Colour the sites by <a class="hl" href="#help/colour/mg132" data-help="colour/mg132" title="Help: this colouring" id="sitehelp">ⓘ</a></h2>
       <div class="seg" id="modes"></div>
@@ -168,7 +183,7 @@
       <div id="plegend" class="legend"></div>
     </div>
     <div class="block">
-      <h2>View <a class="hl" href="#help/view/views" data-help="view/views" title="Help: the six standard views">ⓘ</a></h2>
+      <h2>View <a class="hl" href="#help/view/views" data-help="view/views" title="Help: the standard views">ⓘ</a></h2>
       <div class="seg" id="views"></div>
     </div>
     <div class="block" id="userblock">
@@ -207,7 +222,7 @@
 </main>
 <footer>
   Sites and quantification: Hendriks et al., <a href="https://doi.org/10.1038/s41467-018-04957-4">Nat Commun 9:2456 (2018)</a>, CC BY 4.0 ·
-  Structure: <a href="https://www.rcsb.org/structure/8QOI">PDB 8QOI</a> (Holvec et al., Nat Struct Mol Biol 2024), fetched from the PDB by your browser ·
+  Structure: <span id="footstruct"></span>, fetched from the PDB by your browser ·
   Rendering: <a href="https://molstar.org">Mol*</a>. Nothing is uploaded.
 </footer>
 
@@ -238,9 +253,10 @@
 
         <section data-topic="start" data-title="Quick start">
           <article data-entry="what"><h3>What this shows</h3>
-            <p>The human 80S ribosome with the SUMO2/3 acceptor lysines of its proteins. <span data-n="sites"></span> sites on <span data-n="proteins"></span> ribosomal proteins are listed; <span data-n="modelled"></span> of them have coordinates in the structure and are drawn as enlarged, coloured residues. Each site carries its response to proteasome inhibition (MG132) and to heat shock, and a description of where the lysine sits in the assembled ribosome.</p></article>
-          <article data-entry="steps"><h3>Five steps</h3>
+            <p>The human ribosome with the SUMO2/3 acceptor lysines of its proteins, on a choice of structures: the mature 80S, translating and idle ribosomes, two collided ribosomes, and assembly intermediates of both subunits. On the structure shown now (<span data-struct="short"></span>, PDB <span data-struct="id"></span>) <span data-n="sites"></span> sites on <span data-n="proteins"></span> ribosomal proteins are listed; <span data-n="modelled"></span> of them have coordinates and are drawn as enlarged, coloured residues. Each site carries its response to proteasome inhibition (MG132) and to heat shock, and a description of where the lysine sits in the particle.</p></article>
+          <article data-entry="steps"><h3>Six steps</h3>
             <ol>
+              <li><b>Choose a structure</b> under <i>Structure</i>; the page opens on the mature 80S. <a data-help="structures/choose" href="#help/structures/choose">Structures</a>.</li>
               <li><b>Look around.</b> Drag to rotate, scroll to zoom. <a data-help="view/mouse" href="#help/view/mouse">All controls</a>.</li>
               <li><b>Choose what the colours mean</b> under <i>Colour the sites by</i>. The default is the MG132 fold change. <a data-help="colour/mg132" href="#help/colour/mg132">Colourings</a>.</li>
               <li><b>Jump to a standard view</b> — the 40S or 60S solvent side, the two faces between the subunits, top, bottom. <a data-help="view/views" href="#help/view/views">Views</a>.</li>
@@ -248,10 +264,32 @@
               <li><b>Add your own numbers.</b> <i>Load a table…</i> colours proteins or sites with values from a file on your computer; the file stays on your computer. <a data-help="data/format" href="#help/data/format">Your data</a>.</li>
             </ol></article>
           <article data-entry="reading"><h3>Reading the picture</h3>
-            <p>Every atom is drawn as a sphere. rRNA is light grey, the proteins of the small (40S) subunit sand, those of the large (60S) subunit blue-grey. SUMO sites are drawn larger and in colour, so that a single lysine remains visible when the whole ribosome is in view.</p>
+            <p>Every atom is drawn as a sphere. rRNA is light grey, the proteins of the small (40S) subunit sand, those of the large (60S) subunit blue-grey. Factors bound to the ribosome are olive, tRNA teal, mRNA black. SUMO sites are drawn larger and in colour, so that a single lysine remains visible when the whole ribosome is in view.</p>
             <p>The enlargement is a marker, not the size of the residue. A site that is buried inside the particle shows only where its marker reaches the surface, or not at all; the table lists it all the same, and selecting it moves the view to its position.</p></article>
           <article data-entry="keys"><h3>Keyboard</h3>
             <p><kbd>?</kbd> opens this help, <kbd>Esc</kbd> closes it. Every <span class="hl">ⓘ</span> on the page opens the help at the entry for the control next to it. The address of an open entry (for example <code>#help/env/classes</code>) can be copied and shared.</p></article>
+        </section>
+
+        <section data-topic="structures" data-title="Structures" hidden>
+          <article data-entry="choose"><h3>Choosing a structure</h3>
+            <p>A structure is one state of the ribosome, and a lysine that is enclosed in one state can be free in another. The <i>Structure</i> menu therefore offers several, all of the human ribosome and all from the PDB:</p>
+            <div id="hstructs"></div>
+            <p>Choosing a structure replaces the picture, the site table and the Statistics window. The colouring, the selected site and a table of your own carry over. The address then ends in <code>?s=</code> and the PDB code (for example <code>?s=8G60</code>) and can be shared; without it the page opens on the mature 80S.</p>
+            <p>The <b>mature 80S</b> is the reference: it has the highest resolution, and the statistics on regions, clustering and hotspots are computed on it. The <b>decoding 80S</b> adds mRNA, two tRNAs and eEF1A, and resolves the L1 stalk (RPL10A), RPL10 and part of the P stalk base (RPL12), which the mature structure does not. The <b>idle 80S</b> carries eEF2 and SERBP1, the state of ribosomes that are not translating. The <b>collided disome</b> is a stalled ribosome with the next ribosome run into it, bound by the kinase ZAK and by EDF1. The <b>pre-60S</b> and <b>pre-40S</b> particles are subunits in the making, with assembly factors in place of what is still to come.</p></article>
+          <article data-entry="sites"><h3>One site in several structures</h3>
+            <p>Each structure lists the sites of the ribosomal proteins it contains. The numbers differ because the structures differ: a precursor of the large subunit has no 40S proteins, the decoding ribosome has stalk proteins that the mature structure lacks, and the disome holds every protein twice, so each of its sites appears once for the stalled and once for the collided ribosome.</p>
+            <p>The detail card of a selected site has a line <i>Elsewhere</i>: the environment of the same lysine in each of the other structures, or <i>not modelled</i> where the residue has no coordinates there, or <i>protein absent</i>. A name in that line opens that structure with the same site selected and in view. For the disome the line gives the better-resolved of the two copies.</p>
+            <p>The filter <i>resolved here, not in the mature 80S</i> lists what a structure adds to the reference.</p></article>
+          <article data-entry="partners"><h3>Factors, tRNA and mRNA</h3>
+            <p>Everything in a structure that is not ribosomal protein or rRNA is a partner: translation and assembly factors (olive), tRNA (teal), mRNA (black). The checkbox under the <i>Structure</i> menu takes them out of the picture, which uncovers the sites beneath them; in the nucleolar pre-60S, factors cover much of the surface.</p>
+            <p>In the disome the collided ribosome is drawn in paler tones than the stalled one, so that the two can be told apart.</p>
+            <p>A site counts as <b>near a partner</b> when its side-chain nitrogen (NZ) is within <span data-s="partner_near"></span> Å of an atom of a factor, a tRNA, the mRNA or, in the disome, of a protein or rRNA of the other ribosome. The nearest partner and the distance are in the detail card (<i>Partner</i>), in the tooltip, and can be coloured and filtered. A site is <b>covered by a partner</b> when its NZ would be exposed on the ribosome alone and is enclosed once the partners are in place.</p></article>
+          <article data-entry="orientation"><h3>Orientation</h3>
+            <p>Every single-particle structure is superposed on the mature 80S through the phosphorus atoms of the rRNA they share, and its view buttons use the directions of the mature 80S. The same button therefore shows the same face of the ribosome in every structure. In a precursor of one subunit, a view named after the other subunit looks at the face where that subunit will bind.</p>
+            <p>The disome has views of its own; see <a data-help="view/views" href="#help/view/views">the standard views</a>.</p></article>
+          <article data-entry="compare"><h3>Comparing with the mature 80S</h3>
+            <p>Two tools set a structure against the reference. The colouring <i>Environment in the mature 80S</i> paints each site with the environment the same lysine has in the mature ribosome; switching between it and <i>Lysine environment</i> shows what changes. The filter <i>exposed here, enclosed in the mature 80S</i> lists the sites that are exposed in the structure shown and buried or in contact with rRNA in the mature one.</p>
+            <p>For the assembly intermediates the Statistics window counts these cases and compares them with the other lysines: see <a data-help="stats/precursor" href="#help/stats/precursor">Against the mature 80S</a>.</p></article>
         </section>
 
         <section data-topic="view" data-title="The structure view" hidden>
@@ -263,8 +301,8 @@
               <tr><td>Identify a residue</td><td colspan="2">hover over it: protein, chain and residue appear at the bottom right of the structure; on a SUMO site also its name, environment and MG132 response</td></tr>
               <tr><td>Centre on a residue</td><td colspan="2">click it</td></tr></table>
             <p>The complete list of key and mouse bindings is under <i>Settings / Controls Info</i> in the toolbar at the right edge of the structure.</p></article>
-          <article data-entry="views"><h3>The six standard views</h3>
-            <p>The view buttons turn the ribosome to fixed orientations, derived from the structure itself so that they mean the same for every colouring:</p>
+          <article data-entry="views"><h3>The standard views</h3>
+            <p>The view buttons turn the ribosome to fixed orientations, derived from the structure itself so that they mean the same for every colouring and, through superposition, for every structure:</p>
             <table class="htable"><tr><th>View</th><th>You look at</th></tr>
               <tr><td>40S solvent side</td><td>the outer face of the small subunit, head at the top; the large subunit is behind it</td></tr>
               <tr><td>60S solvent side</td><td>the outer face of the large subunit, central protuberance at the top; includes the exit of the peptide tunnel</td></tr>
@@ -272,10 +310,16 @@
               <tr><td>mRNA exit side</td><td>the opposite side</td></tr>
               <tr><td>top</td><td>down onto the 40S head and the central protuberance</td></tr>
               <tr><td>bottom</td><td>up from below</td></tr></table>
-            <p>The subunit axis runs through the centres of the two subunits; "up" is the 40S head (the position of RACK1) or, for the 60S view, the central protuberance (5S rRNA).</p></article>
+            <p>The subunit axis runs through the centres of the two subunits; "up" is the 40S head (the position of RACK1) or, for the 60S view, the central protuberance (5S rRNA).</p>
+            <p>The collided disome has six views of its own, laid out along the line that joins the two ribosomes:</p>
+            <table class="htable"><tr><th>View</th><th>You look at</th></tr>
+              <tr><td>40S side</td><td>both ribosomes side by side, from the side their small subunits face; the interface between the two 40S subunits, with ZAK, is in the middle</td></tr>
+              <tr><td>60S side</td><td>the same from behind</td></tr>
+              <tr><td>edge-on, first and second side</td><td>both ribosomes side by side, turned a quarter around the line that joins them</td></tr>
+              <tr><td>from the stalled / collided ribosome</td><td>along that line: the named ribosome is in front and hides the other</td></tr></table></article>
           <article data-entry="toolbar"><h3>The toolbar at the right edge</h3>
-            <p>These buttons belong to Mol*, the program that draws the structure. From the top: <i>Reset Zoom</i> brings the whole ribosome back into view; <i>Screenshot</i> saves the current picture as an image; <i>Toggle Controls Panel</i> opens Mol*'s own panels (sequence, components, measurements) for anything this page does not offer; <i>Toggle Full Screen</i>; <i>Settings / Controls Info</i>; <i>Illumination</i>.</p>
-            <p>Changes made in Mol*'s panels are replaced when a colouring is chosen or a table is loaded.</p></article>
+            <p>These buttons belong to Mol*, the program that draws the structure. From the top: <i>Reset Zoom</i> brings the whole particle back into view; <i>Screenshot</i> saves the current picture as an image; <i>Toggle Controls Panel</i> opens Mol*'s own panels (sequence, components, measurements) for anything this page does not offer; <i>Toggle Full Screen</i>; <i>Settings / Controls Info</i>; <i>Illumination</i>.</p>
+            <p>Changes made in Mol*'s panels are replaced when a structure or a colouring is chosen or a table is loaded.</p></article>
           <article data-entry="selection"><h3>The selected site</h3>
             <p>Selecting a row in the table centres the view on that lysine and outlines it in green. The outline stays until another site is selected.</p></article>
         </section>
@@ -289,11 +333,15 @@
             <p>Switching between the three Z-score colourings shows the same sites under each condition: nearly all are low in control and rise with MG132; a subset rises with heat shock. A Z-score compares conditions within one site. It does not compare one site with another; the fold change does.</p>
             <p>Sites without quantification are dark grey.</p></article>
           <article data-entry="environment"><h3>Lysine environment</h3>
-            <p>Colours each site by where its lysine sits in the assembled ribosome: exposed, in contact with rRNA, or buried. The definitions are under <a data-help="env/classes" href="#help/env/classes">Lysine environment</a>.</p></article>
+            <p>Colours each site by where its lysine sits in the structure shown: exposed, in contact with rRNA, or buried. The definitions are under <a data-help="env/classes" href="#help/env/classes">Lysine environment</a>.</p></article>
+          <article data-entry="environment_ref"><h3>Environment in the mature 80S</h3>
+            <p>Offered for every structure other than the mature 80S. Each site is painted with the environment that the same lysine has in the mature ribosome; a site that has no coordinates there, or whose protein is not part of it, is dark grey. Compare with <i>Lysine environment</i> to see which lysines change: see <a data-help="structures/compare" href="#help/structures/compare">Comparing with the mature 80S</a>.</p></article>
+          <article data-entry="partner"><h3>Near a partner</h3>
+            <p>Offered when the structure holds partners. Sites within <span data-s="partner_near"></span> Å of a factor are wine red, of a tRNA green, of the mRNA indigo, and of the other ribosome of a disome rose; all other sites are dark grey. A site near several is given the colour of the nearest. The site colours differ from the colours of the partners themselves so that a site remains visible against the factor it touches. Definitions: <a data-help="structures/partners" href="#help/structures/partners">Factors, tRNA and mRNA</a>.</p></article>
           <article data-entry="region"><h3>Region</h3>
             <p>Colours each site by the part of the ribosome it lies in: 40S head, 40S body, the central protuberance of the 60S, or the 60S body. How the regions are drawn is described under <a data-help="stats/regions" href="#help/stats/regions">Regions</a>.</p></article>
           <article data-entry="hotspot"><h3>Hotspots</h3>
-            <p>Shows the groups of MG132-responsive sites that lie close together, each group in its own colour; all other sites are dark grey. A hotspot is a description of where the modification is dense, not a tested unit: see <a data-help="stats/hotspots" href="#help/stats/hotspots">Hotspots</a>.</p></article>
+            <p>Shows the groups of MG132-responsive sites that lie close together, each group in its own colour; all other sites are dark grey. A hotspot is a description of where the modification is dense, not a tested unit: see <a data-help="stats/hotspots" href="#help/stats/hotspots">Hotspots</a>. The hotspots are defined on the mature 80S and keep their number and colour in every structure.</p></article>
           <article data-entry="comod"><h3>Other modifications</h3>
             <p>Marks the sites whose lysine UniProt also records as carrying another modification: ubiquitin, an acetyl or a succinyl group. A site with several is shown in the colour of the first of these that applies; the detail card lists all of them. Sites without such a record are dark grey. See <a data-help="stats/comod" href="#help/stats/comod">Other modifications</a>.</p></article>
           <article data-entry="significance"><h3>q-values and significance</h3>
@@ -307,23 +355,23 @@
         <section data-topic="env" data-title="Lysine environment" hidden>
           <article data-entry="classes"><h3>The four environments</h3>
             <table class="htable"><tr><th>Environment</th><th>Definition</th><th>Sites</th></tr>
-              <tr><td><span class="dot" data-env="exposed"></span>exposed</td><td>the side-chain nitrogen (NZ) has at least 10 Å² of solvent-accessible surface in the assembled ribosome and is not within 4 Å of rRNA</td><td data-n="env:exposed"></td></tr>
+              <tr><td><span class="dot" data-env="exposed"></span>exposed</td><td>the side-chain nitrogen (NZ) has at least 10 Å² of solvent-accessible surface in the structure shown and is not within 4 Å of rRNA</td><td data-n="env:exposed"></td></tr>
               <tr><td><span class="dot" data-env="rRNA contact"></span>rRNA contact</td><td>NZ lies within 4 Å of an rRNA atom, typically a phosphate</td><td data-n="env:rRNA contact"></td></tr>
-              <tr><td><span class="dot" data-env="buried"></span>buried</td><td>neither: NZ has less than 10 Å² of accessible surface and no rRNA contact; it is covered by protein</td><td data-n="env:buried"></td></tr>
+              <tr><td><span class="dot" data-env="buried"></span>buried</td><td>neither: NZ has less than 10 Å² of accessible surface and no rRNA contact; it is covered by protein, or by a partner bound to the ribosome</td><td data-n="env:buried"></td></tr>
               <tr><td><span class="dot" style="background:#bbb"></span>not modelled</td><td>the residue is part of the protein in the structure but has no coordinates: it lies in a tail or loop too mobile to be resolved</td><td data-n="env:not modelled"></td></tr></table></article>
           <article data-entry="meaning"><h3>What the environment tells you</h3>
-            <p>An exposed lysine, and one in an unresolved mobile segment, can be reached on an assembled ribosome. A lysine whose nitrogen is enclosed by rRNA or by neighbouring proteins cannot carry SUMO in the particle as it is modelled here; a modification found on it points to the protein outside a mature ribosome — free, during assembly or disassembly — or to a state of the ribosome that differs locally from this structure.</p>
-            <p>The detail card gives the accessible surface of NZ twice: in the assembled ribosome and in the protein taken on its own. A lysine that is exposed in the free protein and enclosed in the ribosome is covered by the assembly.</p></article>
+            <p>An exposed lysine, and one in an unresolved mobile segment, can be reached on the particle. A lysine whose nitrogen is enclosed by rRNA or by neighbouring proteins cannot carry SUMO in the particle as it is modelled here; a modification found on it points to the protein outside this particle — free, during assembly or disassembly — or to another state of the ribosome. The other structures show some of these states: the line <i>Elsewhere</i> of the detail card gives the environment of the same lysine in each of them.</p>
+            <p>The detail card gives the accessible surface of NZ twice: in the structure shown and in the protein taken on its own. A lysine that is exposed in the free protein and enclosed in the ribosome is covered by the assembly.</p></article>
           <article data-entry="method"><h3>How it is computed</h3>
-            <p>From the atomic model, without water, ions and ligands. Accessible surface: a probe of 1.4 Å radius rolled over all protein and rRNA atoms (FreeSASA). rRNA contact: the smallest distance from NZ to any rRNA atom. "In the free protein" uses the atoms of that one protein chain only, in the conformation it has in the ribosome.</p></article>
+            <p>From the atomic model, without water, ions and ligands. Accessible surface: a probe of 1.4 Å radius rolled over all protein and RNA atoms of the structure, partners included (FreeSASA). rRNA contact: the smallest distance from NZ to any rRNA atom. "In the free protein" uses the atoms of that one protein chain only, in the conformation it has in the ribosome.</p></article>
           <article data-entry="limits"><h3>Limits</h3>
-            <p>The structure is one state of the ribosome: a vacant 80S without mRNA, tRNA or factors. Surfaces that are free here can be occupied in other states, and flexible regions move. The thresholds (4 Å, 10 Å²) are conventions; the detail card shows the underlying numbers. SUMO is a protein of about 11 kDa, far larger than the probe: "exposed" means reachable by solvent, which is necessary for modification but does not prove that the conjugation machinery fits.</p></article>
+            <p>Each structure is one state of the ribosome, prepared and selected for a particular question; surfaces that are free in it can be occupied in other states, and flexible regions move. The mature 80S is vacant: no mRNA, tRNA or factors. The thresholds (4 Å, 10 Å²) are conventions; the detail card shows the underlying numbers. SUMO is a protein of about 11 kDa, far larger than the probe: "exposed" means reachable by solvent, which is necessary for modification but does not prove that the conjugation machinery fits.</p></article>
         </section>
 
         <section data-topic="table" data-title="Site table and details" hidden>
           <article data-entry="columns"><h3>Columns</h3>
             <table class="htable"><tr><th>Column</th><th>Content</th></tr>
-              <tr><td>Site</td><td>gene symbol and position of the lysine in the UniProt sequence</td></tr>
+              <tr><td>Site</td><td>gene symbol and position of the lysine in the UniProt sequence; in the disome also the ribosome (stalled or collided) the copy belongs to</td></tr>
               <tr><td>Region</td><td>40S head, 40S body, 60S CP (central protuberance) or 60S body; see <a data-help="stats/regions" href="#help/stats/regions">Regions</a></td></tr>
               <tr><td>Environment</td><td>see <a data-help="env/classes" href="#help/env/classes">the four environments</a></td></tr>
               <tr><td>log2 FC</td><td>log2 fold change of SUMO2/3 modification, MG132 against control</td></tr>
@@ -331,18 +379,20 @@
               <tr><td>Z heat</td><td>Z-score in heat shock</td></tr>
               <tr><td><i>your column</i></td><td>after a table is loaded: the value of the column that is shown in the structure, for the site or, failing that, for its protein</td></tr></table></article>
           <article data-entry="filters"><h3>Filtering and sorting</h3>
-            <p>The search box keeps the sites whose name contains the text (<code>RPS3</code>, <code>RACK1 K2</code>). The first menu restricts to a subunit or one of its regions, the second to one environment, the third to sites in a hotspot (any, or one in particular), at the subunit interface, or with another modification recorded. The checkbox keeps the sites that change significantly with MG132. The counter shows how many sites remain.</p>
+            <p>The search box keeps the sites whose name contains the text (<code>RPS3</code>, <code>RACK1 K2</code>). The first menu restricts to a subunit or one of its regions, the second to one environment, the third to sites in a hotspot (any, or one in particular), at the subunit interface, near a partner, on one ribosome of the disome, changed against the mature 80S, or with another modification recorded; it offers what applies to the structure shown. The checkbox keeps the sites that change significantly with MG132. The counter shows how many sites remain.</p>
             <p>The <i>Show</i> buttons of the Statistics window set these filters and the matching colouring for you.</p>
             <p>Click a column header to sort by it; click again to reverse. Number columns start with the largest value.</p></article>
           <article data-entry="select"><h3>Selecting a site</h3>
-            <p>Click a row. The structure centres on the lysine and outlines it, and the details appear below the table. Rows in grey are sites that are not modelled in the structure; they have details but no position to centre on.</p></article>
+            <p>Click a row. The structure centres on the lysine and outlines it, and the details appear below the table. Rows in grey are sites that are not modelled in the structure shown; they have details but no position to centre on. The line <i>Elsewhere</i> of the details tells whether another structure resolves them.</p></article>
           <article data-entry="details"><h3>The site details</h3>
             <table class="htable"><tr><th>Line</th><th>Content</th></tr>
-              <tr><td>Protein</td><td>gene symbol with a link to its UniProt entry, subunit, and the chain name in PDB 8QOI</td></tr>
-              <tr><td>Environment</td><td>the class, and the accessible surface of NZ in the assembled ribosome and in the free protein</td></tr>
+              <tr><td>Protein</td><td>gene symbol with a link to its UniProt entry, subunit, and the chain name in the PDB entry shown</td></tr>
+              <tr><td>Environment</td><td>the class, and the accessible surface of NZ in the structure shown and in the free protein</td></tr>
               <tr><td>Nearest rRNA</td><td>distance from NZ to the closest rRNA atom, with rRNA, nucleotide and atom</td></tr>
+              <tr><td>Partner</td><td>the nearest factor, tRNA, mRNA or other ribosome within <span data-s="partner_near"></span> Å, with the distance; see <a data-help="structures/partners" href="#help/structures/partners">partners</a></td></tr>
               <tr><td>Region</td><td>the region, the distance from NZ to the other subunit, and the hotspot the site belongs to, if any</td></tr>
               <tr><td>Also recorded</td><td>other modifications that UniProt records at this lysine</td></tr>
+              <tr><td>Elsewhere</td><td>the environment of the same lysine in each of the other structures; a name opens that structure at this site. See <a data-help="structures/sites" href="#help/structures/sites">one site in several structures</a></td></tr>
               <tr><td>MG132, Heat shock</td><td>log2 fold change against control and q-value</td></tr>
               <tr><td>Z-scores</td><td>in the three conditions, and the class used in the source analysis (both up, MG132-preferring, heat-shock-preferring, both down)</td></tr>
               <tr><td>Your data</td><td>all values of your table for this site and its protein</td></tr></table></article>
@@ -351,7 +401,17 @@
         <section data-topic="stats" data-title="Statistics" hidden>
           <article data-entry="what"><h3>What is compared, and where the numbers come from</h3>
             <p>A SUMO site is a lysine. Every question in the Statistics window is therefore asked against the other lysines of the same proteins: <span data-s="background.sites"></span> sites on <span data-s="background.proteins"></span> proteins against <span data-s="background.other_lysines"></span> lysines of those proteins that are not sites.</p>
-            <p>The numbers are computed once, by the analysis that produces this viewer's data, from the published site catalogue, the structure and UniProt. The window shows these stored results; it does not recompute them when the table is filtered or a table of your own is loaded.</p></article>
+            <p>The numbers are computed once, by the analysis that produces this viewer's data, from the published site catalogue, the structures and UniProt. The window shows these stored results; it does not recompute them when the table is filtered or a table of your own is loaded.</p>
+            <p>The window follows the structure shown. For the mature 80S it holds the five analyses described in the entries below; for the other structures it holds what that state adds: see <a data-help="stats/state" href="#help/stats/state">the other structures</a>.</p></article>
+          <article data-entry="state"><h3>Statistics of the other structures</h3>
+            <p><b>This structure</b> counts, per ribosome, the ribosomal proteins present, the sites listed and those with coordinates, their environments, and the sites covered by a partner; it names the sites that have coordinates here and not in the mature 80S. For single particles it gives the fit of the superposition on the mature 80S (root-mean-square distance of the rRNA phosphorus atoms used).</p>
+            <p>A click on a site in any table of the window closes it and selects that site.</p></article>
+          <article data-entry="partners"><h3>Near the partners</h3>
+            <p>For each kind of partner in the structure, the table counts the SUMO sites and the other lysines of the same proteins whose NZ lies within <span data-s="partner_near"></span> Å of it, among those with coordinates, and gives the odds ratio with its 95 % interval and p-value from Fisher's exact test. q adjusts the p-values of all such tests across all structures (Benjamini–Hochberg). In the disome each ribosome is tested separately. The second table lists the sites concerned.</p>
+            <p>A lysine next to a factor in a structure can be covered by that factor, or can be where the factor is modified from; the distance alone does not tell which. The counts are small, and the sites of one protein (several of them on RACK1 in the disome) are not independent.</p></article>
+          <article data-entry="precursor"><h3>Against the mature 80S</h3>
+            <p>For the assembly intermediates. The lysines whose NZ is enclosed in the mature ribosome are followed into the precursor: exposed there, still enclosed, not modelled, or on a protein that has not yet joined the particle. The first table gives these counts for the SUMO sites and for the other lysines of the proteins of that subunit; the line below it tests, among the lysines resolved in both, whether the SUMO sites are exposed more often than the others (Fisher's exact test). The last table lists the SUMO sites that the precursor exposes.</p>
+            <p>An enclosed site that is exposed in a precursor could be modified before the ribosome is complete. A precursor structure is one snapshot of a pathway with many intermediates, and the earliest ones are not covered.</p></article>
           <article data-entry="access"><h3>Modified lysines against the other lysines</h3>
             <p>For a yes/no property (modelled, in contact with rRNA, NZ enclosed, at the subunit interface) the table gives the share of SUMO sites and of other lysines that have it, and the odds ratio with its 95 % interval from Fisher's exact test. For a measured quantity (accessible surface of NZ) it gives the two medians and the shift between the groups (Hodges–Lehmann estimate, Wilcoxon rank-sum test).</p>
             <p>q is the p-value adjusted for the six questions of a comparison (Benjamini–Hochberg). Rows with q &lt; 0.05 are tinted. The second table asks the same questions of the MG132-responsive sites against the sites that do not respond.</p></article>
@@ -372,7 +432,7 @@
             <p>From the cross-link and modified-residue records of UniProt for the proteins of the structure. The table gives, per modification, the number of lysines that carry it, how many of them are SUMO sites, and the odds ratio against the lysines without it. UniProt's own SUMO records are not used here: they largely come from the same kind of experiment as the site catalogue.</p>
             <p>A lysine found modified in one proteomics experiment is more likely to be found in another, whatever the modifier. An overlap therefore shows that the same lysines are used; it does not show that one modification depends on the other.</p></article>
           <article data-entry="limits"><h3>Limits</h3>
-            <p>Sites on one protein are not independent observations, so a single heavily modified protein can carry a result; the tests "with proteins as units" guard against this where it matters. Lysines that mass spectrometry cannot detect are counted as unmodified. The structure is one state of the ribosome. A p-value near 0.05 in a table of many tests is weak evidence.</p></article>
+            <p>Sites on one protein are not independent observations, so a single heavily modified protein can carry a result; the tests "with proteins as units" guard against this where it matters. Lysines that mass spectrometry cannot detect are counted as unmodified. Each structure is one state of the ribosome. A p-value near 0.05 in a table of many tests is weak evidence.</p></article>
         </section>
 
         <section data-topic="data" data-title="Your data" hidden>
@@ -385,7 +445,7 @@
               <tr><td>position<br><small>optional</small></td><td><code>position</code>, <code>pos</code>, <code>site</code>, <code>lysine</code>, <code>residue</code></td><td>the lysine's position in the UniProt sequence (214 or K214). Leave the cell empty for a value that belongs to the whole protein.</td></tr>
               <tr><td>values</td><td>every other column</td><td>numbers or text; the header becomes the name of the colouring</td></tr></table></article>
           <article data-entry="matching"><h3>How rows are matched</h3>
-            <p>A row <b>without a position</b> is a protein value and colours the whole protein. A row <b>with a position</b> is a site value and colours that lysine if it is one of the listed SUMO sites. After loading, the box reports how many proteins and sites were matched, how many rows name a protein that is not in this structure, and how many positions are not among the listed sites.</p>
+            <p>A row <b>without a position</b> is a protein value and colours the whole protein. A row <b>with a position</b> is a site value and colours that lysine if it is one of the listed SUMO sites. After loading, the box reports how many proteins and sites were matched, how many rows name a protein that is not in this structure, and how many positions are not among the listed sites. When another structure is chosen the table is matched again; factors of the structure can be coloured as well, by gene symbol or accession. In the disome a value colours both copies.</p>
             <p>One table may contain both kinds of rows. If a protein or site occurs twice, the last row counts.</p></article>
           <article data-entry="scales"><h3>Colour scales</h3>
             <table class="htable"><tr><th>Column content</th><th>Scale</th></tr>
@@ -397,20 +457,21 @@
           <article data-entry="where"><h3>Where your values appear</h3>
             <p>In the structure and its legend; as an extra, sortable column of the site table (the site's own value, or its protein's); and in the detail card of a selected site, which lists all columns. <i>Remove</i> takes the table out again.</p></article>
           <article data-entry="limits"><h3>Limits</h3>
-            <p>One table at a time. Site values are shown for the listed SUMO sites only, not for other lysines. Proteins that are absent from the structure — the mobile stalks, see <a data-help="methods/missing" href="#help/methods/missing">what is not shown</a> — cannot be coloured.</p></article>
+            <p>One table at a time. Site values are shown for the listed SUMO sites only, not for other lysines. Proteins that are absent from the structure shown cannot be coloured; which proteins a structure lacks is under <a data-help="methods/missing" href="#help/methods/missing">what is not shown</a>.</p></article>
         </section>
 
         <section data-topic="methods" data-title="Data and methods" hidden>
           <article data-entry="sites"><h3>Sites and quantification</h3>
-            <p>Hendriks IA, Lyon D, Su D, Skotte NH, Daniel JA, Jensen LJ, Nielsen ML. <i>Site-specific characterization of endogenous SUMOylation across species and organs.</i> Nat Commun 9:2456 (2018), Supplementary Data 1, CC BY 4.0. Endogenous SUMO2/3 sites of HEK293 cells in control, after MG132 and after heat shock, in triplicate; Z-scores, log2 fold changes and q-values are used as published. The viewer shows the sites of the cytosolic ribosomal proteins that are part of the structure.</p></article>
-          <article data-entry="structure"><h3>Structure</h3>
-            <p>PDB <a href="https://www.rcsb.org/structure/8QOI" target="_blank" rel="noopener">8QOI</a>: human 80S ribosome by cryo-EM at 1.9 Å (Holvec S et al., Nat Struct Mol Biol 31:1251, 2024); 75 proteins and four rRNAs. Your browser fetches the coordinates from the PDB each time; they are not stored with this page.</p></article>
+            <p>Hendriks IA, Lyon D, Su D, Skotte NH, Daniel JA, Jensen LJ, Nielsen ML. <i>Site-specific characterization of endogenous SUMOylation across species and organs.</i> Nat Commun 9:2456 (2018), Supplementary Data 1, CC BY 4.0. Endogenous SUMO2/3 sites of HEK293 cells in control, after MG132 and after heat shock, in triplicate; Z-scores, log2 fold changes and q-values are used as published. The viewer shows the sites of the cytosolic ribosomal proteins that are part of the structure shown.</p></article>
+          <article data-entry="structure"><h3>Structures</h3>
+            <p>All structures are cryo-EM models of the human ribosome from the PDB; the table under <a data-help="structures/choose" href="#help/structures/choose">Choosing a structure</a> lists them with their PDB codes, which link to the entries and their publications. The reference is PDB <a href="https://www.rcsb.org/structure/8QOI" target="_blank" rel="noopener">8QOI</a>: human 80S ribosome at 1.9 Å (Holvec S et al., Nat Struct Mol Biol 31:1251, 2024); 75 proteins and four rRNAs. Your browser fetches the coordinates from the PDB each time; they are not stored with this page.</p>
+            <p>Which chains are ribosomal proteins, which are factors, and which RNA is rRNA, tRNA or mRNA is read from the PDB entry. Chains for which an entry records no UniProt accession are identified by their sequence against the proteins of the reference.</p></article>
           <article data-entry="mapping"><h3>Placing sites on the structure</h3>
-            <p>Positions are UniProt sequence positions. They are converted to residues of the structure through the alignment that the PDB entry records for each chain, and every placed site was checked against the published sequence window (the seven residues on either side of the lysine agree with the structure).</p></article>
+            <p>Positions are UniProt sequence positions. They are converted to residues of a structure through the alignment that the PDB entry records for each chain, and every placed site was checked against the published sequence window (the seven residues on either side of the lysine agree with the structure).</p></article>
           <article data-entry="missing"><h3>What is not shown</h3>
-            <p>Proteins that are not part of 8QOI: the mobile stalks (uL1/RPL10A, uL10/RPLP0, P1, uL11/RPL12, uL16/RPL10) and the paralogues RPL7L1 and RPL26L1; their SUMO sites are not listed. Lysines in the ubiquitin moieties of RPS27A and UBA52, which are cleaved off before these proteins enter the ribosome. Sites of non-ribosomal proteins.</p></article>
+            <p>A structure lists the sites of the proteins it contains. The mature 80S lacks the mobile stalks (uL1/RPL10A, uL10/RPLP0, P1, uL11/RPL12, uL16/RPL10) and the paralogues RPL7L1 and RPL26L1; the decoding 80S resolves RPL10A, RPL12 and RPL10, and the pre-60S particles hold RPL7L1. The P-stalk proteins RPLP0 and RPLP1 have no side-chain coordinates in any of the structures, and RPL26L1 is in none. Not listed anywhere: lysines in the ubiquitin moieties of RPS27A and UBA52, which are cleaved off before these proteins enter the ribosome, and sites of non-ribosomal proteins, the factors included.</p></article>
           <article data-entry="software"><h3>Software</h3>
-            <p>Drawn with <a href="https://molstar.org" target="_blank" rel="noopener">Mol*</a> (Sehnal et al., Nucleic Acids Res 2021) from <a href="https://molstar.org/mol-view-spec/" target="_blank" rel="noopener">MolViewSpec</a> scenes. The files <code>data/scene_*.mvsj</code> also open in the stand-alone Mol* viewer. Structural annotation with gemmi and FreeSASA. This page is one HTML file without a build step; licence MIT.</p></article>
+            <p>Drawn with <a href="https://molstar.org" target="_blank" rel="noopener">Mol*</a> (Sehnal et al., Nucleic Acids Res 2021) from <a href="https://molstar.org/mol-view-spec/" target="_blank" rel="noopener">MolViewSpec</a> scenes. The files <code>data/&lt;PDB code&gt;/scene_*.mvsj</code> also open in the stand-alone Mol* viewer. Structural annotation with gemmi and FreeSASA. This page is one HTML file without a build step; licence MIT.</p></article>
         </section>
 
         <section data-topic="changelog" data-title="Changelog" hidden>
@@ -423,9 +484,12 @@
 
 <script src="https://cdn.jsdelivr.net/npm/molstar@5.12.0/build/viewer/molstar.js"></script>
 <script>
-const VERSION = "0.4.1";
+const VERSION = "0.5";
 const VIEW_LABELS = { "40S_solvent": "40S solvent side", "60S_solvent": "60S solvent side", "mRNA_entry": "mRNA entry side",
-                      "mRNA_exit": "mRNA exit side", "top": "top", "bottom": "bottom" };
+                      "mRNA_exit": "mRNA exit side", "top": "top", "bottom": "bottom",
+                      "side_40S": "40S side", "side_60S": "60S side", "across_1": "edge-on, first side", "across_2": "edge-on, second side",
+                      "along_stalled": "from the stalled ribosome", "along_collided": "from the collided ribosome" };
+const STRUCT_GROUPS = { Translation: "Mature and translating ribosomes", Collision: "Collided ribosomes", Assembly: "Assembly intermediates" };
 const ENV_ORDER = ["exposed", "rRNA contact", "buried", "not modelled"];
 const REGION_ORDER = ["40S head", "40S body", "60S central protuberance", "60S body"];
 const REGION_SHORT = { "60S central protuberance": "60S CP" };
@@ -436,8 +500,14 @@ const fmt = (v, d = 1) => v == null ? "–" : Number(v).toFixed(d);
 const fmtQ = v => v == null ? "–" : v === 0 ? "0" : v < 0.001 ? Number(v).toExponential(1) : Number(v).toFixed(3);
 
 let viewer, meta, sites, stats, template, selected = null, sort = { k: "lfc_mg132", dir: -1 };
-let siteMode = "mg132", protMode = "subunit";
+let structures, placement, refStats, sid, entry;   // the list of structures, each site's environment in each of them, the reference's statistics, the structure shown
+let siteMode = "mg132", protMode = "subunit", showPartners = true;
 let user = null;   // the table the visitor loaded: { name, cols, scales, protein: Map(label_asym -> row), site: Map("asym:seq" -> row), ... }
+let userRaw = null;   // its name and text, to match it again when another structure is chosen
+const multi = () => meta.particles.length > 1;
+const refId = () => structures.find(x => x.reference).id;
+const modelledEnv = e => e != null && e !== "not modelled";
+let PARTNER_NEAR = "";   // distance (Å) that counts as near a partner; read from the data
 const TOL = ["#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#CC6677", "#AA4499"];
 const UNSET = "#7A7A7A";
 const PROT_SEQ = ["#F7F7F7", "#ACD39E", "#5AAE61", "#1B7837"], PROT_DIV = ["#762A83", "#F7F7F7", "#1B7837"];   // Tol PRGn
@@ -477,10 +547,12 @@ function colourNodes(pairs) {          // [[selector, colour]] -> one colour nod
 function buildScene(camera) {
   const sc = structuredClone(template), nodes = [...walk(sc.root)];
   if (camera) sc.root.children.push({ kind: "camera", params: camera });
-  for (const n of nodes) if (n.params && n.params.uri && !/^[a-z]+:/i.test(n.params.uri)) n.params.uri = new URL("data/" + n.params.uri, location.href).href;
-  const comps = nodes.filter(n => n.kind === "component");
-  const rep = c => c.children.find(n => n.kind === "representation");
-  const protRep = rep(comps.find(c => c.params.selector === "protein")), siteRep = rep(comps.find(c => Array.isArray(c.params.selector)));
+  for (const n of nodes) if (n.params && n.params.uri && !/^[a-z]+:/i.test(n.params.uri)) n.params.uri = new URL(`data/${sid}/` + n.params.uri, location.href).href;
+  // the components carry their name in `custom.rsv`: rrna, proteins, partners (factors, tRNA, mRNA), sites
+  const part = name => nodes.find(n => n.kind === "component" && n.custom && n.custom.rsv === name);
+  const rep = c => c && c.children.find(n => n.kind === "representation");
+  const protRep = rep(part("proteins")), siteRep = rep(part("sites")), partnerRep = showPartners ? rep(part("partners")) : null;
+  if (!showPartners) for (const n of nodes) if (n.children) n.children = n.children.filter(c => !(c.custom && c.custom.rsv === "partners"));
   const fromUri = siteRep.children.find(n => n.kind === "color_from_uri");
   if (siteMode.startsWith("user:")) {
     const col = siteMode.slice(5), sc2 = user.scales.site[col];
@@ -489,7 +561,10 @@ function buildScene(camera) {
   } else fromUri.params.field_name = "color_" + siteMode;
   if (protMode.startsWith("user:")) {
     const col = protMode.slice(5), sc2 = user.scales.protein[col];
-    protRep.children.push(...colourNodes([...user.protein].map(([asym, row]) => [{ label_asym_id: asym }, sc2.colourOf(row[col])])));
+    const own = new Set(meta.chains.filter(c => c.role === "rp").map(c => c.label_asym));
+    const pairs = [...user.protein].map(([asym, row]) => [asym, sc2.colourOf(row[col])]);
+    protRep.children.push(...colourNodes(pairs.filter(([a]) => own.has(a)).map(([a, c]) => [{ label_asym_id: a }, c])));
+    if (partnerRep) partnerRep.children.push(...colourNodes(pairs.filter(([a]) => !own.has(a)).map(([a, c]) => [{ label_asym_id: a }, c])));
   }
   return sc;
 }
@@ -503,7 +578,7 @@ function applyScene(keepCamera = true, camera = null) {
     if (seq !== sceneSeq) return;                      // superseded while waiting
     try {
       await viewer.loadMvsData(JSON.stringify(buildScene(camera)), "mvsj", { replaceExisting: true, keepCamera: keepCamera && !camera });
-    } catch (e) { $("busy").textContent = "Could not load the structure: " + e.message; console.error(e); return; }
+    } catch (e) { $("busy").textContent = "The structure could not be drawn (its coordinates come from the PDB): " + e.message; console.error(e); return; }
     if (seq === sceneSeq) $("busy").hidden = true;
     renderControls();
   });
@@ -519,8 +594,12 @@ function legendHtml(L, withBase) {
     h += `<div class="bar" style="background:linear-gradient(to right, ${L.ramp.join(", ")})"></div>
           <div class="ticks"><span>${lo}</span><span>${mid}</span><span>${hi}</span></div>`;
   }
-  const base = withBase ? [["rRNA", meta.base.rRNA], ["40S proteins", meta.base.prot_40S], ["60S proteins", meta.base.prot_60S]] : [];
-  return h + `<div class="keys">` + keys.concat(base).map(([k, c]) => `<span><span class="dot" style="background:${c}"></span>${esc(k)}</span>`).join("") + `</div>`;
+  const has = sub => meta.chains.some(c => c.role === "rp" && c.subunit === sub);
+  const base = (withBase ? [["rRNA", meta.base.rRNA], has("40S") && ["40S proteins", meta.base.prot_40S], has("60S") && ["60S proteins", meta.base.prot_60S]].filter(Boolean) : [])
+    .concat(withBase && meta.base_other ? [[`${meta.particles[0]} ribosome (paler)`, meta.base_other.prot_60S]] : [])
+    .concat(showPartners ? meta.partners.map(q => [q.label, q.colour]) : []);
+  const row = list => list.length ? `<div class="keys">` + list.map(([k, c]) => `<span><span class="dot" style="background:${c}"></span>${esc((L.labels || {})[k] || k)}</span>`).join("") + `</div>` : "";
+  return h + row(keys) + row(base);       // the site colours, then what the particle itself is drawn in
 }
 function renderControls() {
   const siteCols = user ? user.cols.filter(c => c.site) : [], protCols = user ? user.cols.filter(c => c.protein) : [];
@@ -532,6 +611,8 @@ function renderControls() {
   const sl = siteMode.startsWith("user:") ? user.scales.site[siteMode.slice(5)].legend : meta.modes.find(m => m.id === siteMode).legend;
   $("legend").innerHTML = legendHtml(sl, protMode === "subunit");
   const st = siteMode.startsWith("user:") ? "colour/user" : siteMode.startsWith("z_") ? "colour/z" : "colour/" + siteMode;
+  $("partnerswrap").hidden = !meta.partners.length;
+  $("partnerslabel").textContent = "Show " + meta.partners.map(q => q.label).join(", ").replace(/, ([^,]*)$/, " and $1");
   $("sitehelp").dataset.help = st; $("sitehelp").href = "#help/" + st;
   $("protblock").hidden = !protCols.length;
   $("pmodes").innerHTML = [["subunit", "Subunit (40S / 60S)"]].concat(protCols.map(c => ["user:" + c.name, "Your data: " + c.name]))
@@ -563,19 +644,23 @@ function loadUserTable(name, text) {
         iPos = find(/^(position|pos|site|lysine|residue)$/i);
   if (iGene < 0 && iAcc < 0) throw new Error("no gene or protein (UniProt accession) column found");
   const prot = meta.chains.filter(c => c.kind === "protein");
-  const byGene = new Map(prot.map(c => [String(c.gene).toUpperCase(), c])), byAcc = new Map(prot.map(c => [String(c.protein).toUpperCase(), c]));
+  const index = key => { const m = new Map(); for (const c of prot) { const k = String(c[key] || "").toUpperCase(); if (k) (m.get(k) || m.set(k, []).get(k)).push(c); } return m; };
+  const byGene = index("gene"), byAcc = index("protein");       // a protein has one chain, or one per ribosome of a disome
   const bySite = new Map(sites.filter(s => s.label_seq != null).map(s => [s.label_asym + "|" + s.position, s]));
   const valueIdx = head.map((h, i) => i).filter(i => i !== iGene && i !== iAcc && i !== iPos && head[i]);
   const cols = valueIdx.map(i => { const v = rows.slice(1).map(r => (r[i] ?? "").trim()).filter(x => x !== "");
     return { name: head[i], i, numeric: v.length > 0 && v.filter(x => isFinite(+x.replace(",", "."))).length >= 0.8 * v.length }; });
-  const u = { name, cols, protein: new Map(), site: new Map(), rows: rows.length - 1, unmatched: 0, offList: 0 };
+  const u = { name, cols, protein: new Map(), site: new Map(), rows: rows.length - 1, unmatched: 0, offList: 0, nProteins: new Set(), nSites: new Set() };
   for (const r of rows.slice(1)) {
-    const chain = (iAcc >= 0 && byAcc.get((r[iAcc] || "").trim().toUpperCase().replace(/-\d+$/, ""))) || (iGene >= 0 && byGene.get((r[iGene] || "").trim().toUpperCase()));
-    if (!chain) { u.unmatched++; continue; }
+    const chains = (iAcc >= 0 && byAcc.get((r[iAcc] || "").trim().toUpperCase().replace(/-\d+$/, ""))) || (iGene >= 0 && byGene.get((r[iGene] || "").trim().toUpperCase()));
+    if (!chains) { u.unmatched++; continue; }
     const rec = {}; for (const c of cols) { const raw = (r[c.i] ?? "").trim(); rec[c.name] = raw === "" ? null : c.numeric ? (isFinite(+raw.replace(",", ".")) ? +raw.replace(",", ".") : null) : raw; }
     const pos = iPos >= 0 ? parseInt(String(r[iPos]).replace(/^[Kk]/, ""), 10) : NaN;
-    if (isFinite(pos)) { const s = bySite.get(chain.label_asym + "|" + pos); if (s) u.site.set(s.label_asym + ":" + s.label_seq, rec); else u.offList++; }
-    else u.protein.set(chain.label_asym, rec);
+    if (isFinite(pos)) {
+      const found = chains.map(c => bySite.get(c.label_asym + "|" + pos)).filter(Boolean);
+      for (const s of found) { u.site.set(s.label_asym + ":" + s.label_seq, rec); u.nSites.add(s.label); }
+      if (!found.length) u.offList++;
+    } else { for (const c of chains) u.protein.set(c.label_asym, rec); u.nProteins.add(chains[0].protein || chains[0].gene); }
   }
   for (const c of cols) { c.protein = [...u.protein.values()].some(r => r[c.name] != null); c.site = [...u.site.values()].some(r => r[c.name] != null); }
   u.scales = { protein: {}, site: {} };
@@ -583,7 +668,7 @@ function loadUserTable(name, text) {
     if (c.protein) u.scales.protein[c.name] = scaleFor(c, [...u.protein.values()].map(r => r[c.name]), "proteins");
     if (c.site) u.scales.site[c.name] = scaleFor(c, [...u.site.values()].map(r => r[c.name]), "sites");
   }
-  if (!u.protein.size && !u.site.size) throw new Error("no row matched a ribosomal protein of this structure");
+  if (!u.protein.size && !u.site.size) throw new Error("no row matched a protein of this structure");
   return u;
 }
 function userValue(s, col) {           // the visitor's value for a table row: the site's own, else its protein's
@@ -592,18 +677,18 @@ function userValue(s, col) {           // the visitor's value for a table row: t
   return (a && a[col] != null) ? a[col] : (b ? b[col] : null);
 }
 const userCol = () => !user ? null : siteMode.startsWith("user:") ? siteMode.slice(5) : protMode.startsWith("user:") ? protMode.slice(5) : (user.cols.find(c => c.protein || c.site) || {}).name;
-function setUser(u) {
+function showUser(u) {                 // take a matched table (or none) into the controls; the caller redraws
   user = u; siteMode = siteMode.startsWith("user:") ? "mg132" : siteMode; protMode = "subunit";
   if (u) {
     const pc = u.cols.find(c => c.protein), sc = u.cols.find(c => c.site);
     if (pc) protMode = "user:" + pc.name; else if (sc) siteMode = "user:" + sc.name;
-    const bits = [`${u.protein.size} protein${u.protein.size === 1 ? "" : "s"}`, `${u.site.size} site${u.site.size === 1 ? "" : "s"}`];
+    const np = u.nProteins.size, nsi = u.nSites.size, bits = [`${np} protein${np === 1 ? "" : "s"}`, `${nsi} site${nsi === 1 ? "" : "s"}`];
     const miss = [u.unmatched ? `${u.unmatched} row${u.unmatched === 1 ? "" : "s"} not in this structure` : "", u.offList ? `${u.offList} position${u.offList === 1 ? "" : "s"} not among the listed sites` : ""].filter(Boolean);
     $("userinfo").innerHTML = `<b>${esc(u.name)}</b>: ${bits.join(", ")} matched${miss.length ? " (" + miss.join("; ") + ")" : ""}. <a href="#" id="clear">Remove</a>`;
     $("pick").textContent = "Load another…";
   } else { $("userinfo").innerHTML = USER_HINT; $("pick").textContent = "Load a table…"; }
-  renderTable(); applyScene(true);
 }
+function setUser(u) { showUser(u); renderTable(); applyScene(true); }
 
 function setView(v) {
   viewer.plugin.canvas3d.requestCameraReset({ durationMs: 350, snapshot: { target: v.target, position: v.position, up: v.up, radius: meta.radius } });
@@ -619,7 +704,10 @@ function visibleSites() {
   const q = $("q").value.trim().toUpperCase(), reg = $("fregion").value, env = $("fenv").value, sig = $("fsig").checked, more = $("fmore").value;
   const extra = s => !more ? true : more === "hotspot" ? s.hotspot != null : more.startsWith("hotspot:") ? s.hotspot === more.slice(8)
                    : more === "interface" ? s.interface === true : more === "comod" ? s.other_mods != null
-                   : more.startsWith("comod:") ? (s.other_mods || "").split(", ").includes(more.slice(6)) : true;
+                   : more.startsWith("comod:") ? (s.other_mods || "").split(", ").includes(more.slice(6))
+                   : more === "near" ? s.near_partner != null : more.startsWith("near:") ? s.near_partner === more.slice(5)
+                   : more.startsWith("particle:") ? s.particle === more.slice(9)
+                   : more === "opened" ? opened(s) : more === "gained" ? gained(s) : true;
   const rows = sites.filter(s => (!q || s.label.toUpperCase().includes(q)) && (!reg || s.subunit === reg || s.region === reg) &&
                                  (!env || s.environment === env) && (!sig || s.sig_mg132) && extra(s));
   const k = sort.k, uc = userCol();
@@ -634,22 +722,25 @@ function visibleSites() {
   return rows;
 }
 
+// against the mature 80S: exposed here but enclosed there; resolved here but not there
+const opened = s => s.environment === "exposed" && ["buried", "rRNA contact"].includes(s.environment_ref);
+const gained = s => s.x != null && !modelledEnv(s.environment_ref);
 function renderTable() {
   const rows = visibleSites(), envCol = meta.modes.find(m => m.id === "environment").legend.colours, uc = userCol();
   $("rows").innerHTML = rows.map(s => `<tr data-i="${s.i}" class="${s.x == null ? "off" : ""}${selected === s.i ? " sel" : ""}"
-      ${s.x == null ? 'title="Not modelled in the structure (mobile segment)"' : ""}>
-      <td>${esc(s.gene)} K${s.position}</td><td title="${esc(s.region)}">${esc(REGION_SHORT[s.region] || s.region)}</td>
+      ${s.x == null ? 'title="Not modelled in this structure"' : ""}>
+      <td>${esc(s.gene)} K${s.position}${multi() ? `<span class="ptag">${esc(s.particle)}</span>` : ""}</td><td title="${esc(s.region)}">${esc(REGION_SHORT[s.region] || s.region)}</td>
       <td><span class="dot" style="background:${envCol[s.environment] || "#bbb"}"></span>${esc(s.environment)}</td>
       <td class="num">${fmt(s.lfc_mg132)}</td><td class="num">${fmtQ(s.q_mg132)}</td><td class="num">${fmt(s.z_hs, 2)}</td>
       ${uc ? `<td class="num">${esc(userValue(s, uc) ?? "–")}</td>` : ""}</tr>`).join("");
   $("uth").hidden = !uc; $("uth").textContent = uc || ""; $("uth").title = uc ? "Your data: " + uc : "";
-  $("count").textContent = `${rows.length} of ${sites.length} sites`;
+  $("count").textContent = `${rows.length} of ${sites.length} ${multi() ? "site copies" : "sites"}`;
 }
 
 function renderDetail(s) {
   const rows = [
-    ["Protein", `<a href="https://www.uniprot.org/uniprotkb/${esc(s.protein)}" target="_blank" rel="noopener">${esc(s.gene)} (${esc(s.protein)})</a>, ${s.subunit} subunit, chain ${esc(s.chain)}`],
-    ["Environment", esc(s.environment) + (s.sasa_nz_complex != null ? ` · NZ surface ${fmt(s.sasa_nz_complex)} Å² assembled, ${fmt(s.sasa_nz_free)} Å² in the free protein` : "")],
+    ["Protein", `<a href="https://www.uniprot.org/uniprotkb/${esc(s.protein)}" target="_blank" rel="noopener">${esc(s.gene)} (${esc(s.protein)})</a>, ${s.subunit} subunit${multi() ? ` of the ${esc(s.particle)} ribosome` : ""}, chain ${esc(s.chain)}`],
+    ["Environment", esc(s.environment) + (s.sasa_nz_complex != null ? ` · NZ surface ${fmt(s.sasa_nz_complex)} Å² in this structure, ${fmt(s.sasa_nz_free)} Å² in the free protein` : "")],
     ["Nearest rRNA", s.dist_rna != null ? `${fmt(s.dist_rna)} Å (${esc(s.nearest_rna)})` : "–"],
     ["Region", esc(s.region) + (s.dist_other_subunit != null ? ` · ${fmt(s.dist_other_subunit)} Å from the other subunit${s.interface ? " (subunit interface)" : ""}` : "") +
                (s.hotspot ? ` · hotspot ${esc(s.hotspot)}${hotspotName(s.hotspot)}` : "")],
@@ -657,35 +748,54 @@ function renderDetail(s) {
     ["Heat shock", `log2 FC ${fmt(s.lfc_hs)}, q ${fmtQ(s.q_hs)}${s.sig_hs ? "" : " (not significant)"}`],
     ["Z-scores", `control ${fmt(s.z_ctrl, 2)} · MG132 ${fmt(s.z_mg132, 2)} · heat ${fmt(s.z_hs, 2)}` + (s.quadrant ? ` · ${esc(s.quadrant)}` : "")],
   ];
+  if (s.near_partner) rows.splice(3, 0, ["Partner", `${fmt(s.near_partner_dist)} Å from ${esc(s.near_partner_name)}` +
+    (s.covered_by_partner ? " · covered by a partner: free on the ribosome alone" : "")]);
   if (s.other_mods) rows.push(["Also recorded", esc(s.other_mods) + " (UniProt)"]);
+  const pl = placement.get(s.label);
+  if (pl) rows.push([`Elsewhere <a class="hl" href="#help/structures/sites" data-help="structures/sites" title="Help: one site in several structures">ⓘ</a>`,
+    `<span class="others">` + structures.filter(x => x.id !== sid).map(x =>
+      `<a href="?s=${x.id}" data-goto="${x.id}" title="Open ${esc(x.short)} (${x.id}) at this site">${esc(x.short)}</a> ${esc(pl[x.id] ?? "protein absent")}`).join(" · ") + `</span>`]);
   if (user) {
     const a = user.site.get(s.label_asym + ":" + s.label_seq) || {}, b = user.protein.get(s.label_asym) || {};
     const vals = user.cols.map(c => [c.name, a[c.name] ?? b[c.name]]).filter(([, v]) => v != null);
     if (vals.length) rows.push(["Your data", vals.map(([k, v]) => `${esc(k)} ${esc(v)}`).join(" · ")]);
   }
-  $("detail").innerHTML = `<div class="name">${esc(s.gene)} K${s.position} <a class="hl" href="#help/table/details" data-help="table/details" title="Help: the site details">ⓘ</a></div><dl>` + rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("") + `</dl>`;
+  $("detail").innerHTML = `<div class="name">${esc(s.gene)} K${s.position}${multi() ? ` <span class="ptag">${esc(s.particle)} ribosome</span>` : ""} <a class="hl" href="#help/table/details" data-help="table/details" title="Help: the site details">ⓘ</a></div><dl>` + rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("") + `</dl>`;
 }
 
-function select(i) {
-  const s = sites[i]; selected = i; renderDetail(s); focusSite(s);
+function select(i, focus = true) {
+  const s = sites[i]; selected = i; renderDetail(s);
+  if (focus) focusSite(s);
+  else if (s.x != null) viewer.structureInteractivity({ elements: { label_asym_id: s.label_asym, label_seq_id: s.label_seq }, action: "select" });
   for (const tr of $("rows").children) tr.classList.toggle("sel", +tr.dataset.i === i);
 }
 
 // ---- statistics window: stored results of the analysis (data/stats.json) -----
-const hotspotName = id => { const h = stats && stats.hotspots.find(x => x.hotspot === id); return h ? ` (${esc(h.name)})` : ""; };
+const hotspotName = id => { const h = refStats && refStats.hotspots.find(x => x.hotspot === id); return h ? ` (${esc(h.name)})` : ""; };
 const pctS = v => v == null ? "–" : (100 * v).toFixed(v < 0.0995 ? 1 : 0) + " %";
 const fmtP = p => p == null ? "–" : p < 0.001 ? p.toExponential(0).replace("e-", "e-").replace(/e-0?/, "e-") : p.toFixed(3);
 const ci = (a, b, d = 2) => `${(+a).toFixed(d)}–${(+b).toFixed(d)}`;
 const sinfo = entry => `<a class="hl" href="#help/stats/${entry}" data-help="stats/${entry}" title="Help: how this is computed">ⓘ</a>`;
 function fillFilterMenus() {
-  $("fregion").innerHTML = `<option value="">whole ribosome</option><option value="40S">40S (all)</option>` +
-    REGION_ORDER.filter(r => r.startsWith("40S")).map(r => `<option value="${r}">· ${r}</option>`).join("") + `<option value="60S">60S (all)</option>` +
-    REGION_ORDER.filter(r => r.startsWith("60S")).map(r => `<option value="${r}">· ${r}</option>`).join("");
+  const present = k => v => sites.some(s => s[k] === v), keep = id => { const el = $(id), v = el.dataset.v || ""; el.value = [...el.options].some(o => o.value === v) ? v : ""; delete el.dataset.v; };
+  for (const id of ["fregion", "fmore"]) $(id).dataset.v = $(id).value;
+  const subs = ["40S", "60S"].filter(present("subunit"));
+  $("fregion").innerHTML = `<option value="">${subs.length > 1 ? "whole ribosome" : "whole particle"}</option>` + subs.map(sub =>
+    (subs.length > 1 ? `<option value="${sub}">${sub} (all)</option>` : "") +
+    REGION_ORDER.filter(r => r.startsWith(sub)).filter(present("region")).map(r => `<option value="${r}">· ${r}</option>`).join("")).join("");
   const mods = [...new Set(sites.flatMap(s => (s.other_mods || "").split(", ").filter(Boolean)))].sort();
-  $("fmore").innerHTML = `<option value="">any site</option><option value="hotspot">in a hotspot</option>` +
-    (stats ? stats.hotspots.map(h => `<option value="hotspot:${h.hotspot}">· ${h.hotspot} ${esc(h.name)}</option>`).join("") : "") +
-    `<option value="interface">at the subunit interface</option><option value="comod">another modification recorded</option>` +
-    mods.map(m => `<option value="comod:${esc(m)}">· ${esc(m)}</option>`).join("");
+  const hot = refStats.hotspots.filter(h => sites.some(s => s.hotspot === h.hotspot));
+  const near = [...new Set(sites.map(s => s.near_partner).filter(Boolean))].sort();
+  const notRef = !entry.reference;
+  $("fmore").innerHTML = `<option value="">any site</option>` +
+    (hot.length ? `<option value="hotspot">in a hotspot</option>` + hot.map(h => `<option value="hotspot:${h.hotspot}">· ${h.hotspot} ${esc(h.name)}</option>`).join("") : "") +
+    (sites.some(s => s.interface === true) ? `<option value="interface">at the subunit interface</option>` : "") +
+    (near.length ? `<option value="near">near a partner</option>` + near.map(k => `<option value="near:${esc(k)}">· near ${k === "factor" ? "a factor" : k === "other ribosome" ? "the other ribosome" : esc(k)}</option>`).join("") : "") +
+    (multi() ? meta.particles.slice().reverse().map(q => `<option value="particle:${esc(q)}">on the ${esc(q)} ribosome</option>`).join("") : "") +
+    (notRef && sites.some(opened) ? `<option value="opened">exposed here, enclosed in the mature 80S</option>` : "") +
+    (notRef && sites.some(gained) ? `<option value="gained">resolved here, not in the mature 80S</option>` : "") +
+    (mods.length ? `<option value="comod">another modification recorded</option>` + mods.map(m => `<option value="comod:${esc(m)}">· ${esc(m)}</option>`).join("") : "");
+  keep("fregion"); keep("fmore");
 }
 function accessTable(comparison) {
   const rows = stats.access.filter(r => r.comparison === comparison), a = rows[0].group_a, b = rows[0].group_b;
@@ -698,8 +808,9 @@ function accessTable(comparison) {
       <td class="num">${fmtP(r.q)}</td></tr>`).join("") + `</table>`;
 }
 function renderStats() {
+  if (stats.kind === "state") return renderStateStats();
   const b = stats.background, P = stats.parameters;
-  $("statssub").textContent = `${b.sites} SUMO2/3 sites on ${b.proteins} proteins, against ${b.other_lysines} other lysines of the same proteins`;
+  $("statssub").textContent = `${entry.short} (${sid}): ${b.sites} SUMO2/3 sites on ${b.proteins} proteins, against ${b.other_lysines} other lysines of the same proteins`;
   const sub = stats.subunits.map(r => `<tr><td>${esc(r.question)}</td>
       <td class="num">${r.measure === "share" ? pctS(r.value_40S) : (+r.value_40S).toFixed(2)} <span class="dim">n = ${r.n_40S}</span></td>
       <td class="num">${r.measure === "share" ? pctS(r.value_60S) : (+r.value_60S).toFixed(2)} <span class="dim">n = ${r.n_60S}</span></td>
@@ -747,6 +858,47 @@ function renderStats() {
     <table class="stable"><tr><th>Modification</th><th class="num">Lysines</th><th class="num">of which SUMO sites</th><th>Share that are SUMO sites</th><th>Share among the other lysines</th>
       <th class="num">Odds ratio (95 %)</th><th class="num">q</th><th></th></tr>${com}</table>`;
 }
+// A structure other than the reference: what it holds, what it adds, its partners, and (for an
+// assembly intermediate) the lysines that the mature ribosome encloses.
+function renderStateStats() {
+  const P = stats.parameters, ov = stats.overview, tot = k => ov.reduce((n, r) => n + r[k], 0);
+  $("statssub").textContent = `${entry.short} (${sid}): ${tot("sites")} ${multi() ? "site copies" : "sites"}, ${tot("modelled")} with coordinates`;
+  const ovRows = ov.map(r => `<tr>${multi() ? `<td>${esc(r.particle)} ribosome</td>` : ""}<td class="num">${r.ribosomal_proteins}</td><td class="num">${r.sites}</td><td class="num">${r.modelled}</td>
+      <td class="num">${r.exposed}</td><td class="num">${r.rna_contact}</td><td class="num">${r.buried}</td><td class="num">${r.not_modelled}</td><td class="num">${r.covered_by_partner}</td></tr>`).join("");
+  const add = sites.filter(gained), seen = new Set(), addOnce = add.filter(s => !seen.has(s.label) && seen.add(s.label));
+  const siteRow = (s, cells) => `<tr data-site="${esc(s.label)}|${esc(s.particle ?? "")}" title="Show this site">${cells}</tr>`;
+  const kind = k => k === "factor" ? "a factor" : k === "other ribosome" ? "the other ribosome" : k;
+  const tests = stats.partners.map(r => `<tr class="${r.q < 0.05 ? "sig" : ""}">${multi() ? `<td>${esc(r.particle)}</td>` : ""}<td>${esc(kind(r.partner))}</td>
+      <td class="num">${r.sites_near} / ${r.sites}</td><td class="num">${r.lysines_near} / ${r.lysines}</td>
+      <td class="num">${r.sites_near + r.lysines_near === 0 ? "–" : (+r.odds_ratio).toFixed(2) + " (" + ci(r.conf_low, r.conf_high) + ")"}</td>
+      <td class="num">${fmtP(r.p)}</td><td class="num">${fmtP(r.q)}</td>
+      <td>${r.sites_near ? `<button data-show="near:${esc(r.partner)}${multi() ? "|" + esc(r.particle) : ""}">Show</button>` : ""}</td></tr>`).join("");
+  const near = stats.near.map(r => siteRow(r, `<td>${esc(r.label)}${multi() ? `<span class="ptag">${esc(r.particle)}</span>` : ""}</td><td>${esc(r.partner_name)}</td>
+      <td class="num">${fmt(r.distance)}</td><td>${esc(r.environment)}${r.covered_by_partner ? " (covered by a partner)" : ""}</td>
+      <td class="num">${fmt(r.lfc_mg132)}${r.sig_mg132 ? "" : ` <span class="dim">n.s.</span>`}</td><td>${r.hotspot ? esc(r.hotspot) : ""}</td>`)).join("");
+  const pre = stats.precursor, FATES = ["exposed", "enclosed", "not modelled", "protein not yet in the particle"];
+  const fate = (g, f) => ((pre.fates.find(r => r.group === g && r.fate === f) || {}).n || 0);
+  $("scontent").innerHTML = `
+    <div class="stoc"><a href="#s-state">This structure</a>${stats.partners.length ? `<a href="#s-partners">Near the partners</a>` : ""}${pre ? `<a href="#s-pre">Against the mature 80S</a>` : ""}<a href="#s-ref">Statistics on the mature 80S</a></div>
+    <h3 id="s-state">This structure ${sinfo("state")}</h3>
+    <p class="lead">${esc(entry.label)}. It holds ${esc(ov[0].holds ? ov[0].holds.replace(";", " and the factors") : "no partner")}.${stats.fit ? ` Superposed on the mature 80S through ${stats.fit.n.toLocaleString("en")} rRNA phosphates (r.m.s.d. ${(+stats.fit.rmsd).toFixed(1)} Å).` : ""}</p>
+    <table class="stable"><tr>${multi() ? "<th>Ribosome</th>" : ""}<th class="num">Ribosomal proteins</th><th class="num">Sites listed</th><th class="num">with coordinates</th><th class="num">exposed</th>
+      <th class="num">rRNA contact</th><th class="num">buried</th><th class="num">not modelled</th><th class="num">covered by a partner</th></tr>${ovRows}</table>
+    <p>${addOnce.length ? `${addOnce.length} site${addOnce.length === 1 ? " has" : "s have"} coordinates here but not in the mature 80S: ${addOnce.map(s => esc(s.label)).join(", ")}. <button class="linkbtn" data-show="gained">Show</button>` : "Every site with coordinates here also has coordinates in the mature 80S."}</p>
+    ${stats.partners.length ? `<h3 id="s-partners">Near the partners ${sinfo("partners")}</h3>
+    <p class="lead">Are SUMO sites found within ${P.partner_near} Å of a partner more often than the other lysines of the same proteins? Tinted rows: q &lt; 0.05.</p>
+    <table class="stable"><tr>${multi() ? "<th>Ribosome</th>" : ""}<th>Within ${P.partner_near} Å of</th><th class="num">SUMO sites</th><th class="num">Other lysines</th><th class="num">Odds ratio (95 %)</th><th class="num">p</th><th class="num">q</th><th></th></tr>${tests}</table>
+    ${near ? `<table class="stable"><tr><th>Site</th><th>Nearest partner</th><th class="num">Distance (Å)</th><th>Environment here</th><th class="num">MG132 log2 FC</th><th>Hotspot</th></tr>${near}</table>` : ""}` : ""}
+    ${pre ? `<h3 id="s-pre">Against the mature 80S ${sinfo("precursor")}</h3>
+    <p class="lead">What becomes of the lysines whose NZ the mature ribosome encloses (less than ${P.exposed_nz_sasa} Å² accessible)?</p>
+    <table class="stable"><tr><th>Enclosed in the mature 80S</th>${FATES.map(f => `<th class="num">${f.startsWith("protein") ? f : f + " here"}</th>`).join("")}</tr>
+      ${["SUMO sites", "other lysines"].map(g => `<tr><td>${g}</td>${FATES.map(f => `<td class="num">${fate(g, f)}</td>`).join("")}</tr>`).join("")}</table>
+    ${pre.test.length ? `<p>Exposed here among those resolved: ${pre.test[0].sites_exposed} of ${pre.test[0].sites} SUMO sites and ${pre.test[0].lysines_exposed} of ${pre.test[0].lysines} other lysines (odds ratio ${(+pre.test[0].odds_ratio).toFixed(2)}, 95 % ${ci(pre.test[0].conf_low, pre.test[0].conf_high)}; Fisher p = ${fmtP(pre.test[0].p)}). <button class="linkbtn" data-show="opened">Show the sites</button></p>` : ""}
+    ${pre.opened.length ? `<table class="stable"><tr><th>SUMO site enclosed in the mature 80S, exposed here</th><th class="num">NZ surface, mature (Å²)</th><th class="num">NZ surface, here (Å²)</th><th>MG132</th></tr>
+      ${pre.opened.map(r => siteRow(r, `<td>${esc(r.label)}</td><td class="num">${fmt(r.nz_mature)}</td><td class="num">${fmt(r.nz_here)}</td><td>${r.sig_mg132 ? "responsive" : `<span class="dim">n.s.</span>`}</td>`)).join("")}</table>` : ""}` : ""}
+    <h3 id="s-ref">Statistics on the mature 80S</h3>
+    <p>The comparison of modified with other lysines, the regions, the clustering tests, the hotspots and the other modifications are computed on the mature 80S. <button class="linkbtn" data-goto="${refId()}">Open the mature 80S</button></p>`;
+}
 function syncHash() {                                  // the address follows the open window
   if ($("help").open) return;                          // the help keeps its own address while it is open
   history.replaceState(null, "", $("stats").open ? "#stats" : location.pathname + location.search);
@@ -759,8 +911,11 @@ function showFromStats(what) {                       // a Show button: colouring
   if (kind === "interface") { siteMode = "region"; $("fmore").value = "interface"; }
   if (kind === "hotspot") { siteMode = "hotspot"; $("fmore").value = "hotspot:" + value; }
   if (kind === "comod") { siteMode = "comod"; $("fmore").value = "comod:" + value; }
+  if (kind === "near") { siteMode = "partner"; $("fmore").value = "near:" + value.split("|")[0]; }
+  if (kind === "opened") { siteMode = "environment"; $("fmore").value = "opened"; }
+  if (kind === "gained") { siteMode = "environment"; $("fmore").value = "gained"; }
   $("stats").close(); syncHash(); renderTable();
-  const h = kind === "hotspot" && stats.hotspots.find(x => x.hotspot === value);
+  const h = kind === "hotspot" && (stats.hotspots || []).find(x => x.hotspot === value);
   applyScene(true, h ? cameraOn([h.x, h.y, h.z], 150) : null);
 }
 // A camera that looks at a point from outside the particle, along the line from its centre.
@@ -772,17 +927,20 @@ function cameraOn(point, distance) {
   return { target: point, position: point.map((v, i) => v + dir[i] * distance), up };
 }
 function initStats() {
-  renderStats();
   $("statsbtn").addEventListener("click", openStats);
   $("sclose").addEventListener("click", () => { $("stats").close(); syncHash(); });
   const d = $("stats");
   d.addEventListener("click", e => {
     if (e.target === d) { d.close(); return syncHash(); }
     const b = e.target.closest("[data-show]"); if (b) return showFromStats(b.dataset.show);
+    const g = e.target.closest("[data-goto]"); if (g) { d.close(); syncHash(); return loadStructure(g.dataset.goto).then(openStats); }
+    const tr = e.target.closest("tr[data-site]");
+    if (tr) { const [label, particle] = tr.dataset.site.split("|"), t = sites.find(x => x.label === label && (!particle || x.particle === particle));
+      d.close(); syncHash(); $("q").value = ""; $("fmore").value = ""; $("fregion").value = ""; $("fenv").value = ""; $("fsig").checked = false; renderTable();
+      if (t) { select(t.i); document.querySelector(`#rows tr[data-i="${t.i}"]`)?.scrollIntoView({ block: "nearest" }); } return; }
     const a = e.target.closest('.stoc a'); if (a) { e.preventDefault(); document.getElementById(a.getAttribute("href").slice(1)).scrollIntoView({ block: "start" }); }
   });
   d.addEventListener("close", syncHash);
-  if (location.hash === "#stats") openStats();
 }
 
 // ---- help: topics, entries, context links, search, changelog -----------------
@@ -867,17 +1025,24 @@ function fillHelpNumbers() {
   }
   for (const el of help.querySelectorAll("[data-env]")) el.style.background = envCol[el.dataset.env];
   for (const el of help.querySelectorAll("[data-s]")) {
-    const v = el.dataset.s.split(".").reduce((o, k) => o == null ? o : o[k], stats);
+    const v = el.dataset.s === "partner_near" ? PARTNER_NEAR : el.dataset.s.split(".").reduce((o, k) => o == null ? o : o[k], refStats);
     el.textContent = typeof v === "number" && el.dataset.fmt === "n" ? v.toLocaleString("en") : v ?? "";
   }
+  for (const el of help.querySelectorAll("[data-struct]")) el.textContent = el.dataset.struct === "id" ? sid : entry[el.dataset.struct];
+  $("hstructs").innerHTML = `<table class="htable"><tr><th>Structure</th><th>PDB</th><th>What it is</th><th>Sites listed</th><th>with coordinates</th></tr>` +
+    Object.keys(STRUCT_GROUPS).map(g => structures.filter(x => x.group === g).map(x =>
+      `<tr><td><a href="?s=${x.id}" data-goto="${x.id}">${esc(x.short)}</a></td><td><a href="https://www.rcsb.org/structure/${x.id}" target="_blank" rel="noopener">${x.id}</a></td>
+       <td>${esc(x.state)}</td><td>${x.sites}${[].concat(x.particles).length > 1 ? " (two copies)" : ""}</td><td>${x.modelled}</td></tr>`).join("")).join("") + `</table>`;
   for (const sec of topics()) {
     if (!sec.querySelector("h2")) sec.insertAdjacentHTML("afterbegin", `<h2>${esc(sec.dataset.title)}</h2>`);
     for (const a of sec.querySelectorAll("article[data-entry]")) a.id = entryId(sec.dataset.topic, a.dataset.entry);
   }
 }
 function initHelp() {
-  fillHelpNumbers();
   document.addEventListener("click", e => {          // capture: an ⓘ inside a sortable header must not sort
+    const g = e.target.closest("a[data-goto]");      // a link to another structure (detail card, help): same site, other structure
+    if (g) { e.preventDefault(); e.stopPropagation(); if (help.open) { help.close(); syncHash(); }
+             return loadStructure(g.dataset.goto, { site: g.closest("#detail") && selected != null ? sites[selected] : null }); }
     const a = e.target.closest("[data-help]"); if (!a) return;
     e.preventDefault(); e.stopPropagation(); openHelp(a.dataset.help);
   }, true);
@@ -895,31 +1060,83 @@ function initHelp() {
   });
   const seen = store.get(SEEN_KEY);
   if (!seen) store.set(SEEN_KEY, VERSION); else if (seen !== VERSION) $("vernew").hidden = false;
-  if (location.hash.startsWith("#help")) openHelp(location.hash.slice(6));
 }
 
 let USER_HINT;
+// Show another structure: its scene, sites and statistics replace the current ones; the colouring,
+// a loaded table and (with opts.site) the selected site carry over.
+let loadSeq = 0;
+// If the data of the chosen structure cannot be fetched, the structure on screen stays as it is:
+// the menu returns to it and the message says what failed (click the message to dismiss it).
+const loadStructure = (id, opts) => loadStructure_(id, opts).catch(e => {
+  const x = (structures || []).find(y => y.id === id);
+  $("busy").hidden = false;
+  $("busy").textContent = `Could not load ${x ? x.short + " (" + id + ")" : "the structure"}: ${e.message}`;
+  if (sid) $("structure").value = sid;
+  console.error(e);
+});
+async function loadStructure_(id, opts = {}) {
+  if (!structures.some(x => x.id === id)) id = refId();
+  const seq = ++loadSeq, keep = opts.site || null;
+  $("busy").hidden = false; $("busy").textContent = "Loading the structure…";
+  const get = f => fetch(`data/${id}/${f}`).then(
+    r => { if (!r.ok) throw new Error(`the file data/${id}/${f} is missing (${r.status}).`); return r.json(); },
+    () => { throw new Error("its data files could not be fetched. Check the connection, then choose the structure again."); });
+  const got = await Promise.all(["meta.json", "sites.json", "scene_mg132.mvsj", "stats.json"].map(get));
+  if (seq !== loadSeq) return;                         // another structure was chosen meanwhile
+  [meta, sites, template, stats] = got;
+  sid = id; entry = structures.find(x => x.id === id); selected = null;
+  sites.forEach((s, i) => s.i = i);
+  if (!siteMode.startsWith("user:") && !meta.modes.some(m => m.id === siteMode)) siteMode = "mg132";
+  $("structure").value = id;
+  $("structinfo").innerHTML = esc(entry.state.charAt(0).toUpperCase() + entry.state.slice(1)) + ". " +
+    esc(entry.label).replace("PDB " + id, `<a href="https://www.rcsb.org/structure/${id}" target="_blank" rel="noopener">PDB ${id}</a>`) + ".";
+  $("footstruct").innerHTML = esc(entry.label).replace("PDB " + id, `<a href="https://www.rcsb.org/structure/${id}">PDB ${id}</a>`);
+  const url = new URL(location.href); if (entry.reference) url.searchParams.delete("s"); else url.searchParams.set("s", id);
+  history.replaceState(null, "", url);
+  fillFilterMenus(); fillHelpNumbers(); renderStats();
+  $("views").innerHTML = meta.views.map(v => `<button data-id="${v.id}">${esc(VIEW_LABELS[v.id] || v.id)}</button>`).join("");
+  if (userRaw) { try { showUser(loadUserTable(userRaw.name, userRaw.text)); }
+                 catch (err) { showUser(null); $("userinfo").innerHTML = `<b>${esc(userRaw.name)}</b>: ${esc(err.message)}. <a href="#" id="clear">Remove</a>`; } }
+  $("detail").innerHTML = DETAIL_HINT;
+  const t = keep && sites.find(x => x.label === keep.label && x.x != null && (!keep.particle || !multi() || x.particle === keep.particle)) ||
+            keep && sites.find(x => x.label === keep.label);
+  if (t && !visibleSites().includes(t)) { $("q").value = ""; $("fenv").value = ""; $("fsig").checked = false; $("fregion").value = ""; $("fmore").value = ""; }   // the filters would hide the site that was followed here
+  renderTable(); renderControls();                    // the controls of the new structure, before its scene has loaded
+  const v0 = meta.views[0];
+  await applyScene(false, t && t.x != null ? cameraOn([t.x, t.y, t.z], 150) : { target: v0.target, position: v0.position, up: v0.up });
+  if (seq === loadSeq && t) { select(t.i, false); document.querySelector(`#rows tr[data-i="${t.i}"]`)?.scrollIntoView({ block: "nearest" }); }
+}
+let DETAIL_HINT;
 async function main() {
   $("ver").textContent = "v" + VERSION;
-  USER_HINT = $("userinfo").innerHTML;
-  [meta, sites, template, stats] = await Promise.all(["data/meta.json", "data/sites.json", "data/scene_mg132.mvsj", "data/stats.json"].map(u => fetch(u).then(r => r.json())));
-  sites.forEach((s, i) => s.i = i);
-  fillFilterMenus();
-  initHelp();
-  initStats();
-  $("views").innerHTML = meta.views.map(v => `<button data-id="${v.id}">${esc(VIEW_LABELS[v.id] || v.id)}</button>`).join("");
+  USER_HINT = $("userinfo").innerHTML; DETAIL_HINT = $("detail").innerHTML;
+  const json = u => fetch(u).then(r => { if (!r.ok) throw new Error(`${u}: ${r.status}`); return r.json(); });
+  const [index, rows] = await Promise.all([json("data/structures.json"), json("data/placement.json")]);
+  structures = index.structures; PARTNER_NEAR = index.partner_near;
+  placement = new Map(rows.map(r => [r.label, r]));
+  refStats = await json(`data/${index.reference}/stats.json`);
+  $("structure").innerHTML = Object.entries(STRUCT_GROUPS).map(([g, label]) => `<optgroup label="${esc(label)}">` +
+    structures.filter(x => x.group === g).map(x => `<option value="${x.id}">${esc(x.short)} (${x.id})</option>`).join("") + `</optgroup>`).join("");
   viewer = await molstar.Viewer.create("viewer", {
     layoutIsExpanded: false, layoutShowControls: false, layoutShowRemoteState: false, layoutShowSequence: false,
     layoutShowLog: false, layoutShowLeftPanel: false, viewportShowExpand: false, viewportShowSelectionMode: false,
     viewportShowAnimation: false, viewportShowControls: true, collapseLeftPanel: true, collapseRightPanel: true,
   });
   window.__rsv = { viewer, get meta() { return meta; }, get sites() { return sites; }, get user() { return user; }, get stats() { return stats; }, openStats, showFromStats,
+                   get structures() { return structures; }, get structure() { return sid; }, setStructure: (id, opts) => loadStructure(id, opts),
+                   setPartners: on => { showPartners = on; $("partners").checked = on; return applyScene(); },
                    setSiteMode: m => { siteMode = m; return applyScene(); }, setProteinMode: m => { protMode = m; return applyScene(); },
-                   loadUserText: (name, text) => setUser(loadUserTable(name, text)), buildScene, setView, select };
-  renderTable();
-  await applyScene(false);
-  setView(meta.views[0]);
+                   loadUserText: (name, text) => { userRaw = { name, text }; setUser(loadUserTable(name, text)); }, buildScene, setView, select };
+  initHelp();
+  initStats();
+  const deep = location.hash;                          // loadStructure rewrites the address
+  await loadStructure(new URLSearchParams(location.search).get("s") || refId());
+  if (deep.startsWith("#help")) openHelp(deep.slice(6)); else if (deep === "#stats") openStats();
 
+  $("structure").addEventListener("change", e => loadStructure(e.target.value, { site: selected != null ? sites[selected] : null }));
+  $("busy").addEventListener("click", () => { if (!/^Loading/.test($("busy").textContent)) $("busy").hidden = true; });
+  $("partners").addEventListener("change", e => { showPartners = e.target.checked; applyScene(); });
   $("modes").addEventListener("click", e => { const b = e.target.closest("button"); if (b && b.dataset.id !== siteMode) { siteMode = b.dataset.id; renderTable(); applyScene(); } });
   $("pmodes").addEventListener("change", e => { protMode = e.target.value; renderTable(); applyScene(); });
   $("views").addEventListener("click", e => { const b = e.target.closest("button"); if (b) setView(meta.views.find(v => v.id === b.dataset.id)); });
@@ -930,7 +1147,7 @@ async function main() {
   });
   $("rows").addEventListener("click", e => { const tr = e.target.closest("tr"); if (tr) select(+tr.dataset.i); });
 
-  const readFile = f => f.text().then(t => setUser(loadUserTable(f.name, t))).catch(err => { $("userinfo").innerHTML = `Could not use <b>${esc(f.name)}</b>: ${esc(err.message)}. <a href="#" id="clear">Dismiss</a>`; });
+  const readFile = f => f.text().then(t => { const u = loadUserTable(f.name, t); userRaw = { name: f.name, text: t }; setUser(u); }).catch(err => { $("userinfo").innerHTML = `Could not use <b>${esc(f.name)}</b>: ${esc(err.message)}. <a href="#" id="clear">Dismiss</a>`; });
   $("pick").addEventListener("click", () => $("file").click());
   $("file").addEventListener("change", e => { if (e.target.files[0]) readFile(e.target.files[0]); e.target.value = ""; });
   const ub = $("userblock");
@@ -938,7 +1155,7 @@ async function main() {
   ub.addEventListener("dragleave", () => ub.classList.remove("drag"));
   ub.addEventListener("drop", e => { e.preventDefault(); ub.classList.remove("drag"); if (e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); });
   ub.addEventListener("click", e => {
-    if (e.target.id === "clear") { e.preventDefault(); setUser(null); }
+    if (e.target.id === "clear") { e.preventDefault(); userRaw = null; setUser(null); }
     if (e.target.id === "example") { e.preventDefault(); downloadExample(); }
   });
   $("example2").addEventListener("click", e => { e.preventDefault(); downloadExample(); });
@@ -946,7 +1163,7 @@ async function main() {
 function downloadExample() {
   {
     {
-      const prot = meta.chains.filter(c => c.kind === "protein").slice(0, 6), s0 = sites.find(x => x.label_seq != null);
+      const prot = meta.chains.filter(c => c.role === "rp" && c.gene).slice(0, 6), s0 = sites.find(x => x.label_seq != null);
       const csv = "gene,protein,position,my_value,my_group\n" + prot.map((c, i) => `${c.gene},${c.protein},,${i + 1},${i % 2 ? "B" : "A"}`).join("\n") +
                   `\n${s0.gene},${s0.protein},${s0.position},3.5,A\n`;
       const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "ribosome_sumo_viewer_example.csv"; a.click();

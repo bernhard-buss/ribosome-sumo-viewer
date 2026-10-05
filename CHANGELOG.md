@@ -4,6 +4,35 @@ The version next to the title is raised with every change of what the viewer can
 Changes of the data files are listed with the version that shipped them. This file is
 the only place the history is written; the Changelog page of the in-page help renders it.
 
+## 0.5 — 2026-10-05
+Seven structures. A *Structure* menu offers, beside the mature 80S, a decoding and an idle
+80S, a pair of collided ribosomes, two pre-60S particles and a pre-40S particle. Each has its
+own picture, site table and Statistics window; the colouring, the selected site and a loaded
+table carry over, and the address (`?s=` and the PDB code) can be shared. All single
+particles are superposed on the mature 80S, so a view button shows the same face in each.
+
+- The decoding 80S shows the sites of the L1 stalk (RPL10A), RPL10 and RPL12, the pre-60S
+  particles those of RPL7L1; these proteins are not part of the mature structure.
+- Factors, tRNA and mRNA are drawn in their own colours and can be hidden. In the disome the
+  collided ribosome is paler than the stalled one, and every site is listed once per ribosome.
+- New site colourings: *Near a partner* (the nearest factor, tRNA, mRNA or other ribosome
+  within 10 Å) and *Environment in the mature 80S*. New filters: near a partner, on one
+  ribosome of the disome, exposed here and enclosed in the mature 80S, resolved here and not
+  in the mature 80S.
+- The detail card names the nearest partner and, under *Elsewhere*, gives the environment of
+  the same lysine in every other structure; a name there opens that structure at the site.
+- The Statistics window of the other structures: what the structure holds and adds, the test
+  of SUMO sites against other lysines near each kind of partner with the list of sites, and
+  for the assembly intermediates the fate of the lysines that the mature ribosome encloses.
+- If the data of a chosen structure cannot be fetched, the structure on screen stays, the
+  menu returns to it, and the message names what failed; a click dismisses the message.
+- New help topic *Structures*; new entries for the two colourings and the statistics of the
+  other structures; the entries on environment, table, details and methods now cover all
+  structures.
+- Data: one folder per structure (`data/<PDB code>/`), `data/structures.json` (the menu) and
+  `data/placement.json` (each site's environment in each structure). The files of the mature
+  80S moved from `data/` to `data/8QOI/`.
+
 ## 0.4.1 — 2026-10-05
 Fixes.
 
