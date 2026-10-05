@@ -93,7 +93,7 @@
    "kind": "protein",
    "subunit": "60S",
    "protein": "P32969",
-   "gene": "RPL9; RPL9P7; RPL9P8; RPL9P9"
+   "gene": "RPL9"
   },
   {
    "label_asym": "L",
@@ -644,6 +644,7 @@
   {
    "id": "mg132",
    "label": "MG132 fold change",
+   "group": "Response",
    "legend": {
     "kind": "ramp",
     "title": "log2 fold change, MG132 vs control (sites with q < 0.05)",
@@ -666,6 +667,7 @@
   {
    "id": "z_mg132",
    "label": "Z-score, MG132",
+   "group": "Response",
    "legend": {
     "kind": "ramp",
     "title": "Z-score in MG132",
@@ -686,6 +688,7 @@
   {
    "id": "z_ctrl",
    "label": "Z-score, control",
+   "group": "Response",
    "legend": {
     "kind": "ramp",
     "title": "Z-score in control",
@@ -706,6 +709,7 @@
   {
    "id": "z_hs",
    "label": "Z-score, heat shock",
+   "group": "Response",
    "legend": {
     "kind": "ramp",
     "title": "Z-score in heat shock",
@@ -726,6 +730,7 @@
   {
    "id": "environment",
    "label": "Lysine environment",
+   "group": "Position",
    "legend": {
     "kind": "key",
     "title": "Environment of the lysine in the assembled 80S",
@@ -733,6 +738,60 @@
      "exposed": "#44AA99",
      "rRNA contact": "#DDCC77",
      "buried": "#332288"
+    }
+   }
+  },
+  {
+   "id": "region",
+   "label": "Region",
+   "group": "Position",
+   "legend": {
+    "kind": "key",
+    "title": "Region of the ribosome",
+    "colours": {
+     "40S head": "#CC6677",
+     "40S body": "#DDCC77",
+     "60S central protuberance": "#332288",
+     "60S body": "#88CCEE"
+    }
+   }
+  },
+  {
+   "id": "hotspot",
+   "label": "Hotspots",
+   "group": "Position",
+   "legend": {
+    "kind": "key",
+    "title": "Hotspots of MG132-responsive sites",
+    "colours": {
+     "H1": "#CC6677",
+     "H2": "#332288",
+     "H3": "#44AA99",
+     "H4": "#DDCC77",
+     "H5": "#AA4499",
+     "H6": "#117733",
+     "H7": "#88CCEE",
+     "H8": "#999933"
+    },
+    "extra": {
+     "not in a hotspot": "#7A7A7A"
+    }
+   }
+  },
+  {
+   "id": "comod",
+   "label": "Other modifications",
+   "group": "Position",
+   "legend": {
+    "kind": "key",
+    "title": "Other modification recorded at the lysine (UniProt)",
+    "colours": {
+     "ubiquitin": "#CC6677",
+     "acetyl": "#44AA99",
+     "succinyl": "#DDCC77"
+    },
+    "extra": {
+     "none recorded": "#7A7A7A"
     }
    }
   }

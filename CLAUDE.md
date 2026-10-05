@@ -7,6 +7,8 @@
   PDB structure, and copied here as is. Never add in-house data: measurements of the lab
   reach the viewer only through *Your data*, which reads a local file in the browser.
   Do not edit `data/` by hand.
+- The Statistics window only displays `data/stats.json` (computed by the pipeline from public
+  data). Never compute statistics in the page, and never add results that rest on in-house data.
 - The scene is one MolViewSpec template (`data/scene_mg132.mvsj`); `buildScene()` re-colours
   it for the chosen site colouring / protein colouring and reloads it with `loadMvsData`.
 - **Help is part of every feature.** A feature is done when (1) it has an entry in the help
@@ -16,6 +18,7 @@
   `CHANGELOG.md`; there is no second copy. Numbers in help text come from the data
   (`data-n` spans filled by `fillHelpNumbers()`), not from typed constants.
 - Test hook: `window.__rsv` (`viewer`, `meta`, `sites`, `user`, `setSiteMode`,
-  `setProteinMode`, `loadUserText(name, text)`, `buildScene`, `setView`, `select`).
+  `setProteinMode`, `loadUserText(name, text)`, `buildScene`, `setView`, `select`, `stats`, `openStats`,
+  `showFromStats("hotspot:H1")`).
 - Check after changes: `node --check` on the extracted script; load the page from a static
   server; no console errors; a deep link such as `#help/env/classes` opens that entry.

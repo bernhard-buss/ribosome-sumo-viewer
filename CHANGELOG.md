@@ -4,6 +4,26 @@ The version next to the title is raised with every change of what the viewer can
 Changes of the data files are listed with the version that shipped them. This file is
 the only place the history is written; the Changelog page of the in-page help renders it.
 
+## 0.4 — 2026-10-05
+Statistics. A Statistics window (button in the header, or the address `#stats`) shows the
+results of the analysis behind the data: the modified lysines against the other lysines of
+the same proteins, the two subunits and four regions of the ribosome, spatial clustering
+tested by random draws, the hotspots of MG132-responsive sites, and other modifications
+recorded at the same lysines. Each table has an ⓘ to its method, and *Show* buttons set
+the matching colouring and filter (for a hotspot also the view).
+
+- Three new site colourings: region (40S head, 40S body, 60S central protuberance, 60S
+  body), hotspots, and other modifications recorded in UniProt. The colourings are now
+  grouped into *Response to stress* and *Position and context*.
+- The site table shows the region instead of the subunit and can be filtered by region,
+  hotspot, subunit interface and other modification; the detail card adds the region, the
+  distance to the other subunit, the hotspot and the other modifications.
+- New help topic *Statistics*; new entries for the three colourings.
+- Data: `data/stats.json` (the stored results) and new fields in `data/sites.json`
+  (`region`, `interface`, `dist_other_subunit`, `hotspot`, `other_mods`).
+- Fix: a protein encoded by several genes (RPL9) is listed under its first gene symbol, so
+  that a loaded table matches it by gene name.
+
 ## 0.3 — 2026-10-04
 Help. A Help window (button in the header, or the `?` key) with seven topics and this
 changelog; a search box finds entries across all topics. Every ⓘ on the page opens the

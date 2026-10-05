@@ -27,6 +27,8 @@
   .block { padding: 10px 14px; border-bottom: 1px solid var(--line); }
   .block h2 { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; font-weight: 600; }
   .seg { display: flex; flex-wrap: wrap; gap: 4px; }
+  .seg .grp { flex-basis: 100%; font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .seg .grp:first-child { margin-top: 0; }
   .seg button { font: inherit; font-size: 12.5px; padding: 4px 9px; border: 1px solid var(--line); background: #fff; border-radius: 5px; cursor: pointer; color: var(--ink); }
   .seg button:hover { border-color: #9aa3af; }
   .seg button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
@@ -67,17 +69,17 @@
   .verchip:hover { border-color: #9aa3af; color: var(--ink); }
   #vernew { margin-left: 6px; background: var(--accent); color: #fff; border-radius: 999px; padding: 0 6px; font-size: 10.5px; }
   #vernew[hidden] { display: none; }
-  #helpbtn, #hclose { font: inherit; font-size: 13px; padding: 4px 12px; border: 1px solid var(--line); background: #fff; border-radius: 5px; cursor: pointer; color: var(--ink); }
-  #helpbtn:hover, #hclose:hover { border-color: #9aa3af; }
+  #helpbtn, #hclose, #statsbtn, #sclose { font: inherit; font-size: 13px; padding: 4px 12px; border: 1px solid var(--line); background: #fff; border-radius: 5px; cursor: pointer; color: var(--ink); }
+  #helpbtn:hover, #hclose:hover, #statsbtn:hover, #sclose:hover { border-color: #9aa3af; }
   a.hl, span.hl { color: var(--accent); text-decoration: none; font-weight: 400; font-size: 13px; margin-left: 3px; cursor: pointer; letter-spacing: 0; text-transform: none; }
   a.hl:hover { text-decoration: underline; }
   .stagehelp { position: absolute; left: 12px; top: 12px; z-index: 4; font-size: 12px; color: var(--muted); background: rgba(255,255,255,.88); border: 1px solid var(--line);
                border-radius: 999px; padding: 2px 10px; text-decoration: none; }
   .stagehelp:hover { color: var(--accent); border-color: #9aa3af; }
   #busy:not([hidden]) ~ .stagehelp { display: none; }
-  dialog#help { width: min(1020px, 96vw); height: min(780px, 92vh); padding: 0; border: 1px solid var(--line); border-radius: 10px; color: var(--ink);
+  dialog#help, dialog#stats { width: min(1020px, 96vw); height: min(780px, 92vh); padding: 0; border: 1px solid var(--line); border-radius: 10px; color: var(--ink);
                 box-shadow: 0 18px 60px rgba(20, 24, 32, .28); }
-  dialog#help::backdrop { background: rgba(20, 24, 32, .42); }
+  dialog#help::backdrop, dialog#stats::backdrop { background: rgba(20, 24, 32, .42); }
   .hwrap { display: grid; grid-template-rows: auto minmax(0, 1fr); height: 100%; }
   .hbar { display: flex; gap: 12px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); }
   .hbar strong { font-size: 15px; }
@@ -107,6 +109,26 @@
   .htable td:first-child { white-space: nowrap; }
   .htable small { color: var(--muted); }
   .dim { color: var(--muted); }
+  .scontent { overflow: auto; padding: 14px 24px 30px; font-size: 13.5px; line-height: 1.5; }
+  .scontent h3 { font-size: 15px; margin: 18px 0 2px; scroll-margin-top: 8px; }
+  .scontent h3:first-of-type { margin-top: 6px; }
+  .scontent p { margin: 0 0 8px; max-width: 86ch; color: var(--muted); }
+  .scontent p.lead { color: var(--ink); }
+  .scontent a { color: var(--accent); }
+  .stoc { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+  .stoc a { font-size: 12.5px; text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; color: var(--ink); }
+  .stoc a:hover { border-color: #9aa3af; color: var(--accent); }
+  .stable { border-collapse: collapse; width: 100%; font-size: 12.5px; margin: 4px 0 6px; }
+  .stable th { position: static; background: #f0f2f5; text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line); cursor: default; white-space: normal; vertical-align: bottom; }
+  .stable td { padding: 5px 8px; border-bottom: 1px solid #eef0f3; white-space: normal; vertical-align: top; }
+  .stable .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .stable tr.sig td { background: #f7f5fc; }
+  .stable button { font: inherit; font-size: 12px; padding: 1px 9px; border: 1px solid var(--line); background: #fff; border-radius: 5px; cursor: pointer; color: var(--accent); }
+  .stable button:hover { border-color: var(--accent); }
+  .mbar { display: inline-block; width: 70px; height: 8px; background: #eceef2; border-radius: 2px; vertical-align: 1px; margin-right: 6px; overflow: hidden; }
+  .mbar i { display: block; height: 100%; background: var(--accent); }
+  .mbar.other i { background: #9aa3af; }
+  details.smore { margin: 2px 0 8px; } details.smore summary { cursor: pointer; color: var(--accent); font-size: 12.5px; }
   #hresults .hit { display: block; padding: 8px 10px; margin: 0 -10px 4px; border-radius: 8px; text-decoration: none; color: var(--ink); }
   #hresults .hit:hover { background: #f1f0f8; }
   #hresults .hit b { color: var(--accent); } #hresults .hit small { color: var(--muted); display: block; }
@@ -128,6 +150,7 @@
   <span class="sub">SUMO2/3 acceptor sites of the ribosomal proteins on the human 80S ribosome, in control, MG132 and heat shock</span>
   <span class="hdr-right">
     <a class="verchip" href="#help/changelog" data-help="changelog" title="Version — open the changelog"><span id="ver"></span><span id="vernew" hidden>new</span></a>
+    <button id="statsbtn" title="Statistics on the sites">Statistics</button>
     <button id="helpbtn" data-help="" title="Help (press ?)">Help</button>
   </span>
 </header>
@@ -160,8 +183,9 @@
     <div class="block">
       <div class="filters">
         <input type="search" id="q" placeholder="Protein, e.g. RACK1" aria-label="Filter by protein">
-        <select id="fsub" aria-label="Subunit"><option value="">both subunits</option><option>40S</option><option>60S</option></select>
+        <select id="fregion" aria-label="Region"></select>
         <select id="fenv" aria-label="Environment"><option value="">any environment</option><option>exposed</option><option>rRNA contact</option><option>buried</option><option>not modelled</option></select>
+        <select id="fmore" aria-label="Further filter"></select>
         <label><input type="checkbox" id="fsig"> MG132 q &lt; 0.05</label>
         <span id="count"></span><a class="hl" href="#help/table/filters" data-help="table/filters" title="Help: filtering and sorting the site table">ⓘ</a>
       </div>
@@ -169,7 +193,7 @@
     <div id="tablewrap">
       <table>
         <thead><tr>
-          <th data-k="label">Site</th><th data-k="subunit">Subunit</th><th data-k="environment">Environment <a class="hl" href="#help/env/classes" data-help="env/classes" title="Help: the four environments">ⓘ</a></th>
+          <th data-k="label">Site</th><th data-k="region">Region <a class="hl" href="#help/stats/regions" data-help="stats/regions" title="Help: the regions">ⓘ</a></th><th data-k="environment">Environment <a class="hl" href="#help/env/classes" data-help="env/classes" title="Help: the four environments">ⓘ</a></th>
           <th data-k="lfc_mg132" class="num" title="log2 fold change, MG132 vs control">log2 FC</th>
           <th data-k="q_mg132" class="num" title="q-value, MG132 vs control">q <a class="hl" href="#help/colour/significance" data-help="colour/significance" title="Help: q-values">ⓘ</a></th>
           <th data-k="z_hs" class="num" title="Z-score in heat shock">Z heat</th>
@@ -186,6 +210,18 @@
   Structure: <a href="https://www.rcsb.org/structure/8QOI">PDB 8QOI</a> (Holvec et al., Nat Struct Mol Biol 2024), fetched from the PDB by your browser ·
   Rendering: <a href="https://molstar.org">Mol*</a>. Nothing is uploaded.
 </footer>
+
+<dialog id="stats" aria-labelledby="statstitle">
+  <div class="hwrap">
+    <div class="hbar">
+      <strong id="statstitle">Statistics</strong>
+      <span class="dim" id="statssub"></span>
+      <span class="hkeys"><a class="hl" href="#help/stats/what" data-help="stats/what" title="Help: how these numbers are computed">ⓘ how to read this</a></span>
+      <button id="sclose" aria-label="Close statistics">Close</button>
+    </div>
+    <div class="scontent" id="scontent"></div>
+  </div>
+</dialog>
 
 <dialog id="help" aria-labelledby="helptitle">
   <div class="hwrap">
@@ -254,6 +290,12 @@
             <p>Sites without quantification are dark grey.</p></article>
           <article data-entry="environment"><h3>Lysine environment</h3>
             <p>Colours each site by where its lysine sits in the assembled ribosome: exposed, in contact with rRNA, or buried. The definitions are under <a data-help="env/classes" href="#help/env/classes">Lysine environment</a>.</p></article>
+          <article data-entry="region"><h3>Region</h3>
+            <p>Colours each site by the part of the ribosome it lies in: 40S head, 40S body, the central protuberance of the 60S, or the 60S body. How the regions are drawn is described under <a data-help="stats/regions" href="#help/stats/regions">Regions</a>.</p></article>
+          <article data-entry="hotspot"><h3>Hotspots</h3>
+            <p>Shows the groups of MG132-responsive sites that lie close together, each group in its own colour; all other sites are dark grey. A hotspot is a description of where the modification is dense, not a tested unit: see <a data-help="stats/hotspots" href="#help/stats/hotspots">Hotspots</a>.</p></article>
+          <article data-entry="comod"><h3>Other modifications</h3>
+            <p>Marks the sites whose lysine UniProt also records as carrying another modification: ubiquitin, an acetyl or a succinyl group. A site with several is shown in the colour of the first of these that applies; the detail card lists all of them. Sites without such a record are dark grey. See <a data-help="stats/comod" href="#help/stats/comod">Other modifications</a>.</p></article>
           <article data-entry="significance"><h3>q-values and significance</h3>
             <p>q is the false-discovery-rate estimate published with the data (three replicates per condition). A site is called significant in a condition when q &lt; 0.05. A q of 0 is printed as 0: it is the value in the source, meaning smaller than the resolution of the estimate.</p></article>
           <article data-entry="proteins"><h3>Colouring the proteins</h3>
@@ -282,14 +324,15 @@
           <article data-entry="columns"><h3>Columns</h3>
             <table class="htable"><tr><th>Column</th><th>Content</th></tr>
               <tr><td>Site</td><td>gene symbol and position of the lysine in the UniProt sequence</td></tr>
-              <tr><td>Subunit</td><td>40S or 60S</td></tr>
+              <tr><td>Region</td><td>40S head, 40S body, 60S CP (central protuberance) or 60S body; see <a data-help="stats/regions" href="#help/stats/regions">Regions</a></td></tr>
               <tr><td>Environment</td><td>see <a data-help="env/classes" href="#help/env/classes">the four environments</a></td></tr>
               <tr><td>log2 FC</td><td>log2 fold change of SUMO2/3 modification, MG132 against control</td></tr>
               <tr><td>q</td><td>q-value of that change</td></tr>
               <tr><td>Z heat</td><td>Z-score in heat shock</td></tr>
               <tr><td><i>your column</i></td><td>after a table is loaded: the value of the column that is shown in the structure, for the site or, failing that, for its protein</td></tr></table></article>
           <article data-entry="filters"><h3>Filtering and sorting</h3>
-            <p>The search box keeps the sites whose name contains the text (<code>RPS3</code>, <code>RACK1 K2</code>). The two menus restrict to one subunit or one environment, the checkbox to sites that change significantly with MG132. The counter shows how many sites remain.</p>
+            <p>The search box keeps the sites whose name contains the text (<code>RPS3</code>, <code>RACK1 K2</code>). The first menu restricts to a subunit or one of its regions, the second to one environment, the third to sites in a hotspot (any, or one in particular), at the subunit interface, or with another modification recorded. The checkbox keeps the sites that change significantly with MG132. The counter shows how many sites remain.</p>
+            <p>The <i>Show</i> buttons of the Statistics window set these filters and the matching colouring for you.</p>
             <p>Click a column header to sort by it; click again to reverse. Number columns start with the largest value.</p></article>
           <article data-entry="select"><h3>Selecting a site</h3>
             <p>Click a row. The structure centres on the lysine and outlines it, and the details appear below the table. Rows in grey are sites that are not modelled in the structure; they have details but no position to centre on.</p></article>
@@ -298,9 +341,38 @@
               <tr><td>Protein</td><td>gene symbol with a link to its UniProt entry, subunit, and the chain name in PDB 8QOI</td></tr>
               <tr><td>Environment</td><td>the class, and the accessible surface of NZ in the assembled ribosome and in the free protein</td></tr>
               <tr><td>Nearest rRNA</td><td>distance from NZ to the closest rRNA atom, with rRNA, nucleotide and atom</td></tr>
+              <tr><td>Region</td><td>the region, the distance from NZ to the other subunit, and the hotspot the site belongs to, if any</td></tr>
+              <tr><td>Also recorded</td><td>other modifications that UniProt records at this lysine</td></tr>
               <tr><td>MG132, Heat shock</td><td>log2 fold change against control and q-value</td></tr>
               <tr><td>Z-scores</td><td>in the three conditions, and the class used in the source analysis (both up, MG132-preferring, heat-shock-preferring, both down)</td></tr>
               <tr><td>Your data</td><td>all values of your table for this site and its protein</td></tr></table></article>
+        </section>
+
+        <section data-topic="stats" data-title="Statistics" hidden>
+          <article data-entry="what"><h3>What is compared, and where the numbers come from</h3>
+            <p>A SUMO site is a lysine. Every question in the Statistics window is therefore asked against the other lysines of the same proteins: <span data-s="background.sites"></span> sites on <span data-s="background.proteins"></span> proteins against <span data-s="background.other_lysines"></span> lysines of those proteins that are not sites.</p>
+            <p>The numbers are computed once, by the analysis that produces this viewer's data, from the published site catalogue, the structure and UniProt. The window shows these stored results; it does not recompute them when the table is filtered or a table of your own is loaded.</p></article>
+          <article data-entry="access"><h3>Modified lysines against the other lysines</h3>
+            <p>For a yes/no property (modelled, in contact with rRNA, NZ enclosed, at the subunit interface) the table gives the share of SUMO sites and of other lysines that have it, and the odds ratio with its 95 % interval from Fisher's exact test. For a measured quantity (accessible surface of NZ) it gives the two medians and the shift between the groups (Hodges–Lehmann estimate, Wilcoxon rank-sum test).</p>
+            <p>q is the p-value adjusted for the six questions of a comparison (Benjamini–Hochberg). Rows with q &lt; 0.05 are tinted. The second table asks the same questions of the MG132-responsive sites against the sites that do not respond.</p></article>
+          <article data-entry="regions"><h3>Subunits and regions</h3>
+            <p>The regions are derived from the structure. The <b>40S head</b> is the stretch of 18S rRNA that has the fewest contacts with the rest of the 18S — nucleotides <span data-s="parameters.head_domain_18S.0"></span>–<span data-s="parameters.head_domain_18S.1"></span>, the 3′ major domain — and a 40S lysine belongs to the head when the nearest 18S nucleotide lies in that stretch; the other 40S lysines form the <b>40S body</b>. A 60S lysine within <span data-s="parameters.cp_reach"></span> Å of the 5S rRNA belongs to the <b>central protuberance</b>, the others to the <b>60S body</b>. A lysine is <b>at the subunit interface</b> when its NZ is within <span data-s="parameters.interface_dist"></span> Å of the other subunit.</p>
+            <p>The table gives, per region, the share of its lysines that are SUMO sites (with a 95 % Wilson interval), the odds ratio against all other lysines, the number of responsive sites and their median fold change. The subunit table compares 40S and 60S directly. Because the sites of one protein are not independent, the fold change is also tested with one value per protein (its median).</p></article>
+          <article data-entry="clustering"><h3>Spatial clustering</h3>
+            <p>The test counts the pairs of sites whose NZ atoms are within <span data-s="parameters.cluster_dist"></span> Å of each other and compares the count with <span data-s="parameters.permutations" data-fmt="n"></span> random draws of as many lysines. Three ways of drawing answer three questions:</p>
+            <table class="htable"><tr><th>Null model</th><th>Drawn from</th><th>Question</th></tr>
+              <tr><td>any lysine</td><td>all modelled lysines of the ribosome</td><td>Are the sites closer together than lysines in general?</td></tr>
+              <tr><td>same proteins</td><td>the lysines of each protein, as many as that protein has sites</td><td>Given which proteins are modified, are the sites closer together than the lysines of those proteins are anyway?</td></tr>
+              <tr><td>among the sites</td><td>the SUMO sites, as many as respond</td><td>Are the responsive sites closer together than SUMO sites in general?</td></tr></table>
+            <p>"Expected" is the mean of the draws, with the range that holds 95 % of them. p is the share of draws that reach the observed value. The mean distance to the nearest other site and the number of sites in hotspots are tested the same way.</p></article>
+          <article data-entry="hotspots"><h3>Hotspots</h3>
+            <p>A hotspot is a group of at least <span data-s="parameters.hotspot_min_sites"></span> MG132-responsive sites in which every site has another within <span data-s="parameters.cluster_dist"></span> Å (NZ to NZ). Hotspots are numbered by size. <i>Show</i> colours the sites by hotspot, lists the sites of that hotspot in the table and turns the structure to it.</p>
+            <p>Hotspots describe where the modification is densest. Whether there are more sites in hotspots than chance places there is the last line of the clustering table.</p></article>
+          <article data-entry="comod"><h3>Other modifications</h3>
+            <p>From the cross-link and modified-residue records of UniProt for the proteins of the structure. The table gives, per modification, the number of lysines that carry it, how many of them are SUMO sites, and the odds ratio against the lysines without it. UniProt's own SUMO records are not used here: they largely come from the same kind of experiment as the site catalogue.</p>
+            <p>A lysine found modified in one proteomics experiment is more likely to be found in another, whatever the modifier. An overlap therefore shows that the same lysines are used; it does not show that one modification depends on the other.</p></article>
+          <article data-entry="limits"><h3>Limits</h3>
+            <p>Sites on one protein are not independent observations, so a single heavily modified protein can carry a result; the tests "with proteins as units" guard against this where it matters. Lysines that mass spectrometry cannot detect are counted as unmodified. The structure is one state of the ribosome. A p-value near 0.05 in a table of many tests is weak evidence.</p></article>
         </section>
 
         <section data-topic="data" data-title="Your data" hidden>
@@ -351,16 +423,19 @@
 
 <script src="https://cdn.jsdelivr.net/npm/molstar@5.12.0/build/viewer/molstar.js"></script>
 <script>
-const VERSION = "0.3";
+const VERSION = "0.4";
 const VIEW_LABELS = { "40S_solvent": "40S solvent side", "60S_solvent": "60S solvent side", "mRNA_entry": "mRNA entry side",
                       "mRNA_exit": "mRNA exit side", "top": "top", "bottom": "bottom" };
 const ENV_ORDER = ["exposed", "rRNA contact", "buried", "not modelled"];
+const REGION_ORDER = ["40S head", "40S body", "60S central protuberance", "60S body"];
+const REGION_SHORT = { "60S central protuberance": "60S CP" };
+const GROUP_LABEL = { Response: "Response to stress", Position: "Position and context" };
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const fmt = (v, d = 1) => v == null ? "–" : Number(v).toFixed(d);
 const fmtQ = v => v == null ? "–" : v === 0 ? "0" : v < 0.001 ? Number(v).toExponential(1) : Number(v).toFixed(3);
 
-let viewer, meta, sites, template, selected = null, sort = { k: "lfc_mg132", dir: -1 };
+let viewer, meta, sites, stats, template, selected = null, sort = { k: "lfc_mg132", dir: -1 };
 let siteMode = "mg132", protMode = "subunit";
 let user = null;   // the table the visitor loaded: { name, cols, scales, protein: Map(label_asym -> row), site: Map("asym:seq" -> row), ... }
 const TOL = ["#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#CC6677", "#AA4499"];
@@ -428,7 +503,7 @@ async function applyScene(keepCamera = true) {
 
 function legendHtml(L, withBase) {
   let h = `<div>${esc(L.title)}</div>`;
-  const keys = Object.entries(L.kind === "key" ? L.colours : (L.extra || {})).filter(([, c]) => c);
+  const keys = Object.entries(Object.assign({}, L.kind === "key" ? L.colours : {}, L.extra || {})).filter(([, c]) => c);
   if (L.kind === "ramp") {
     const [lo, hi] = L.limits, mid = +((lo + hi) / 2).toPrecision(3);
     h += `<div class="bar" style="background:linear-gradient(to right, ${L.ramp.join(", ")})"></div>
@@ -439,8 +514,11 @@ function legendHtml(L, withBase) {
 }
 function renderControls() {
   const siteCols = user ? user.cols.filter(c => c.site) : [], protCols = user ? user.cols.filter(c => c.protein) : [];
-  $("modes").innerHTML = meta.modes.map(m => [m.id, m.label]).concat(siteCols.map(c => ["user:" + c.name, "Your data: " + c.name]))
-    .map(([id, label]) => `<button data-id="${esc(id)}" aria-pressed="${id === siteMode}">${esc(label)}</button>`).join("");
+  const btn = ([id, label]) => `<button data-id="${esc(id)}" aria-pressed="${id === siteMode}">${esc(label)}</button>`;
+  const groups = [...new Set(meta.modes.map(m => m.group || ""))];
+  $("modes").innerHTML = groups.map(g => (groups.length > 1 ? `<span class="grp">${esc(GROUP_LABEL[g] || g)}</span>` : "") +
+      meta.modes.filter(m => (m.group || "") === g).map(m => btn([m.id, m.label])).join("")).join("") +
+    (siteCols.length ? `<span class="grp">Your data</span>` + siteCols.map(c => btn(["user:" + c.name, c.name])).join("") : "");
   const sl = siteMode.startsWith("user:") ? user.scales.site[siteMode.slice(5)].legend : meta.modes.find(m => m.id === siteMode).legend;
   $("legend").innerHTML = legendHtml(sl, protMode === "subunit");
   const st = siteMode.startsWith("user:") ? "colour/user" : siteMode.startsWith("z_") ? "colour/z" : "colour/" + siteMode;
@@ -528,14 +606,18 @@ function focusSite(s) {
 }
 
 function visibleSites() {
-  const q = $("q").value.trim().toUpperCase(), sub = $("fsub").value, env = $("fenv").value, sig = $("fsig").checked;
-  const rows = sites.filter(s => (!q || s.label.toUpperCase().includes(q)) && (!sub || s.subunit === sub) &&
-                                 (!env || s.environment === env) && (!sig || s.sig_mg132));
+  const q = $("q").value.trim().toUpperCase(), reg = $("fregion").value, env = $("fenv").value, sig = $("fsig").checked, more = $("fmore").value;
+  const extra = s => !more ? true : more === "hotspot" ? s.hotspot != null : more.startsWith("hotspot:") ? s.hotspot === more.slice(8)
+                   : more === "interface" ? s.interface === true : more === "comod" ? s.other_mods != null
+                   : more.startsWith("comod:") ? (s.other_mods || "").split(", ").includes(more.slice(6)) : true;
+  const rows = sites.filter(s => (!q || s.label.toUpperCase().includes(q)) && (!reg || s.subunit === reg || s.region === reg) &&
+                                 (!env || s.environment === env) && (!sig || s.sig_mg132) && extra(s));
   const k = sort.k, uc = userCol();
   rows.sort((a, b) => {
     let x = k === "user" ? userValue(a, uc) : a[k], y = k === "user" ? userValue(b, uc) : b[k];
     if (k === "label") { x = a.gene; y = b.gene; if (x === y) return (a.position - b.position) * sort.dir; }
     if (k === "environment") { x = ENV_ORDER.indexOf(x); y = ENV_ORDER.indexOf(y); }
+    if (k === "region") { x = REGION_ORDER.indexOf(x); y = REGION_ORDER.indexOf(y); }
     if (x == null) return 1; if (y == null) return -1;
     return (x < y ? -1 : x > y ? 1 : a.gene.localeCompare(b.gene) || a.position - b.position) * sort.dir;
   });
@@ -546,7 +628,7 @@ function renderTable() {
   const rows = visibleSites(), envCol = meta.modes.find(m => m.id === "environment").legend.colours, uc = userCol();
   $("rows").innerHTML = rows.map(s => `<tr data-i="${s.i}" class="${s.x == null ? "off" : ""}${selected === s.i ? " sel" : ""}"
       ${s.x == null ? 'title="Not modelled in the structure (mobile segment)"' : ""}>
-      <td>${esc(s.gene)} K${s.position}</td><td>${s.subunit}</td>
+      <td>${esc(s.gene)} K${s.position}</td><td title="${esc(s.region)}">${esc(REGION_SHORT[s.region] || s.region)}</td>
       <td><span class="dot" style="background:${envCol[s.environment] || "#bbb"}"></span>${esc(s.environment)}</td>
       <td class="num">${fmt(s.lfc_mg132)}</td><td class="num">${fmtQ(s.q_mg132)}</td><td class="num">${fmt(s.z_hs, 2)}</td>
       ${uc ? `<td class="num">${esc(userValue(s, uc) ?? "–")}</td>` : ""}</tr>`).join("");
@@ -559,10 +641,13 @@ function renderDetail(s) {
     ["Protein", `<a href="https://www.uniprot.org/uniprotkb/${esc(s.protein)}" target="_blank" rel="noopener">${esc(s.gene)} (${esc(s.protein)})</a>, ${s.subunit} subunit, chain ${esc(s.chain)}`],
     ["Environment", esc(s.environment) + (s.sasa_nz_complex != null ? ` · NZ surface ${fmt(s.sasa_nz_complex)} Å² assembled, ${fmt(s.sasa_nz_free)} Å² in the free protein` : "")],
     ["Nearest rRNA", s.dist_rna != null ? `${fmt(s.dist_rna)} Å (${esc(s.nearest_rna)})` : "–"],
+    ["Region", esc(s.region) + (s.dist_other_subunit != null ? ` · ${fmt(s.dist_other_subunit)} Å from the other subunit${s.interface ? " (subunit interface)" : ""}` : "") +
+               (s.hotspot ? ` · hotspot ${esc(s.hotspot)}${hotspotName(s.hotspot)}` : "")],
     ["MG132", `log2 FC ${fmt(s.lfc_mg132)}, q ${fmtQ(s.q_mg132)}${s.sig_mg132 ? "" : " (not significant)"}`],
     ["Heat shock", `log2 FC ${fmt(s.lfc_hs)}, q ${fmtQ(s.q_hs)}${s.sig_hs ? "" : " (not significant)"}`],
     ["Z-scores", `control ${fmt(s.z_ctrl, 2)} · MG132 ${fmt(s.z_mg132, 2)} · heat ${fmt(s.z_hs, 2)}` + (s.quadrant ? ` · ${esc(s.quadrant)}` : "")],
   ];
+  if (s.other_mods) rows.push(["Also recorded", esc(s.other_mods) + " (UniProt)"]);
   if (user) {
     const a = user.site.get(s.label_asym + ":" + s.label_seq) || {}, b = user.protein.get(s.label_asym) || {};
     const vals = user.cols.map(c => [c.name, a[c.name] ?? b[c.name]]).filter(([, v]) => v != null);
@@ -574,6 +659,114 @@ function renderDetail(s) {
 function select(i) {
   const s = sites[i]; selected = i; renderDetail(s); focusSite(s);
   for (const tr of $("rows").children) tr.classList.toggle("sel", +tr.dataset.i === i);
+}
+
+// ---- statistics window: stored results of the analysis (data/stats.json) -----
+const hotspotName = id => { const h = stats && stats.hotspots.find(x => x.hotspot === id); return h ? ` (${esc(h.name)})` : ""; };
+const pctS = v => v == null ? "–" : (100 * v).toFixed(v < 0.0995 ? 1 : 0) + " %";
+const fmtP = p => p == null ? "–" : p < 0.001 ? p.toExponential(0).replace("e-", "e-").replace(/e-0?/, "e-") : p.toFixed(3);
+const ci = (a, b, d = 2) => `${(+a).toFixed(d)}–${(+b).toFixed(d)}`;
+const sinfo = entry => `<a class="hl" href="#help/stats/${entry}" data-help="stats/${entry}" title="Help: how this is computed">ⓘ</a>`;
+function fillFilterMenus() {
+  $("fregion").innerHTML = `<option value="">whole ribosome</option><option value="40S">40S (all)</option>` +
+    REGION_ORDER.filter(r => r.startsWith("40S")).map(r => `<option value="${r}">· ${r}</option>`).join("") + `<option value="60S">60S (all)</option>` +
+    REGION_ORDER.filter(r => r.startsWith("60S")).map(r => `<option value="${r}">· ${r}</option>`).join("");
+  const mods = [...new Set(sites.flatMap(s => (s.other_mods || "").split(", ").filter(Boolean)))].sort();
+  $("fmore").innerHTML = `<option value="">any site</option><option value="hotspot">in a hotspot</option>` +
+    (stats ? stats.hotspots.map(h => `<option value="hotspot:${h.hotspot}">· ${h.hotspot} ${esc(h.name)}</option>`).join("") : "") +
+    `<option value="interface">at the subunit interface</option><option value="comod">another modification recorded</option>` +
+    mods.map(m => `<option value="comod:${esc(m)}">· ${esc(m)}</option>`).join("");
+}
+function accessTable(comparison) {
+  const rows = stats.access.filter(r => r.comparison === comparison), a = rows[0].group_a, b = rows[0].group_b;
+  const cell = (r, v, cls) => r.measure === "share" ? `<span class="mbar ${cls}"><i style="width:${100 * v}%"></i></span>${pctS(v)}` : `${(+v).toFixed(1)}`;
+  return `<table class="stable"><tr><th>Property of the lysine</th><th>${esc(a)}</th><th>${esc(b)}</th><th>Difference (95 % interval)</th><th class="num">q</th></tr>` +
+    rows.map(r => `<tr class="${r.q < 0.05 ? "sig" : ""}"><td>${esc(r.question.replace("(A2)", "(Å²)"))}</td>
+      <td>${cell(r, r.value_a, "")} <span class="dim">n = ${r.n_a}</span></td><td>${cell(r, r.value_b, "other")} <span class="dim">n = ${r.n_b}</span></td>
+      <td>${r.estimate_type === "odds ratio" ? "odds ratio " + (+r.estimate).toFixed(2) + " (" + ci(r.conf_low, r.conf_high) + ")"
+            : "shift " + (r.estimate > 0 ? "+" : "") + (+r.estimate).toFixed(1) + " Å² (" + (+r.conf_low).toFixed(1) + " to " + (+r.conf_high).toFixed(1) + ")"}</td>
+      <td class="num">${fmtP(r.q)}</td></tr>`).join("") + `</table>`;
+}
+function renderStats() {
+  const b = stats.background, P = stats.parameters;
+  $("statssub").textContent = `${b.sites} SUMO2/3 sites on ${b.proteins} proteins, against ${b.other_lysines} other lysines of the same proteins`;
+  const sub = stats.subunits.map(r => `<tr><td>${esc(r.question)}</td>
+      <td class="num">${r.measure === "share" ? pctS(r.value_40S) : (+r.value_40S).toFixed(2)} <span class="dim">n = ${r.n_40S}</span></td>
+      <td class="num">${r.measure === "share" ? pctS(r.value_60S) : (+r.value_60S).toFixed(2)} <span class="dim">n = ${r.n_60S}</span></td>
+      <td>${esc(r.test)}</td><td class="num">${fmtP(r.p)}</td></tr>`).join("");
+  const regRow = r => `<tr class="${r.q < 0.05 ? "sig" : ""}"><td>${esc(r.region)}</td><td class="num">${r.sites} / ${r.lysines}</td>
+      <td><span class="mbar"><i style="width:${Math.min(100, 300 * r.share)}%"></i></span>${pctS(r.share)} <span class="dim">(${pctS(r.lo)}–${pctS(r.hi)})</span></td>
+      <td class="num">${(+r.odds_ratio).toFixed(2)} (${ci(r.conf_low, r.conf_high)})</td><td class="num">${fmtP(r.q)}</td>
+      <td class="num">${r.responsive}</td><td class="num">${r.median_lfc == null ? "–" : (+r.median_lfc).toFixed(1)}</td>
+      <td>${r.kind === "region" ? `<button data-show="region:${esc(r.region)}">Show</button>` : r.region === "subunit interface" ? `<button data-show="interface">Show</button>` : ""}</td></tr>`;
+  const clu = stats.clustering.map(r => `<tr class="${r.p < 0.05 ? "sig" : ""}"><td>${esc(r.set)}</td><td>${esc(r.null)}</td><td>${esc(r.statistic.replace(" A", " Å").replace("(A)", "(Å)"))}</td>
+      <td class="num">${(+r.observed).toFixed(r.statistic.startsWith("mean") ? 1 : 0)}</td>
+      <td class="num">${(+r.expected).toFixed(1)} <span class="dim">(${(+r.null_lo).toFixed(r.statistic.startsWith("mean") ? 1 : 0)}–${(+r.null_hi).toFixed(r.statistic.startsWith("mean") ? 1 : 0)})</span></td>
+      <td class="num">${fmtP(r.p)}</td></tr>`).join("");
+  const hot = stats.hotspots.map(h => `<tr><td><span class="dot" style="background:${h.colour}"></span>${h.hotspot}</td><td>${esc(h.proteins)}</td><td>${esc(h.region)}</td>
+      <td class="num">${h.n_sites}</td><td class="num">${h.exposed}</td><td class="num">${(+h.median_lfc).toFixed(1)}</td><td class="num">${(+h.max_lfc).toFixed(1)}</td>
+      <td><button data-show="hotspot:${h.hotspot}">Show</button></td></tr>`).join("");
+  const com = stats.comodification.filter(r => r.lysines >= 5).map(r => `<tr class="${r.q < 0.05 ? "sig" : ""}"><td>${esc(r.modifier)}</td><td class="num">${r.lysines}</td><td class="num">${r.sumo_sites}</td>
+      <td><span class="mbar"><i style="width:${100 * r.share_of_modifier}%"></i></span>${pctS(r.share_of_modifier)}</td>
+      <td><span class="mbar other"><i style="width:${100 * r.share_of_other_lysines}%"></i></span>${pctS(r.share_of_other_lysines)}</td>
+      <td class="num">${(+r.odds_ratio).toFixed(1)} (${ci(r.conf_low, r.conf_high, 1)})</td><td class="num">${fmtP(r.q)}</td>
+      <td><button data-show="comod:${esc(r.modifier)}">Show</button></td></tr>`).join("");
+  const nHot = stats.hotspots.reduce((n, h) => n + h.n_sites, 0);
+  $("scontent").innerHTML = `
+    <div class="stoc"><a href="#s-access">Modified lysines</a><a href="#s-regions">Subunits and regions</a><a href="#s-cluster">Clustering</a><a href="#s-hot">Hotspots</a><a href="#s-comod">Other modifications</a></div>
+    <h3 id="s-access">Modified lysines against the other lysines ${sinfo("access")}</h3>
+    <p class="lead">How do the lysines that carry SUMO2/3 differ from the other lysines of the same proteins? Tinted rows: q &lt; 0.05.</p>
+    ${accessTable("SUMO sites vs other lysines of the same proteins")}
+    <details class="smore"><summary>The same questions for the MG132-responsive sites against the sites that do not respond</summary>
+    ${accessTable("MG132-responsive vs non-responsive SUMO sites")}</details>
+    <h3 id="s-regions">Subunits and regions ${sinfo("regions")}</h3>
+    <p class="lead">Where on the ribosome are lysines modified, and where is the MG132 response largest? Tinted rows: q &lt; 0.05.</p>
+    <table class="stable"><tr><th>Quantity</th><th class="num">40S</th><th class="num">60S</th><th>Test</th><th class="num">p</th></tr>${sub}</table>
+    <table class="stable"><tr><th>Region</th><th class="num">Sites / lysines</th><th>Lysines that are sites (95 % interval)</th><th class="num">Odds ratio vs the rest</th><th class="num">q</th>
+      <th class="num">Responsive sites</th><th class="num">Median log2 FC</th><th></th></tr>
+      ${stats.regions.map(regRow).join("")}</table>
+    <p>${stats.region_tests.map(t => `${esc(t.question)}: ${esc(t.test)} p = ${fmtP(t.p)} (n = ${t.n})`).join(" · ")}</p>
+    <h3 id="s-cluster">Spatial clustering ${sinfo("clustering")}</h3>
+    <p class="lead">Are the sites closer to one another than randomly drawn lysines? ${P.permutations.toLocaleString("en")} draws per line; pairs count NZ atoms within ${P.cluster_dist} Å. Tinted rows: p &lt; 0.05.</p>
+    <table class="stable"><tr><th>Sites</th><th>Drawn from (null model)</th><th>Statistic</th><th class="num">Observed</th><th class="num">Expected (95 % of draws)</th><th class="num">p</th></tr>${clu}</table>
+    <h3 id="s-hot">Hotspots ${sinfo("hotspots")}</h3>
+    <p class="lead">${stats.hotspots.length} groups of at least ${P.hotspot_min_sites} MG132-responsive sites linked within ${P.cluster_dist} Å, holding ${nHot} of the responsive sites.</p>
+    <table class="stable"><tr><th>Hotspot</th><th>Proteins (sites)</th><th>Region</th><th class="num">Sites</th><th class="num">Exposed</th><th class="num">Median log2 FC</th><th class="num">Max log2 FC</th><th></th></tr>${hot}</table>
+    <h3 id="s-comod">Other modifications at the same lysines ${sinfo("comod")}</h3>
+    <p class="lead">Are lysines that carry another modification (UniProt) SUMO sites more often than the others?</p>
+    <table class="stable"><tr><th>Modification</th><th class="num">Lysines</th><th class="num">of which SUMO sites</th><th>Share that are SUMO sites</th><th>Share among the other lysines</th>
+      <th class="num">Odds ratio (95 %)</th><th class="num">q</th><th></th></tr>${com}</table>`;
+}
+function syncHash() {                                  // the address follows the open window
+  if ($("help").open) return;                          // the help keeps its own address while it is open
+  history.replaceState(null, "", $("stats").open ? "#stats" : location.pathname + location.search);
+}
+function openStats() { const d = $("stats"); if (!d.open) d.showModal(); $("scontent").scrollTop = 0; history.replaceState(null, "", "#stats"); }
+function showFromStats(what) {                       // a Show button: colouring + filter (+ view) for that row
+  const [kind, value] = [what.split(":")[0], what.split(":").slice(1).join(":")];
+  $("q").value = ""; $("fenv").value = ""; $("fsig").checked = false; $("fregion").value = ""; $("fmore").value = "";
+  if (kind === "region") { siteMode = "region"; $("fregion").value = value; }
+  if (kind === "interface") { siteMode = "region"; $("fmore").value = "interface"; }
+  if (kind === "hotspot") { siteMode = "hotspot"; $("fmore").value = "hotspot:" + value; }
+  if (kind === "comod") { siteMode = "comod"; $("fmore").value = "comod:" + value; }
+  $("stats").close(); syncHash(); renderTable();
+  applyScene().then(() => {
+    const h = kind === "hotspot" && stats.hotspots.find(x => x.hotspot === value);
+    if (h) viewer.plugin.canvas3d.camera.focus([h.x, h.y, h.z], 42, 400);
+  });
+}
+function initStats() {
+  renderStats();
+  $("statsbtn").addEventListener("click", openStats);
+  $("sclose").addEventListener("click", () => { $("stats").close(); syncHash(); });
+  const d = $("stats");
+  d.addEventListener("click", e => {
+    if (e.target === d) { d.close(); return syncHash(); }
+    const b = e.target.closest("[data-show]"); if (b) return showFromStats(b.dataset.show);
+    const a = e.target.closest('.stoc a'); if (a) { e.preventDefault(); document.getElementById(a.getAttribute("href").slice(1)).scrollIntoView({ block: "start" }); }
+  });
+  d.addEventListener("close", syncHash);
+  if (location.hash === "#stats") openStats();
 }
 
 // ---- help: topics, entries, context links, search, changelog -----------------
@@ -657,6 +850,10 @@ function fillHelpNumbers() {
     const k = el.dataset.n; el.textContent = k.startsWith("env:") ? sites.filter(s => s.environment === k.slice(4)).length : n[k];
   }
   for (const el of help.querySelectorAll("[data-env]")) el.style.background = envCol[el.dataset.env];
+  for (const el of help.querySelectorAll("[data-s]")) {
+    const v = el.dataset.s.split(".").reduce((o, k) => o == null ? o : o[k], stats);
+    el.textContent = typeof v === "number" && el.dataset.fmt === "n" ? v.toLocaleString("en") : v ?? "";
+  }
   for (const sec of topics()) {
     if (!sec.querySelector("h2")) sec.insertAdjacentHTML("afterbegin", `<h2>${esc(sec.dataset.title)}</h2>`);
     for (const a of sec.querySelectorAll("article[data-entry]")) a.id = entryId(sec.dataset.topic, a.dataset.entry);
@@ -669,14 +866,17 @@ function initHelp() {
     e.preventDefault(); e.stopPropagation(); openHelp(a.dataset.help);
   }, true);
   $("hnav").addEventListener("click", e => { const b = e.target.closest("button[data-topic]"); if (b) openHelp(b.dataset.topic); });
-  $("hclose").addEventListener("click", () => help.close());
-  help.addEventListener("click", e => { if (e.target === help) help.close(); });       // click on the backdrop
-  help.addEventListener("close", () => { if (!help.open) history.replaceState(null, "", location.pathname + location.search); });
+  $("hclose").addEventListener("click", () => { help.close(); syncHash(); });
+  help.addEventListener("click", e => { if (e.target === help) { help.close(); syncHash(); } });       // click on the backdrop
+  help.addEventListener("close", syncHash);
   $("hsearch").addEventListener("input", e => helpSearch(e.target.value));
   document.addEventListener("keydown", e => {
     if (e.key === "?" && !help.open && !/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) { e.preventDefault(); openHelp(); }
   });
-  window.addEventListener("hashchange", () => { if (location.hash.startsWith("#help")) openHelp(location.hash.slice(6)); });
+  window.addEventListener("hashchange", () => {
+    if (location.hash.startsWith("#help")) openHelp(location.hash.slice(6));
+    else if (location.hash === "#stats") openStats();
+  });
   const seen = store.get(SEEN_KEY);
   if (!seen) store.set(SEEN_KEY, VERSION); else if (seen !== VERSION) $("vernew").hidden = false;
   if (location.hash.startsWith("#help")) openHelp(location.hash.slice(6));
@@ -686,16 +886,18 @@ let USER_HINT;
 async function main() {
   $("ver").textContent = "v" + VERSION;
   USER_HINT = $("userinfo").innerHTML;
-  [meta, sites, template] = await Promise.all(["data/meta.json", "data/sites.json", "data/scene_mg132.mvsj"].map(u => fetch(u).then(r => r.json())));
+  [meta, sites, template, stats] = await Promise.all(["data/meta.json", "data/sites.json", "data/scene_mg132.mvsj", "data/stats.json"].map(u => fetch(u).then(r => r.json())));
   sites.forEach((s, i) => s.i = i);
+  fillFilterMenus();
   initHelp();
+  initStats();
   $("views").innerHTML = meta.views.map(v => `<button data-id="${v.id}">${esc(VIEW_LABELS[v.id] || v.id)}</button>`).join("");
   viewer = await molstar.Viewer.create("viewer", {
     layoutIsExpanded: false, layoutShowControls: false, layoutShowRemoteState: false, layoutShowSequence: false,
     layoutShowLog: false, layoutShowLeftPanel: false, viewportShowExpand: false, viewportShowSelectionMode: false,
     viewportShowAnimation: false, viewportShowControls: true, collapseLeftPanel: true, collapseRightPanel: true,
   });
-  window.__rsv = { viewer, get meta() { return meta; }, get sites() { return sites; }, get user() { return user; },
+  window.__rsv = { viewer, get meta() { return meta; }, get sites() { return sites; }, get user() { return user; }, get stats() { return stats; }, openStats, showFromStats,
                    setSiteMode: m => { siteMode = m; return applyScene(); }, setProteinMode: m => { protMode = m; return applyScene(); },
                    loadUserText: (name, text) => setUser(loadUserTable(name, text)), buildScene, setView, select };
   renderTable();
@@ -705,7 +907,7 @@ async function main() {
   $("modes").addEventListener("click", e => { const b = e.target.closest("button"); if (b && b.dataset.id !== siteMode) { siteMode = b.dataset.id; renderTable(); applyScene(); } });
   $("pmodes").addEventListener("change", e => { protMode = e.target.value; renderTable(); applyScene(); });
   $("views").addEventListener("click", e => { const b = e.target.closest("button"); if (b) setView(meta.views.find(v => v.id === b.dataset.id)); });
-  for (const id of ["q", "fsub", "fenv", "fsig"]) $(id).addEventListener("input", renderTable);
+  for (const id of ["q", "fregion", "fenv", "fmore", "fsig"]) $(id).addEventListener("input", renderTable);
   document.querySelector("thead").addEventListener("click", e => {
     const th = e.target.closest("th"); if (!th) return;
     sort = { k: th.dataset.k, dir: sort.k === th.dataset.k ? -sort.dir : (th.classList.contains("num") ? -1 : 1) }; renderTable();

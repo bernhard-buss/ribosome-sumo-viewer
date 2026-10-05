@@ -23,6 +23,16 @@ The version next to the title is raised with every change of what the viewer
 can do; [CHANGELOG.md](CHANGELOG.md) is the one place the history is written,
 and the help renders that file.
 
+## Statistics
+
+The **Statistics** button (or the address `#stats`) opens the results of the
+analysis behind the data: the modified lysines against the other lysines of the
+same proteins, the subunits and four regions of the ribosome, spatial
+clustering tested by random draws, the hotspots of MG132-responsive sites, and
+other modifications recorded at the same lysines in UniProt. *Show* buttons set
+the matching colouring and filter. The results are stored in `data/stats.json`;
+the page displays them and does not recompute them.
+
 ## Your own data
 
 *Load a table…* reads a CSV or TSV from your disk into the page and colours the
@@ -42,7 +52,8 @@ not stored, and it is gone when the page is closed.
 
 | File | Content |
 |---|---|
-| `data/sites.json` | one row per site: protein, position, structural annotation, quantification |
+| `data/sites.json` | one row per site: protein, position, structural annotation (environment, region, hotspot), quantification, other modifications |
+| `data/stats.json` | the stored test results shown in the Statistics window |
 | `data/annotations.json` | per-residue colours and tooltips for the structure view |
 | `data/scene_*.mvsj` | one [MolViewSpec](https://molstar.org/mol-view-spec/) scene per colouring |
 | `data/meta.json` | colourings, legends and the six standard views |
@@ -56,6 +67,8 @@ Sources:
   published.
 - **Structure** — PDB [8QOI](https://www.rcsb.org/structure/8QOI), human 80S
   ribosome at 1.9 Å (Holvec S et al., Nat Struct Mol Biol 31:1251, 2024).
+- **Other modifications** — the cross-link and modified-residue records of
+  UniProt (CC BY 4.0) for the proteins of the structure.
 - **Structural annotation** — computed from 8QOI: a lysine is *rRNA contact*
   when its side-chain nitrogen (NZ) is within 4 Å of an rRNA atom, *exposed*
   when it is not and its NZ has ≥ 10 Å² of solvent-accessible surface in the
