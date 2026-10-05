@@ -17,6 +17,8 @@
   has an entry (newest first, `## x.y — YYYY-MM-DD`). The in-page changelog renders
   `CHANGELOG.md`; there is no second copy. Numbers in help text come from the data
   (`data-n` spans filled by `fillHelpNumbers()`), not from typed constants.
+- A view that must hold after a scene reload travels inside the scene as a MolViewSpec `camera` node
+  (`buildScene(camera)`); setting the camera after `loadMvsData` races with the camera the reload restores.
 - Test hook: `window.__rsv` (`viewer`, `meta`, `sites`, `user`, `setSiteMode`,
   `setProteinMode`, `loadUserText(name, text)`, `buildScene`, `setView`, `select`, `stats`, `openStats`,
   `showFromStats("hotspot:H1")`).

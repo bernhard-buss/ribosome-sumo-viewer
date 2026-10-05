@@ -423,7 +423,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/molstar@5.12.0/build/viewer/molstar.js"></script>
 <script>
-const VERSION = "0.4";
+const VERSION = "0.4.1";
 const VIEW_LABELS = { "40S_solvent": "40S solvent side", "60S_solvent": "60S solvent side", "mRNA_entry": "mRNA entry side",
                       "mRNA_exit": "mRNA exit side", "top": "top", "bottom": "bottom" };
 const ENV_ORDER = ["exposed", "rRNA contact", "buried", "not modelled"];
@@ -474,8 +474,9 @@ function colourNodes(pairs) {          // [[selector, colour]] -> one colour nod
   for (const [sel, col] of pairs) if (col) (by.get(col) || by.set(col, []).get(col)).push(sel);
   return [...by].map(([color, selector]) => ({ kind: "color", params: { color, selector } }));
 }
-function buildScene() {
+function buildScene(camera) {
   const sc = structuredClone(template), nodes = [...walk(sc.root)];
+  if (camera) sc.root.children.push({ kind: "camera", params: camera });
   for (const n of nodes) if (n.params && n.params.uri && !/^[a-z]+:/i.test(n.params.uri)) n.params.uri = new URL("data/" + n.params.uri, location.href).href;
   const comps = nodes.filter(n => n.kind === "component");
   const rep = c => c.children.find(n => n.kind === "representation");
@@ -492,13 +493,22 @@ function buildScene() {
   }
   return sc;
 }
-async function applyScene(keepCamera = true) {
+// Scene loads run one at a time: two overlapping loads leave Mol* with a broken camera. A request
+// made while one is running waits for it; of several waiting requests only the newest is carried out.
+let sceneQueue = Promise.resolve(), sceneSeq = 0;
+function applyScene(keepCamera = true, camera = null) {
+  const seq = ++sceneSeq;
   $("busy").hidden = false; $("busy").textContent = "Loading the structure…";
-  try {
-    await viewer.loadMvsData(JSON.stringify(buildScene()), "mvsj", { replaceExisting: true, keepCamera });
-  } catch (e) { $("busy").textContent = "Could not load the structure: " + e.message; console.error(e); return; }
-  $("busy").hidden = true;
-  renderControls();
+  const job = sceneQueue.then(async () => {
+    if (seq !== sceneSeq) return;                      // superseded while waiting
+    try {
+      await viewer.loadMvsData(JSON.stringify(buildScene(camera)), "mvsj", { replaceExisting: true, keepCamera: keepCamera && !camera });
+    } catch (e) { $("busy").textContent = "Could not load the structure: " + e.message; console.error(e); return; }
+    if (seq === sceneSeq) $("busy").hidden = true;
+    renderControls();
+  });
+  sceneQueue = job.catch(() => {});
+  return job;
 }
 
 function legendHtml(L, withBase) {
@@ -750,10 +760,16 @@ function showFromStats(what) {                       // a Show button: colouring
   if (kind === "hotspot") { siteMode = "hotspot"; $("fmore").value = "hotspot:" + value; }
   if (kind === "comod") { siteMode = "comod"; $("fmore").value = "comod:" + value; }
   $("stats").close(); syncHash(); renderTable();
-  applyScene().then(() => {
-    const h = kind === "hotspot" && stats.hotspots.find(x => x.hotspot === value);
-    if (h) viewer.plugin.canvas3d.camera.focus([h.x, h.y, h.z], 42, 400);
-  });
+  const h = kind === "hotspot" && stats.hotspots.find(x => x.hotspot === value);
+  applyScene(true, h ? cameraOn([h.x, h.y, h.z], 150) : null);
+}
+// A camera that looks at a point from outside the particle, along the line from its centre.
+function cameraOn(point, distance) {
+  const c = meta.views[0].target, d = point.map((v, i) => v - c[i]), n = Math.hypot(...d) || 1;
+  const dir = d.map(v => v / n);
+  const ups = meta.views.map(v => v.up), dot = u => Math.abs(u[0] * dir[0] + u[1] * dir[1] + u[2] * dir[2]);
+  const up = ups.reduce((best, u) => dot(u) < dot(best) ? u : best);      // the stored "up" most across the line of sight
+  return { target: point, position: point.map((v, i) => v + dir[i] * distance), up };
 }
 function initStats() {
   renderStats();

@@ -4,6 +4,14 @@ The version next to the title is raised with every change of what the viewer can
 Changes of the data files are listed with the version that shipped them. This file is
 the only place the history is written; the Changelog page of the in-page help renders it.
 
+## 0.4.1 — 2026-10-05
+Fixes.
+
+- *Show* on a hotspot in the Statistics window now turns the structure to that hotspot; in
+  0.4 it set the colouring and the filter but left the view unchanged.
+- Choosing a colouring, a *Show* button or a table while the structure is still loading no
+  longer starts a second load on top of the first, which could leave the view empty.
+
 ## 0.4 — 2026-10-05
 Statistics. A Statistics window (button in the header, or the address `#stats`) shows the
 results of the analysis behind the data: the modified lysines against the other lysines of
