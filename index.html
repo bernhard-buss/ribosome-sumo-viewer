@@ -83,6 +83,12 @@
                border-radius: 999px; padding: 2px 10px; text-decoration: none; }
   .stagehelp:hover { color: var(--accent); border-color: #9aa3af; }
   #busy:not([hidden]) ~ .stagehelp { display: none; }
+  #pin { position: absolute; left: 12px; top: 44px; z-index: 4; max-width: min(360px, calc(100% - 24px)); font-size: 12.5px; line-height: 1.4; color: var(--ink);
+         background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 8px; padding: 6px 28px 6px 10px; box-shadow: 0 2px 10px rgba(20,24,32,.12); }
+  #pin[hidden] { display: none; }
+  #pin b { font-weight: 600; } #pin .dim { color: var(--muted); }
+  #pin button { position: absolute; right: 4px; top: 3px; border: 0; background: none; font: inherit; font-size: 15px; line-height: 1; color: var(--muted); cursor: pointer; padding: 2px 5px; }
+  #pin button:hover { color: var(--ink); }
   dialog#help, dialog#stats { width: min(1020px, 96vw); height: min(780px, 92vh); padding: 0; border: 1px solid var(--line); border-radius: 10px; color: var(--ink);
                 box-shadow: 0 18px 60px rgba(20, 24, 32, .28); }
   dialog#help::backdrop, dialog#stats::backdrop { background: rgba(20, 24, 32, .42); }
@@ -165,7 +171,7 @@
   </span>
 </header>
 <main>
-  <div id="stage"><div id="viewer"></div><div id="busy">Loading the structure…</div><a class="stagehelp" href="#help/view/mouse" data-help="view/mouse" title="Help: mouse and touch controls">ⓘ rotate · zoom · move</a></div>
+  <div id="stage"><div id="viewer"></div><div id="busy">Loading the structure…</div><a class="stagehelp" href="#help/view/mouse" data-help="view/mouse" title="Help: mouse and touch controls">ⓘ rotate · zoom · move</a><div id="pin" hidden></div></div>
   <aside>
     <div class="block" id="structblock">
       <h2>Structure <a class="hl" href="#help/structures/choose" data-help="structures/choose" title="Help: the structures">ⓘ</a></h2>
@@ -314,8 +320,9 @@
               <tr><td>Rotate</td><td>drag with the left button</td><td>drag with one finger</td></tr>
               <tr><td>Zoom</td><td>scroll wheel</td><td>pinch with two fingers</td></tr>
               <tr><td>Move sideways</td><td>drag with the right button, or <kbd>Ctrl</kbd> + drag</td><td>drag with two fingers</td></tr>
-              <tr><td>Identify a residue</td><td colspan="2">hover over it: protein, chain and residue appear at the bottom right of the structure; on a SUMO site also its name, environment and MG132 response</td></tr>
-              <tr><td>Centre on a residue</td><td colspan="2">click it</td></tr></table>
+              <tr><td>Identify a residue</td><td>hover over it: protein, chain and residue appear at the bottom right of the structure; on a SUMO site also its name, environment and MG132 response</td><td>tap it (see the next row)</td></tr>
+              <tr><td>Mark a residue</td><td colspan="2">click or tap it: the residue is outlined and its label is pinned at the top left of the structure until the next click; a SUMO site is also selected in the table, with its details below it. A click on empty space removes the mark.</td></tr>
+              <tr><td>Zoom to a residue</td><td colspan="2">double-click or double-tap it. The camera moves closer along the current line of sight; nothing is cut away in front of or behind the residue.</td></tr></table>
             <p>The complete list of key and mouse bindings is under <i>Settings / Controls Info</i> in the toolbar at the right edge of the structure.</p></article>
           <article data-entry="views"><h3>The standard views</h3>
             <p>The view buttons turn the ribosome to fixed orientations, derived from the structure itself so that they mean the same for every colouring and, through superposition, for every structure:</p>
@@ -337,7 +344,7 @@
             <p>These buttons belong to Mol*, the program that draws the structure. From the top: <i>Reset Zoom</i> brings the whole particle back into view; <i>Screenshot</i> saves the current picture as an image; <i>Toggle Controls Panel</i> opens Mol*'s own panels (sequence, components, measurements) for anything this page does not offer; <i>Toggle Full Screen</i>; <i>Settings / Controls Info</i>; <i>Illumination</i>.</p>
             <p>Changes made in Mol*'s panels are replaced when a structure or a colouring is chosen or a table is loaded.</p></article>
           <article data-entry="selection"><h3>The selected site</h3>
-            <p>Selecting a row in the table centres the view on that lysine and outlines it in green. The outline stays until another site is selected.</p></article>
+            <p>Selecting a row in the table moves the camera to that lysine and outlines it in green; clicking a residue in the structure outlines it the same way and pins its label. The outline stays until another site or residue is selected, or until a click on empty space.</p></article>
         </section>
 
         <section data-topic="colour" data-title="Colourings" hidden>
@@ -530,7 +537,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/molstar@5.12.0/build/viewer/molstar.js"></script>
 <script>
-const VERSION = "0.7";
+const VERSION = "0.7.1";
 const VIEW_LABELS = { "40S_solvent": "40S solvent side", "60S_solvent": "60S solvent side", "mRNA_entry": "mRNA entry side",
                       "mRNA_exit": "mRNA exit side", "top": "top", "bottom": "bottom",
                       "side_40S": "40S side", "side_60S": "60S side", "across_1": "edge-on, first side", "across_2": "edge-on, second side",
@@ -766,10 +773,79 @@ function setView(v) {
   syncSoon(700);
 }
 
+// Move the camera towards a point along the current line of sight; the clipping radius stays
+// as it is, so that nothing in front of or behind the point is cut away.
+function zoomTo(point, distance = 70, ms = 350) {
+  const cam = viewer.plugin.canvas3d.camera, c = cam.getSnapshot();
+  const d = [0, 1, 2].map(i => c.position[i] - c.target[i]), n = Math.hypot(...d) || 1;
+  cam.setState({ target: point, position: point.map((v, i) => v + d[i] / n * distance), up: c.up }, ms);
+  syncSoon(ms + 300);
+}
 function focusSite(s) {
   if (s.x == null) return;
   viewer.structureInteractivity({ elements: { label_asym_id: s.label_asym, label_seq_id: s.label_seq }, action: "select" });
-  viewer.plugin.canvas3d.camera.focus([s.x, s.y, s.z], 28, 350);
+  zoomTo([s.x, s.y, s.z]);
+}
+
+// ---- clicking in the structure ------------------------------------------------
+// A click marks the residue (outline) and pins its label on the stage, where it stays until the
+// next click; a click on empty space clears both. A double click zooms to the residue. Hovering
+// keeps Mol*'s own label at the bottom right. Mol*'s default, to focus the camera on a click
+// (which also narrows the clipping to the residue), is switched off in initInteraction().
+let lastClick = null;      // { time, position, loci }
+const structLib = () => molstar.lib.structure;
+function residueOf(loci) {               // the first residue of a loci: structure, chain and residue identifiers
+  const SE = structLib().StructureElement, SP = structLib().StructureProperties;
+  if (!loci || loci.kind !== "element-loci") return null;
+  const loc = SE.Loci.getFirstLocation(loci); if (!loc) return null;
+  return { entry: String(loci.structure.model.entryId || "").toUpperCase(), asym: SP.chain.label_asym_id(loc), auth_asym: SP.chain.auth_asym_id(loc),
+           seq: SP.residue.label_seq_id(loc), auth_seq: SP.residue.auth_seq_id(loc), comp: SP.atom.label_comp_id(loc) };
+}
+function pinLabel(r, site) {
+  const pin = $("pin"), chain = meta.chains.find(c => c.label_asym === r.asym);
+  let html;
+  if (r.entry !== sid && meta.sumo && r.entry === meta.sumo.pdb_id) {
+    const at = sites.find(x => siteKey(x) === sumoAt);
+    html = `<b>SUMO2 core</b>, residue ${esc(r.comp)} ${r.auth_seq}, placed at ${at ? esc(at.label) : "the selected site"} <span class="dim">· one of the possible placements</span>`;
+  } else if (site) {
+    html = `<b>${esc(site.label)}</b>${multi() ? ` <span class="dim">${esc(site.particle)} ribosome</span>` : ""} · ${esc(site.environment)}${site.region ? `, ${esc(site.region)}` : ""}` +
+      ` · MG132 log2 FC ${fmt(site.lfc_mg132)} (q ${fmtQ(site.q_mg132)})` + (site.fit != null ? ` · room for SUMO: ${esc(site.room)}, ${pct1(site.fit)}` : "") +
+      `<br><span class="dim">Details below the table.</span>`;
+  } else {
+    const who = chain ? (chain.gene || chain.description || chain.protein || "") : "";
+    html = `<b>${esc(r.comp)} ${r.auth_seq}</b> of ${esc(who)}${chain && chain.role !== "rp" && chain.kind === "protein" ? " (factor)" : ""}, chain ${esc(r.auth_asym)}` +
+      (multi() && chain ? ` <span class="dim">· ${esc(chain.particle)} ribosome</span>` : "") + `<br><span class="dim">Not a SUMO2/3 site.</span>`;
+  }
+  pin.innerHTML = html + `<button type="button" id="unpin" title="Remove the mark" aria-label="Remove the mark">×</button>`;
+  pin.hidden = false;
+}
+function unpin(clearSelection = true) {
+  $("pin").hidden = true; $("pin").innerHTML = "";
+  if (clearSelection) { try { viewer.plugin.managers.interactivity.lociSelects.deselectAll(); } catch (e) {} }
+}
+function onStructureClick(e) {
+  const loci = e.current && e.current.loci;
+  if (!loci || loci.kind !== "element-loci") { unpin(); return; }
+  const res = molstar.lib.loci.Loci.applyGranularity(loci, "residue");
+  lastClick = { time: Date.now(), position: e.position ? [...e.position] : null, loci: res };
+  try { viewer.plugin.managers.interactivity.lociSelects.selectOnly({ loci: res }); } catch (err) {}
+  const r = residueOf(res);
+  const site = r && r.entry === sid ? sites.find(x => x.label_asym === r.asym && x.label_seq === r.seq) : null;
+  if (r) pinLabel(r, site);
+  if (site) { select(site.i, false); revealRow(site.i); }
+}
+async function initInteraction() {
+  const plugin = viewer.plugin;
+  // Mol*'s click behaviours: no camera focus (it narrows the clipping to the residue) and no focus
+  // representation; hover highlighting and labels stay
+  for (const cell of plugin.state.behaviors.cells.values()) {
+    const t = cell.transform.transformer;
+    if (t.id === "ms-plugin.camera-focus-loci" || t.id === "ms-plugin.representation-focus-loci")
+      await plugin.state.updateBehavior(t, p => { for (const k of Object.keys(p.bindings || {})) if (/^click/.test(k)) p.bindings[k] = { triggers: [], action: "", description: "" }; });
+  }
+  plugin.behaviors.interaction.click.subscribe(onStructureClick);
+  $("viewer").addEventListener("dblclick", () => { if (lastClick && lastClick.position && Date.now() - lastClick.time < 1500) zoomTo(lastClick.position); });
+  $("pin").addEventListener("click", e => { if (e.target.id === "unpin") unpin(); });
 }
 
 function visibleSites() {
@@ -852,6 +928,11 @@ function toggleSumo() {                                // draw (or remove) a SUM
   const s = sites[selected]; if (!s) return;
   sumoAt = sumoAt === siteKey(s) ? null : siteKey(s);
   renderDetail(s); syncUrl(); applyScene(true);
+}
+function revealRow(i) {                 // scroll the table, not the page, so that the structure stays where it is on a narrow screen
+  const tr = document.querySelector(`#rows tr[data-i="${i}"]`), w = $("tablewrap"); if (!tr) return;
+  const dy = tr.getBoundingClientRect().top - w.getBoundingClientRect().top - w.clientHeight / 2 + tr.offsetHeight / 2;
+  if (Math.abs(dy) > w.clientHeight / 2 - tr.offsetHeight) w.scrollTop += dy;
 }
 function select(i, focus = true) {
   const s = sites[i]; selected = i; renderDetail(s);
@@ -1058,7 +1139,7 @@ function initStats() {
     const tr = e.target.closest("tr[data-site]");
     if (tr) { const [label, particle] = tr.dataset.site.split("|"), t = sites.find(x => x.label === label && (!particle || x.particle === particle));
       d.close(); syncHash(); $("q").value = ""; $("fmore").value = ""; $("fregion").value = ""; $("fenv").value = ""; $("fsig").checked = false; renderTable();
-      if (t) { select(t.i); document.querySelector(`#rows tr[data-i="${t.i}"]`)?.scrollIntoView({ block: "nearest" }); } return; }
+      if (t) { select(t.i); revealRow(t.i); } return; }
     const a = e.target.closest('.stoc a'); if (a) { e.preventDefault(); document.getElementById(a.getAttribute("href").slice(1)).scrollIntoView({ block: "start" }); }
   });
   d.addEventListener("close", syncHash);
@@ -1262,7 +1343,7 @@ async function loadStructure_(id, opts = {}) {
   const got = await Promise.all(["meta.json", "sites.json", "scene_mg132.mvsj", "stats.json"].map(get));
   if (seq !== loadSeq) return;                         // another structure was chosen meanwhile
   [meta, sites, template, stats] = got;
-  sid = id; entry = structures.find(x => x.id === id); selected = null; sumoAt = null; lastCam = null; camBusy = true;
+  sid = id; entry = structures.find(x => x.id === id); selected = null; sumoAt = null; lastCam = null; camBusy = true; unpin(false);
   sites.forEach((s, i) => s.i = i);
   if (st) {
     if (st.colour) siteMode = st.colour;
@@ -1297,7 +1378,7 @@ async function loadStructure_(id, opts = {}) {
   await applyScene(false, camera);
   if (seq !== loadSeq) return;
   camBusy = false;
-  if (t) { select(t.i, false); document.querySelector(`#rows tr[data-i="${t.i}"]`)?.scrollIntoView({ block: "nearest" }); }
+  if (t) { select(t.i, false); revealRow(t.i); }
   urlReady = true; syncSoon(300);
 }
 let DETAIL_HINT;
@@ -1321,9 +1402,10 @@ async function main() {
                    setPartners: on => { showPartners = on; $("partners").checked = on; return applyScene(); },
                    setSiteMode: m => { siteMode = m; return applyScene(); }, setProteinMode: m => { protMode = m; return applyScene(); },
                    loadUserText: (name, text) => { userRaw = { name, text }; setUser(loadUserTable(name, text)); }, buildScene, setView, select,
-                   toggleSumo, get sumoAt() { return sumoAt; }, stateQuery, syncUrl };
+                   toggleSumo, get sumoAt() { return sumoAt; }, stateQuery, syncUrl, zoomTo, onStructureClick, get lastClick() { return lastClick; } };
   initHelp();
   initStats();
+  await initInteraction();
   const st = readUrlState(), deep = location.hash;     // the address is rewritten once the page is set up
   await loadStructure(st.s || refId(), { state: st, onData: () => { if (deep.startsWith("#help")) openHelp(deep.slice(6)); else if (deep === "#stats") openStats(); } });
 

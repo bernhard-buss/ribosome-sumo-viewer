@@ -9,6 +9,9 @@ shown on the structure and coloured by its response to proteasome inhibition
 contact with rRNA, buried). A table lists every site; selecting a row centres
 the structure on that lysine.
 
+In the structure, hovering identifies a residue, a click or tap marks it and
+pins its label, and a double click zooms to it without cutting anything away.
+
 ## Structures
 
 The *Structure* menu offers seven states of the ribosome; the address takes the

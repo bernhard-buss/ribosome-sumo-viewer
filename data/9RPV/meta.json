@@ -121,7 +121,8 @@
    "protein": "",
    "gene": "",
    "role": "mRNA",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "mRNA of the collided 80S"
   },
   {
    "label_asym": "B",
@@ -131,7 +132,8 @@
    "protein": "",
    "gene": "",
    "role": "mRNA",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "mRNA of the stalled 80S"
   },
   {
    "label_asym": "C",
@@ -141,7 +143,8 @@
    "protein": "",
    "gene": "",
    "role": "tRNA",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "P/E tRNA on the collided 80S"
   },
   {
    "label_asym": "D",
@@ -151,7 +154,8 @@
    "protein": "",
    "gene": "",
    "role": "tRNA",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "P-site tRNA of the stalled 80S"
   },
   {
    "label_asym": "E",
@@ -161,7 +165,8 @@
    "protein": "",
    "gene": "",
    "role": "tRNA",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "A/P tRNA on the collided 80S"
   },
   {
    "label_asym": "F",
@@ -171,7 +176,8 @@
    "protein": "O60869",
    "gene": "EDF1",
    "role": "factor",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "Endothelial differentiation-related factor 1"
   },
   {
    "label_asym": "G",
@@ -181,7 +187,8 @@
    "protein": "",
    "gene": "",
    "role": "tRNA",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "E-site tRNA of the stalled 80S"
   },
   {
    "label_asym": "H",
@@ -191,7 +198,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "28S rRNA of the collided 80S"
   },
   {
    "label_asym": "I",
@@ -201,7 +209,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "5S rRNA"
   },
   {
    "label_asym": "J",
@@ -211,7 +220,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "5.8S rRNA of the collided 80S"
   },
   {
    "label_asym": "K",
@@ -221,7 +231,8 @@
    "protein": "P62917",
    "gene": "RPL8",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L8"
   },
   {
    "label_asym": "L",
@@ -231,7 +242,8 @@
    "protein": "P39023",
    "gene": "RPL3",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L3"
   },
   {
    "label_asym": "M",
@@ -241,7 +253,8 @@
    "protein": "P36578",
    "gene": "RPL4",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L4"
   },
   {
    "label_asym": "N",
@@ -251,7 +264,8 @@
    "protein": "P46777",
    "gene": "RPL5",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L5"
   },
   {
    "label_asym": "O",
@@ -261,7 +275,8 @@
    "protein": "Q02878",
    "gene": "RPL6",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "Large ribosomal subunit protein eL6"
   },
   {
    "label_asym": "P",
@@ -271,7 +286,8 @@
    "protein": "P18124",
    "gene": "RPL7",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "Large ribosomal subunit protein uL30"
   },
   {
    "label_asym": "Q",
@@ -281,7 +297,8 @@
    "protein": "P62424",
    "gene": "RPL7A",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L7a"
   },
   {
    "label_asym": "R",
@@ -291,7 +308,8 @@
    "protein": "P32969",
    "gene": "RPL9",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L9"
   },
   {
    "label_asym": "S",
@@ -301,7 +319,8 @@
    "protein": "Q96L21",
    "gene": "RPL10L",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "Ribosomal protein uL16-like"
   },
   {
    "label_asym": "T",
@@ -311,7 +330,8 @@
    "protein": "P62913",
    "gene": "RPL11",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L11"
   },
   {
    "label_asym": "U",
@@ -321,7 +341,8 @@
    "protein": "P26373",
    "gene": "RPL13",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "Large ribosomal subunit protein eL13"
   },
   {
    "label_asym": "V",
@@ -331,7 +352,8 @@
    "protein": "P50914",
    "gene": "RPL14",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L14"
   },
   {
    "label_asym": "W",
@@ -341,7 +363,8 @@
    "protein": "P61313",
    "gene": "RPL15",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L15"
   },
   {
    "label_asym": "X",
@@ -351,7 +374,8 @@
    "protein": "P40429",
    "gene": "RPL13A",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L13a"
   },
   {
    "label_asym": "Y",
@@ -361,7 +385,8 @@
    "protein": "P18621",
    "gene": "RPL17",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L17"
   },
   {
    "label_asym": "Z",
@@ -371,7 +396,8 @@
    "protein": "Q07020",
    "gene": "RPL18",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L18"
   },
   {
    "label_asym": "AA",
@@ -381,7 +407,8 @@
    "protein": "P84098",
    "gene": "RPL19",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L19"
   },
   {
    "label_asym": "BA",
@@ -391,7 +418,8 @@
    "protein": "Q02543",
    "gene": "RPL18A",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L18a"
   },
   {
    "label_asym": "CA",
@@ -401,7 +429,8 @@
    "protein": "P46778",
    "gene": "RPL21",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L21"
   },
   {
    "label_asym": "DA",
@@ -411,7 +440,8 @@
    "protein": "P35268",
    "gene": "RPL22",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L22"
   },
   {
    "label_asym": "EA",
@@ -421,7 +451,8 @@
    "protein": "P62829",
    "gene": "RPL23",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L23"
   },
   {
    "label_asym": "FA",
@@ -431,7 +462,8 @@
    "protein": "P83731",
    "gene": "RPL24",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L24"
   },
   {
    "label_asym": "GA",
@@ -441,7 +473,8 @@
    "protein": "P62750",
    "gene": "RPL23A",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L23a"
   },
   {
    "label_asym": "HA",
@@ -451,7 +484,8 @@
    "protein": "P61254",
    "gene": "RPL26",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L26"
   },
   {
    "label_asym": "IA",
@@ -461,7 +495,8 @@
    "protein": "P61353",
    "gene": "RPL27",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L27"
   },
   {
    "label_asym": "JA",
@@ -471,7 +506,8 @@
    "protein": "P46776",
    "gene": "RPL27A",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L27a"
   },
   {
    "label_asym": "KA",
@@ -481,7 +517,8 @@
    "protein": "P47914",
    "gene": "RPL29",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L29"
   },
   {
    "label_asym": "LA",
@@ -491,7 +528,8 @@
    "protein": "P62888",
    "gene": "RPL30",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L30"
   },
   {
    "label_asym": "MA",
@@ -501,7 +539,8 @@
    "protein": "P62899",
    "gene": "RPL31",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L31"
   },
   {
    "label_asym": "NA",
@@ -511,7 +550,8 @@
    "protein": "P62910",
    "gene": "RPL32",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L32"
   },
   {
    "label_asym": "OA",
@@ -521,7 +561,8 @@
    "protein": "P18077",
    "gene": "RPL35A",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L35a"
   },
   {
    "label_asym": "PA",
@@ -531,7 +572,8 @@
    "protein": "P49207",
    "gene": "RPL34",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L34"
   },
   {
    "label_asym": "QA",
@@ -541,7 +583,8 @@
    "protein": "P42766",
    "gene": "RPL35",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L35"
   },
   {
    "label_asym": "RA",
@@ -551,7 +594,8 @@
    "protein": "Q9Y3U8",
    "gene": "RPL36",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L36"
   },
   {
    "label_asym": "SA",
@@ -561,7 +605,8 @@
    "protein": "P61927",
    "gene": "RPL37",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "Large ribosomal subunit protein eL37"
   },
   {
    "label_asym": "TA",
@@ -571,7 +616,8 @@
    "protein": "P63173",
    "gene": "RPL38",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L38"
   },
   {
    "label_asym": "UA",
@@ -581,7 +627,8 @@
    "protein": "P62891",
    "gene": "RPL39",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L39"
   },
   {
    "label_asym": "VA",
@@ -591,7 +638,8 @@
    "protein": "P62987",
    "gene": "UBA52",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "Ubiquitin-60S ribosomal protein L40"
   },
   {
    "label_asym": "WA",
@@ -601,7 +649,8 @@
    "protein": "P62945",
    "gene": "RPL41",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L41"
   },
   {
    "label_asym": "XA",
@@ -611,7 +660,8 @@
    "protein": "P83881",
    "gene": "RPL36A",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L36a"
   },
   {
    "label_asym": "YA",
@@ -621,7 +671,8 @@
    "protein": "P61513",
    "gene": "RPL37A",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L37a"
   },
   {
    "label_asym": "ZA",
@@ -631,7 +682,8 @@
    "protein": "P46779",
    "gene": "RPL28",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "60S ribosomal protein L28"
   },
   {
    "label_asym": "AB",
@@ -641,7 +693,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "28S rRNA of the stalled 80S"
   },
   {
    "label_asym": "BB",
@@ -651,7 +704,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "5S rRNA"
   },
   {
    "label_asym": "CB",
@@ -661,7 +715,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "5.8S rRNA of the stalled 80S"
   },
   {
    "label_asym": "DB",
@@ -671,7 +726,8 @@
    "protein": "P62917",
    "gene": "RPL8",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Large ribosomal subunit protein uL2"
   },
   {
    "label_asym": "EB",
@@ -681,7 +737,8 @@
    "protein": "P39023",
    "gene": "RPL3",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Large ribosomal subunit protein uL3"
   },
   {
    "label_asym": "FB",
@@ -691,7 +748,8 @@
    "protein": "P36578",
    "gene": "RPL4",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L4"
   },
   {
    "label_asym": "GB",
@@ -701,7 +759,8 @@
    "protein": "P46777",
    "gene": "RPL5",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L5"
   },
   {
    "label_asym": "HB",
@@ -711,7 +770,8 @@
    "protein": "Q02878",
    "gene": "RPL6",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Large ribosomal subunit protein eL6"
   },
   {
    "label_asym": "IB",
@@ -721,7 +781,8 @@
    "protein": "P18124",
    "gene": "RPL7",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Large ribosomal subunit protein uL30"
   },
   {
    "label_asym": "JB",
@@ -731,7 +792,8 @@
    "protein": "P62424",
    "gene": "RPL7A",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L7a"
   },
   {
    "label_asym": "KB",
@@ -741,7 +803,8 @@
    "protein": "P32969",
    "gene": "RPL9",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L9"
   },
   {
    "label_asym": "LB",
@@ -751,7 +814,8 @@
    "protein": "P27635",
    "gene": "RPL10",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L10"
   },
   {
    "label_asym": "MB",
@@ -761,7 +825,8 @@
    "protein": "P62913",
    "gene": "RPL11",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L11"
   },
   {
    "label_asym": "NB",
@@ -771,7 +836,8 @@
    "protein": "P26373",
    "gene": "RPL13",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Large ribosomal subunit protein eL13"
   },
   {
    "label_asym": "OB",
@@ -781,7 +847,8 @@
    "protein": "P50914",
    "gene": "RPL14",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L14"
   },
   {
    "label_asym": "PB",
@@ -791,7 +858,8 @@
    "protein": "P61313",
    "gene": "RPL15",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L15"
   },
   {
    "label_asym": "QB",
@@ -801,7 +869,8 @@
    "protein": "P40429",
    "gene": "RPL13A",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L13a"
   },
   {
    "label_asym": "RB",
@@ -811,7 +880,8 @@
    "protein": "P18621",
    "gene": "RPL17",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L17"
   },
   {
    "label_asym": "SB",
@@ -821,7 +891,8 @@
    "protein": "Q07020",
    "gene": "RPL18",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L18"
   },
   {
    "label_asym": "TB",
@@ -831,7 +902,8 @@
    "protein": "P84098",
    "gene": "RPL19",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L19"
   },
   {
    "label_asym": "UB",
@@ -841,7 +913,8 @@
    "protein": "Q02543",
    "gene": "RPL18A",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L18a"
   },
   {
    "label_asym": "VB",
@@ -851,7 +924,8 @@
    "protein": "P46778",
    "gene": "RPL21",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L21"
   },
   {
    "label_asym": "WB",
@@ -861,7 +935,8 @@
    "protein": "P35268",
    "gene": "RPL22",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L22"
   },
   {
    "label_asym": "XB",
@@ -871,7 +946,8 @@
    "protein": "P62829",
    "gene": "RPL23",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L23"
   },
   {
    "label_asym": "YB",
@@ -881,7 +957,8 @@
    "protein": "P83731",
    "gene": "RPL24",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L24"
   },
   {
    "label_asym": "ZB",
@@ -891,7 +968,8 @@
    "protein": "P62750",
    "gene": "RPL23A",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L23a"
   },
   {
    "label_asym": "AC",
@@ -901,7 +979,8 @@
    "protein": "P61254",
    "gene": "RPL26",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L26"
   },
   {
    "label_asym": "BC",
@@ -911,7 +990,8 @@
    "protein": "P61353",
    "gene": "RPL27",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L27"
   },
   {
    "label_asym": "CC",
@@ -921,7 +1001,8 @@
    "protein": "P46776",
    "gene": "RPL27A",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Large ribosomal subunit protein uL15"
   },
   {
    "label_asym": "DC",
@@ -931,7 +1012,8 @@
    "protein": "P47914",
    "gene": "RPL29",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Large ribosomal subunit protein eL29"
   },
   {
    "label_asym": "EC",
@@ -941,7 +1023,8 @@
    "protein": "P62888",
    "gene": "RPL30",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L30"
   },
   {
    "label_asym": "FC",
@@ -951,7 +1034,8 @@
    "protein": "P62899",
    "gene": "RPL31",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L31"
   },
   {
    "label_asym": "GC",
@@ -961,7 +1045,8 @@
    "protein": "P62910",
    "gene": "RPL32",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L32"
   },
   {
    "label_asym": "HC",
@@ -971,7 +1056,8 @@
    "protein": "P18077",
    "gene": "RPL35A",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L35a"
   },
   {
    "label_asym": "IC",
@@ -981,7 +1067,8 @@
    "protein": "P49207",
    "gene": "RPL34",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L34"
   },
   {
    "label_asym": "JC",
@@ -991,7 +1078,8 @@
    "protein": "P42766",
    "gene": "RPL35",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L35"
   },
   {
    "label_asym": "KC",
@@ -1001,7 +1089,8 @@
    "protein": "Q9Y3U8",
    "gene": "RPL36",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L36"
   },
   {
    "label_asym": "LC",
@@ -1011,7 +1100,8 @@
    "protein": "P61927",
    "gene": "RPL37",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Large ribosomal subunit protein eL37"
   },
   {
    "label_asym": "MC",
@@ -1021,7 +1111,8 @@
    "protein": "P63173",
    "gene": "RPL38",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L38"
   },
   {
    "label_asym": "NC",
@@ -1031,7 +1122,8 @@
    "protein": "P62891",
    "gene": "RPL39",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L39"
   },
   {
    "label_asym": "OC",
@@ -1041,7 +1133,8 @@
    "protein": "P62987",
    "gene": "UBA52",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Ubiquitin-ribosomal protein eL40 fusion protein"
   },
   {
    "label_asym": "PC",
@@ -1051,7 +1144,8 @@
    "protein": "P62945",
    "gene": "RPL41",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L41"
   },
   {
    "label_asym": "QC",
@@ -1061,7 +1155,8 @@
    "protein": "P83881",
    "gene": "RPL36A",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Large ribosomal subunit protein eL42"
   },
   {
    "label_asym": "RC",
@@ -1071,7 +1166,8 @@
    "protein": "P61513",
    "gene": "RPL37A",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L37a"
   },
   {
    "label_asym": "SC",
@@ -1081,7 +1177,8 @@
    "protein": "P46779",
    "gene": "RPL28",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Large ribosomal subunit protein eL28"
   },
   {
    "label_asym": "TC",
@@ -1091,7 +1188,8 @@
    "protein": "P62906",
    "gene": "RPL10A",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "60S ribosomal protein L10a"
   },
   {
    "label_asym": "UC",
@@ -1101,7 +1199,8 @@
    "protein": "Q9NYL2",
    "gene": "MAP3K20",
    "role": "factor",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "Mitogen-activated protein kinase kinase kinase 20"
   },
   {
    "label_asym": "VC",
@@ -1111,7 +1210,8 @@
    "protein": "Q9NYL2",
    "gene": "MAP3K20",
    "role": "factor",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "Mitogen-activated protein kinase kinase kinase 20"
   },
   {
    "label_asym": "WC",
@@ -1121,7 +1221,8 @@
    "protein": "P08865",
    "gene": "RPSA",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Small ribosomal subunit protein uS2"
   },
   {
    "label_asym": "XC",
@@ -1131,7 +1232,8 @@
    "protein": "P61247",
    "gene": "RPS3A",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S3a"
   },
   {
    "label_asym": "YC",
@@ -1141,7 +1243,8 @@
    "protein": "P15880",
    "gene": "RPS2",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S2"
   },
   {
    "label_asym": "ZC",
@@ -1151,7 +1254,8 @@
    "protein": "P23396",
    "gene": "RPS3",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S3"
   },
   {
    "label_asym": "AD",
@@ -1161,7 +1265,8 @@
    "protein": "P62701",
    "gene": "RPS4X",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Small ribosomal subunit protein eS4, X isoform"
   },
   {
    "label_asym": "BD",
@@ -1171,7 +1276,8 @@
    "protein": "P46782",
    "gene": "RPS5",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S5"
   },
   {
    "label_asym": "CD",
@@ -1181,7 +1287,8 @@
    "protein": "P62753",
    "gene": "RPS6",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S6"
   },
   {
    "label_asym": "DD",
@@ -1191,7 +1298,8 @@
    "protein": "P62081",
    "gene": "RPS7",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S7"
   },
   {
    "label_asym": "ED",
@@ -1201,7 +1309,8 @@
    "protein": "P62241",
    "gene": "RPS8",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S8"
   },
   {
    "label_asym": "FD",
@@ -1211,7 +1320,8 @@
    "protein": "P46781",
    "gene": "RPS9",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S9"
   },
   {
    "label_asym": "GD",
@@ -1221,7 +1331,8 @@
    "protein": "P46783",
    "gene": "RPS10",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S10"
   },
   {
    "label_asym": "HD",
@@ -1231,7 +1342,8 @@
    "protein": "P62280",
    "gene": "RPS11",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S11"
   },
   {
    "label_asym": "ID",
@@ -1241,7 +1353,8 @@
    "protein": "P25398",
    "gene": "RPS12",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S12"
   },
   {
    "label_asym": "JD",
@@ -1251,7 +1364,8 @@
    "protein": "P62277",
    "gene": "RPS13",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S13"
   },
   {
    "label_asym": "KD",
@@ -1261,7 +1375,8 @@
    "protein": "P62263",
    "gene": "RPS14",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S14"
   },
   {
    "label_asym": "LD",
@@ -1271,7 +1386,8 @@
    "protein": "P62841",
    "gene": "RPS15",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S15"
   },
   {
    "label_asym": "MD",
@@ -1281,7 +1397,8 @@
    "protein": "P62249",
    "gene": "RPS16",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S16"
   },
   {
    "label_asym": "ND",
@@ -1291,7 +1408,8 @@
    "protein": "P08708",
    "gene": "RPS17",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S17"
   },
   {
    "label_asym": "OD",
@@ -1301,7 +1419,8 @@
    "protein": "P62269",
    "gene": "RPS18",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S18"
   },
   {
    "label_asym": "PD",
@@ -1311,7 +1430,8 @@
    "protein": "P39019",
    "gene": "RPS19",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S19"
   },
   {
    "label_asym": "QD",
@@ -1321,7 +1441,8 @@
    "protein": "P60866",
    "gene": "RPS20",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S20"
   },
   {
    "label_asym": "RD",
@@ -1331,7 +1452,8 @@
    "protein": "P63220",
    "gene": "RPS21",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Small ribosomal subunit protein eS21"
   },
   {
    "label_asym": "SD",
@@ -1341,7 +1463,8 @@
    "protein": "P62244",
    "gene": "RPS15A",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S15a"
   },
   {
    "label_asym": "TD",
@@ -1351,7 +1474,8 @@
    "protein": "P62266",
    "gene": "RPS23",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S23"
   },
   {
    "label_asym": "UD",
@@ -1361,7 +1485,8 @@
    "protein": "P62847",
    "gene": "RPS24",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S24"
   },
   {
    "label_asym": "VD",
@@ -1371,7 +1496,8 @@
    "protein": "P62851",
    "gene": "RPS25",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S25"
   },
   {
    "label_asym": "WD",
@@ -1381,7 +1507,8 @@
    "protein": "P62854",
    "gene": "RPS26",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S26"
   },
   {
    "label_asym": "XD",
@@ -1391,7 +1518,8 @@
    "protein": "P42677",
    "gene": "RPS27",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S27"
   },
   {
    "label_asym": "YD",
@@ -1401,7 +1529,8 @@
    "protein": "P62857",
    "gene": "RPS28",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S28"
   },
   {
    "label_asym": "ZD",
@@ -1411,7 +1540,8 @@
    "protein": "P62273",
    "gene": "RPS29",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "40S ribosomal protein S29"
   },
   {
    "label_asym": "AE",
@@ -1421,7 +1551,8 @@
    "protein": "P62861",
    "gene": "FAU",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Ubiquitin-like FUBI-ribosomal protein eS30 fusion protein"
   },
   {
    "label_asym": "BE",
@@ -1431,7 +1562,8 @@
    "protein": "P62979",
    "gene": "RPS27A",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Ubiquitin"
   },
   {
    "label_asym": "CE",
@@ -1441,7 +1573,8 @@
    "protein": "P63244",
    "gene": "RACK1",
    "role": "rp",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "Receptor of activated protein C kinase 1"
   },
   {
    "label_asym": "DE",
@@ -1451,7 +1584,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "18S rRNA of the collided 80S"
   },
   {
    "label_asym": "EE",
@@ -1461,7 +1595,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "stalled"
+   "particle": "stalled",
+   "description": "18S rRNA of the stalled 80S"
   },
   {
    "label_asym": "FE",
@@ -1471,7 +1606,8 @@
    "protein": "P08865",
    "gene": "RPSA",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein SA"
   },
   {
    "label_asym": "GE",
@@ -1481,7 +1617,8 @@
    "protein": "P61247",
    "gene": "RPS3A",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S3a"
   },
   {
    "label_asym": "HE",
@@ -1491,7 +1628,8 @@
    "protein": "P15880",
    "gene": "RPS2",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S2"
   },
   {
    "label_asym": "IE",
@@ -1501,7 +1639,8 @@
    "protein": "P23396",
    "gene": "RPS3",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S3"
   },
   {
    "label_asym": "JE",
@@ -1511,7 +1650,8 @@
    "protein": "P62701",
    "gene": "RPS4X",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "Small ribosomal subunit protein eS4, X isoform"
   },
   {
    "label_asym": "KE",
@@ -1521,7 +1661,8 @@
    "protein": "P46782",
    "gene": "RPS5",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S5"
   },
   {
    "label_asym": "LE",
@@ -1531,7 +1672,8 @@
    "protein": "P62753",
    "gene": "RPS6",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S6"
   },
   {
    "label_asym": "ME",
@@ -1541,7 +1683,8 @@
    "protein": "P62081",
    "gene": "RPS7",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S7"
   },
   {
    "label_asym": "NE",
@@ -1551,7 +1694,8 @@
    "protein": "P62241",
    "gene": "RPS8",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S8"
   },
   {
    "label_asym": "OE",
@@ -1561,7 +1705,8 @@
    "protein": "P46781",
    "gene": "RPS9",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S9"
   },
   {
    "label_asym": "PE",
@@ -1571,7 +1716,8 @@
    "protein": "P46783",
    "gene": "RPS10",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S10"
   },
   {
    "label_asym": "QE",
@@ -1581,7 +1727,8 @@
    "protein": "P62280",
    "gene": "RPS11",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S11"
   },
   {
    "label_asym": "RE",
@@ -1591,7 +1738,8 @@
    "protein": "P62277",
    "gene": "RPS13",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S13"
   },
   {
    "label_asym": "SE",
@@ -1601,7 +1749,8 @@
    "protein": "P62263",
    "gene": "RPS14",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S14"
   },
   {
    "label_asym": "TE",
@@ -1611,7 +1760,8 @@
    "protein": "P62841",
    "gene": "RPS15",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S15"
   },
   {
    "label_asym": "UE",
@@ -1621,7 +1771,8 @@
    "protein": "P62249",
    "gene": "RPS16",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S16"
   },
   {
    "label_asym": "VE",
@@ -1631,7 +1782,8 @@
    "protein": "P08708",
    "gene": "RPS17",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S17"
   },
   {
    "label_asym": "WE",
@@ -1641,7 +1793,8 @@
    "protein": "P62269",
    "gene": "RPS18",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S18"
   },
   {
    "label_asym": "XE",
@@ -1651,7 +1804,8 @@
    "protein": "P39019",
    "gene": "RPS19",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S19"
   },
   {
    "label_asym": "YE",
@@ -1661,7 +1815,8 @@
    "protein": "P60866",
    "gene": "RPS20",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S20"
   },
   {
    "label_asym": "ZE",
@@ -1671,7 +1826,8 @@
    "protein": "P63220",
    "gene": "RPS21",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S21"
   },
   {
    "label_asym": "AF",
@@ -1681,7 +1837,8 @@
    "protein": "P62244",
    "gene": "RPS15A",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S15a"
   },
   {
    "label_asym": "BF",
@@ -1691,7 +1848,8 @@
    "protein": "P62266",
    "gene": "RPS23",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S23"
   },
   {
    "label_asym": "CF",
@@ -1701,7 +1859,8 @@
    "protein": "P62847",
    "gene": "RPS24",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S24"
   },
   {
    "label_asym": "DF",
@@ -1711,7 +1870,8 @@
    "protein": "P62851",
    "gene": "RPS25",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S25"
   },
   {
    "label_asym": "EF",
@@ -1721,7 +1881,8 @@
    "protein": "P62854",
    "gene": "RPS26",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S26"
   },
   {
    "label_asym": "FF",
@@ -1731,7 +1892,8 @@
    "protein": "P42677",
    "gene": "RPS27",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S27"
   },
   {
    "label_asym": "GF",
@@ -1741,7 +1903,8 @@
    "protein": "P62857",
    "gene": "RPS28",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S28"
   },
   {
    "label_asym": "HF",
@@ -1751,7 +1914,8 @@
    "protein": "P62273",
    "gene": "RPS29",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S29"
   },
   {
    "label_asym": "IF",
@@ -1761,7 +1925,8 @@
    "protein": "P62861",
    "gene": "FAU",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "Ubiquitin-like FUBI-ribosomal protein eS30 fusion protein"
   },
   {
    "label_asym": "JF",
@@ -1771,7 +1936,8 @@
    "protein": "P25398",
    "gene": "RPS12",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "40S ribosomal protein S12"
   },
   {
    "label_asym": "KF",
@@ -1781,7 +1947,8 @@
    "protein": "P63244",
    "gene": "RACK1",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "Receptor of activated protein C kinase 1"
   },
   {
    "label_asym": "LF",
@@ -1791,7 +1958,8 @@
    "protein": "P62979",
    "gene": "RPS27A",
    "role": "rp",
-   "particle": "collided"
+   "particle": "collided",
+   "description": "Ubiquitin"
   }
  ],
  "modes": [

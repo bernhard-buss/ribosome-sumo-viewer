@@ -94,7 +94,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "1"
+   "particle": "1",
+   "description": "28S rRNA (3773-MER)"
   },
   {
    "label_asym": "B",
@@ -104,7 +105,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "1"
+   "particle": "1",
+   "description": "5S rRNA (120-MER)"
   },
   {
    "label_asym": "C",
@@ -114,7 +116,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "1"
+   "particle": "1",
+   "description": "5.8S rRNA (156-MER)"
   },
   {
    "label_asym": "D",
@@ -124,7 +127,8 @@
    "protein": "P62917",
    "gene": "RPL8",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L8"
   },
   {
    "label_asym": "E",
@@ -134,7 +138,8 @@
    "protein": "P39023",
    "gene": "RPL3",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "Large ribosomal subunit protein uL3"
   },
   {
    "label_asym": "F",
@@ -144,7 +149,8 @@
    "protein": "P36578",
    "gene": "RPL4",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "Large ribosomal subunit protein uL4"
   },
   {
    "label_asym": "G",
@@ -154,7 +160,8 @@
    "protein": "P46777",
    "gene": "RPL5",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "Large ribosomal subunit protein uL18"
   },
   {
    "label_asym": "H",
@@ -164,7 +171,8 @@
    "protein": "Q02878",
    "gene": "RPL6",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "Large ribosomal subunit protein eL6"
   },
   {
    "label_asym": "I",
@@ -174,7 +182,8 @@
    "protein": "P18124",
    "gene": "RPL7",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "Large ribosomal subunit protein uL30"
   },
   {
    "label_asym": "J",
@@ -184,7 +193,8 @@
    "protein": "P62424",
    "gene": "RPL7A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L7a"
   },
   {
    "label_asym": "K",
@@ -194,7 +204,8 @@
    "protein": "P32969",
    "gene": "RPL9",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L9"
   },
   {
    "label_asym": "L",
@@ -204,7 +215,8 @@
    "protein": "Q96L21",
    "gene": "RPL10L",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L10-like"
   },
   {
    "label_asym": "M",
@@ -214,7 +226,8 @@
    "protein": "P62913",
    "gene": "RPL11",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L11"
   },
   {
    "label_asym": "N",
@@ -224,7 +237,8 @@
    "protein": "P26373",
    "gene": "RPL13",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L13"
   },
   {
    "label_asym": "O",
@@ -234,7 +248,8 @@
    "protein": "P50914",
    "gene": "RPL14",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L14"
   },
   {
    "label_asym": "P",
@@ -244,7 +259,8 @@
    "protein": "P61313",
    "gene": "RPL15",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L15"
   },
   {
    "label_asym": "Q",
@@ -254,7 +270,8 @@
    "protein": "P40429",
    "gene": "RPL13A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L13a"
   },
   {
    "label_asym": "R",
@@ -264,7 +281,8 @@
    "protein": "P18621",
    "gene": "RPL17",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L17"
   },
   {
    "label_asym": "S",
@@ -274,7 +292,8 @@
    "protein": "Q07020",
    "gene": "RPL18",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L18"
   },
   {
    "label_asym": "T",
@@ -284,7 +303,8 @@
    "protein": "P84098",
    "gene": "RPL19",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L19"
   },
   {
    "label_asym": "U",
@@ -294,7 +314,8 @@
    "protein": "Q02543",
    "gene": "RPL18A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L18a"
   },
   {
    "label_asym": "V",
@@ -304,7 +325,8 @@
    "protein": "P46778",
    "gene": "RPL21",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L21"
   },
   {
    "label_asym": "W",
@@ -314,7 +336,8 @@
    "protein": "P35268",
    "gene": "RPL22",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L22"
   },
   {
    "label_asym": "X",
@@ -324,7 +347,8 @@
    "protein": "P62829",
    "gene": "RPL23",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L23"
   },
   {
    "label_asym": "Y",
@@ -334,7 +358,8 @@
    "protein": "P83731",
    "gene": "RPL24",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L24"
   },
   {
    "label_asym": "Z",
@@ -344,7 +369,8 @@
    "protein": "P62750",
    "gene": "RPL23A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L23a"
   },
   {
    "label_asym": "AA",
@@ -354,7 +380,8 @@
    "protein": "P61254",
    "gene": "RPL26",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L26"
   },
   {
    "label_asym": "BA",
@@ -364,7 +391,8 @@
    "protein": "P61353",
    "gene": "RPL27",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L27"
   },
   {
    "label_asym": "CA",
@@ -374,7 +402,8 @@
    "protein": "P46776",
    "gene": "RPL27A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "Large ribosomal subunit protein uL15"
   },
   {
    "label_asym": "DA",
@@ -384,7 +413,8 @@
    "protein": "P47914",
    "gene": "RPL29",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L29"
   },
   {
    "label_asym": "EA",
@@ -394,7 +424,8 @@
    "protein": "P62888",
    "gene": "RPL30",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L30"
   },
   {
    "label_asym": "FA",
@@ -404,7 +435,8 @@
    "protein": "P62899",
    "gene": "RPL31",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L31"
   },
   {
    "label_asym": "GA",
@@ -414,7 +446,8 @@
    "protein": "P62910",
    "gene": "RPL32",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L32"
   },
   {
    "label_asym": "HA",
@@ -424,7 +457,8 @@
    "protein": "P18077",
    "gene": "RPL35A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L35a"
   },
   {
    "label_asym": "IA",
@@ -434,7 +468,8 @@
    "protein": "P49207",
    "gene": "RPL34",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L34"
   },
   {
    "label_asym": "JA",
@@ -444,7 +479,8 @@
    "protein": "P42766",
    "gene": "RPL35",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L35"
   },
   {
    "label_asym": "KA",
@@ -454,7 +490,8 @@
    "protein": "Q9Y3U8",
    "gene": "RPL36",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L36"
   },
   {
    "label_asym": "LA",
@@ -464,7 +501,8 @@
    "protein": "P61927",
    "gene": "RPL37",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L37"
   },
   {
    "label_asym": "MA",
@@ -474,7 +512,8 @@
    "protein": "P63173",
    "gene": "RPL38",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L38"
   },
   {
    "label_asym": "NA",
@@ -484,7 +523,8 @@
    "protein": "P62891",
    "gene": "RPL39",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L39"
   },
   {
    "label_asym": "OA",
@@ -494,7 +534,8 @@
    "protein": "P62987",
    "gene": "UBA52",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "Ubiquitin-60S ribosomal protein L40"
   },
   {
    "label_asym": "PA",
@@ -504,7 +545,8 @@
    "protein": "P62945",
    "gene": "RPL41",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L41"
   },
   {
    "label_asym": "QA",
@@ -514,7 +556,8 @@
    "protein": "P83881",
    "gene": "RPL36A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L36a"
   },
   {
    "label_asym": "RA",
@@ -524,7 +567,8 @@
    "protein": "P61513",
    "gene": "RPL37A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L37a"
   },
   {
    "label_asym": "SA",
@@ -534,7 +578,8 @@
    "protein": "P46779",
    "gene": "RPL28",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L28"
   },
   {
    "label_asym": "TA",
@@ -544,7 +589,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "1"
+   "particle": "1",
+   "description": "18S rRNA (1740-MER)"
   },
   {
    "label_asym": "UA",
@@ -554,7 +600,8 @@
    "protein": "P62701",
    "gene": "RPS4X",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S4, X isoform"
   },
   {
    "label_asym": "VA",
@@ -564,7 +611,8 @@
    "protein": "P08865",
    "gene": "RPSA",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein SA"
   },
   {
    "label_asym": "WA",
@@ -574,7 +622,8 @@
    "protein": "P61247",
    "gene": "RPS3A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S3a"
   },
   {
    "label_asym": "XA",
@@ -584,7 +633,8 @@
    "protein": "P23396",
    "gene": "RPS3",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S3"
   },
   {
    "label_asym": "YA",
@@ -594,7 +644,8 @@
    "protein": "P46782",
    "gene": "RPS5",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S5"
   },
   {
    "label_asym": "ZA",
@@ -604,7 +655,8 @@
    "protein": "P62081",
    "gene": "RPS7",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S7"
   },
   {
    "label_asym": "AB",
@@ -614,7 +666,8 @@
    "protein": "P62241",
    "gene": "RPS8",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S8"
   },
   {
    "label_asym": "BB",
@@ -624,7 +677,8 @@
    "protein": "P46783",
    "gene": "RPS10",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S10"
   },
   {
    "label_asym": "CB",
@@ -634,7 +688,8 @@
    "protein": "P62280",
    "gene": "RPS11",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S11"
   },
   {
    "label_asym": "DB",
@@ -644,7 +699,8 @@
    "protein": "P62841",
    "gene": "RPS15",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S15"
   },
   {
    "label_asym": "EB",
@@ -654,7 +710,8 @@
    "protein": "P62249",
    "gene": "RPS16",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S16"
   },
   {
    "label_asym": "FB",
@@ -664,7 +721,8 @@
    "protein": "P62269",
    "gene": "RPS18",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S18"
   },
   {
    "label_asym": "GB",
@@ -674,7 +732,8 @@
    "protein": "P39019",
    "gene": "RPS19",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "Small ribosomal subunit protein eS19"
   },
   {
    "label_asym": "HB",
@@ -684,7 +743,8 @@
    "protein": "P60866",
    "gene": "RPS20",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S20"
   },
   {
    "label_asym": "IB",
@@ -694,7 +754,8 @@
    "protein": "P63220",
    "gene": "RPS21",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S21"
   },
   {
    "label_asym": "JB",
@@ -704,7 +765,8 @@
    "protein": "P62266",
    "gene": "RPS23",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S23"
   },
   {
    "label_asym": "KB",
@@ -714,7 +776,8 @@
    "protein": "P62854",
    "gene": "RPS26",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S26"
   },
   {
    "label_asym": "LB",
@@ -724,7 +787,8 @@
    "protein": "P62857",
    "gene": "RPS28",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S28"
   },
   {
    "label_asym": "MB",
@@ -734,7 +798,8 @@
    "protein": "P62273",
    "gene": "RPS29",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S29"
   },
   {
    "label_asym": "NB",
@@ -744,7 +809,8 @@
    "protein": "P63244",
    "gene": "RACK1",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "Receptor of activated protein C kinase 1"
   },
   {
    "label_asym": "OB",
@@ -754,7 +820,8 @@
    "protein": "P15880",
    "gene": "RPS2",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S2"
   },
   {
    "label_asym": "PB",
@@ -764,7 +831,8 @@
    "protein": "P62753",
    "gene": "RPS6",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S6"
   },
   {
    "label_asym": "QB",
@@ -774,7 +842,8 @@
    "protein": "P46781",
    "gene": "RPS9",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S9"
   },
   {
    "label_asym": "RB",
@@ -784,7 +853,8 @@
    "protein": "P25398",
    "gene": "RPS12",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S12"
   },
   {
    "label_asym": "SB",
@@ -794,7 +864,8 @@
    "protein": "P62277",
    "gene": "RPS13",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S13"
   },
   {
    "label_asym": "TB",
@@ -804,7 +875,8 @@
    "protein": "P62263",
    "gene": "RPS14",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S14"
   },
   {
    "label_asym": "UB",
@@ -814,7 +886,8 @@
    "protein": "P62244",
    "gene": "RPS15A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S15a"
   },
   {
    "label_asym": "VB",
@@ -824,7 +897,8 @@
    "protein": "P62847",
    "gene": "RPS24",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S24"
   },
   {
    "label_asym": "WB",
@@ -834,7 +908,8 @@
    "protein": "P62851",
    "gene": "RPS25",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S25"
   },
   {
    "label_asym": "XB",
@@ -844,7 +919,8 @@
    "protein": "P42677",
    "gene": "RPS27",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S27"
   },
   {
    "label_asym": "YB",
@@ -854,7 +930,8 @@
    "protein": "P62861",
    "gene": "FAU",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "Ubiquitin-like FUBI-ribosomal protein eS30 fusion protein"
   },
   {
    "label_asym": "ZB",
@@ -864,7 +941,8 @@
    "protein": "P62979",
    "gene": "RPS27A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "Ubiquitin-40S ribosomal protein S27a"
   },
   {
    "label_asym": "AC",
@@ -874,7 +952,8 @@
    "protein": "P08708",
    "gene": "RPS17",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "40S ribosomal protein S17"
   }
  ],
  "modes": [

@@ -32,8 +32,10 @@
 - **Help is part of every feature.** A feature is done when (1) it has an entry in the help
   dialog (`<section data-topic>` → `<article data-entry>`), (2) its control carries an ⓘ
   (`<a class="hl" data-help="topic/entry">`), (3) `VERSION` is raised and `CHANGELOG.md`
-  has an entry (newest first, `## x.y — YYYY-MM-DD`). The in-page changelog renders
-  `CHANGELOG.md`; there is no second copy. Numbers in help text come from the data
+  has an entry (newest first, `## x.y — YYYY-MM-DD` or `## x.y.z — …`): the minor number for
+  a new feature, the patch number for smaller changes and fixes. Entries are written for the
+  person using the viewer — what they can do or see differently — not for the developer: no
+  data-file or code bullets. The in-page changelog renders `CHANGELOG.md`; there is no second copy. Numbers in help text come from the data
   (`data-n` spans filled by `fillHelpNumbers()`), not from typed constants.
 - A view that must hold after a scene reload travels inside the scene as a MolViewSpec `camera` node
   (`buildScene(camera)`); setting the camera after `loadMvsData` races with the camera the reload restores.
@@ -47,10 +49,17 @@
   MolViewSpec scene away from its target by `camFactor()`, so `buildScene()` divides by it.
   Without that a stored camera drifts on every reload. The camera is not read while
   `document.hidden` (the Browser pane of the test harness reports hidden: override it to test).
+- Clicking: `initInteraction()` empties the click bindings of Mol*'s `camera-focus-loci` and
+  `representation-focus-loci` behaviours (their camera focus narrows the clipping to the residue)
+  and handles `plugin.behaviors.interaction.click` itself: `onStructureClick()` marks the residue
+  (`lociSelects.selectOnly`), pins a label (`#pin`) and selects a site's row; `dblclick` on the
+  canvas calls `zoomTo(point)`, which moves the camera along the line of sight and leaves the
+  clipping radius alone. Hover is Mol*'s. `molstar.lib.structure` / `molstar.lib.loci` give
+  `StructureElement`, `StructureProperties` and `Loci.applyGranularity` for reading a loci.
 - Test hook: `window.__rsv` (`viewer`, `meta`, `sites`, `user`, `setSiteMode`,
   `setProteinMode`, `loadUserText(name, text)`, `buildScene`, `setView`, `select`, `stats`, `openStats`,
   `showFromStats("hotspot:H1")`, `structures`, `structure`, `setStructure(id, {site})`, `setPartners(bool)`,
-  `toggleSumo()` (at the selected site), `sumoAt`, `stateQuery()`, `syncUrl()`).
+  `toggleSumo()` (at the selected site), `sumoAt`, `stateQuery()`, `syncUrl()`, `zoomTo(point)`, `onStructureClick(event)`, `lastClick`).
 - Check after changes: `node --check` on the extracted script; load the page from a static
   server; no console errors; a deep link such as `#help/env/classes` opens that entry;
   `?s=9RPV#stats` opens the statistics of the disome; switching structures keeps the

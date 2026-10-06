@@ -1,8 +1,21 @@
 # Changelog
 
-The version next to the title is raised with every change of what the viewer can do.
-Changes of the data files are listed with the version that shipped them. This file is
-the only place the history is written; the Changelog page of the in-page help renders it.
+The version next to the title is raised with every change of what the viewer can do: the
+minor number for new features, the patch number for smaller changes and fixes. The entries
+say what changed for the person using the viewer. This file is the only place the history is
+written; the Changelog page of the in-page help renders it.
+
+## 0.7.1 — 2026-10-06
+Clicking in the structure. A click (or tap) marks the residue and pins its label at the top
+left of the structure, where it stays until the next click; a SUMO site is also selected in the
+table, with its details below it. A double click (or double tap) zooms to the residue. Hovering
+keeps showing the label at the bottom right as before.
+
+- Before, a single click moved the camera onto the residue and cut away everything in front
+  of and behind it. This no longer happens, also not when a site is chosen in the table: the
+  camera moves closer and nothing is cut away.
+- A click on empty space removes the mark.
+- Choosing a site no longer scrolls the page on a narrow screen; only the table scrolls.
 
 ## 0.7 — 2026-10-05
 Shareable links. The address of the page now holds everything that is chosen, and a
@@ -15,11 +28,10 @@ Shareable links. The address of the page now holds everything that is chosen, an
   as before. Defaults are left out, so the opening view has the bare address.
 - Not in the link: a table of your own and the protein colouring by it; the file never
   leaves your computer.
-- A link to the Statistics window or a Help entry opens it as soon as the data is there,
-  without waiting for the structure to be drawn.
 - Fix: since 0.5 the opening view of a structure was drawn about a third farther away than
   the same view chosen with its button; both now match.
-- New help entry *Sharing a view* (Quick start).
+- Help: *Sharing a view*; the topic *Room for SUMO* explains the measure with a picture and a
+  sense of scale.
 
 ## 0.6 — 2026-10-05
 Room for SUMO. For every site in every structure the viewer now says whether a SUMO fits at
@@ -36,8 +48,6 @@ placements that overlap nothing is the measure (classes room, tight, none).
   sites whose room something takes.
 - New help topic *Room for SUMO* (measure, method with its test on a crystal structure of a
   SUMO2 conjugate, what takes the room, showing a SUMO, limits).
-- Data: `fit`, `room`, `room_taken_by` and a placement per site in `data/<PDB code>/sites.json`;
-  a `room` section in `stats.json`; the parameters in `data/structures.json`.
 
 ## 0.5 — 2026-10-05
 Seven structures. A *Structure* menu offers, beside the mature 80S, a decoding and an idle
@@ -64,9 +74,6 @@ particles are superposed on the mature 80S, so a view button shows the same face
 - New help topic *Structures*; new entries for the two colourings and the statistics of the
   other structures; the entries on environment, table, details and methods now cover all
   structures.
-- Data: one folder per structure (`data/<PDB code>/`), `data/structures.json` (the menu) and
-  `data/placement.json` (each site's environment in each structure). The files of the mature
-  80S moved from `data/` to `data/8QOI/`.
 
 ## 0.4.1 — 2026-10-05
 Fixes.

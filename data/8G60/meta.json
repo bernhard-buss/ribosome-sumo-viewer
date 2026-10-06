@@ -115,7 +115,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "1"
+   "particle": "1",
+   "description": "18S rRNA"
   },
   {
    "label_asym": "B",
@@ -125,7 +126,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "1"
+   "particle": "1",
+   "description": "5.8S rRNA"
   },
   {
    "label_asym": "C",
@@ -135,7 +137,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "1"
+   "particle": "1",
+   "description": "28S rRNA"
   },
   {
    "label_asym": "D",
@@ -145,7 +148,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "1"
+   "particle": "1",
+   "description": "5S rRNA"
   },
   {
    "label_asym": "E",
@@ -155,7 +159,8 @@
    "protein": "P61247",
    "gene": "RPS3A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS1"
   },
   {
    "label_asym": "F",
@@ -165,7 +170,8 @@
    "protein": "P08865",
    "gene": "RPSA",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uS2"
   },
   {
    "label_asym": "G",
@@ -175,7 +181,8 @@
    "protein": "P23396",
    "gene": "RPS3",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uS3"
   },
   {
    "label_asym": "H",
@@ -185,7 +192,8 @@
    "protein": "P46781",
    "gene": "RPS9",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uS4"
   },
   {
    "label_asym": "I",
@@ -195,7 +203,8 @@
    "protein": "P62701",
    "gene": "RPS4X",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS4"
   },
   {
    "label_asym": "J",
@@ -205,7 +214,8 @@
    "protein": "P15880",
    "gene": "RPS2",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uS5"
   },
   {
    "label_asym": "K",
@@ -215,7 +225,8 @@
    "protein": "P62753",
    "gene": "RPS6",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS6"
   },
   {
    "label_asym": "L",
@@ -225,7 +236,8 @@
    "protein": "P46782",
    "gene": "RPS5",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uS7"
   },
   {
    "label_asym": "M",
@@ -235,7 +247,8 @@
    "protein": "P62081",
    "gene": "RPS7",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS7"
   },
   {
    "label_asym": "N",
@@ -245,7 +258,8 @@
    "protein": "P62244",
    "gene": "RPS15A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uS8"
   },
   {
    "label_asym": "O",
@@ -255,7 +269,8 @@
    "protein": "P62241",
    "gene": "RPS8",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS8"
   },
   {
    "label_asym": "P",
@@ -265,7 +280,8 @@
    "protein": "P62249",
    "gene": "RPS16",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uS9"
   },
   {
    "label_asym": "Q",
@@ -275,7 +291,8 @@
    "protein": "P60866",
    "gene": "RPS20",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uS10"
   },
   {
    "label_asym": "R",
@@ -285,7 +302,8 @@
    "protein": "P46783",
    "gene": "RPS10",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS10"
   },
   {
    "label_asym": "S",
@@ -295,7 +313,8 @@
    "protein": "P62263",
    "gene": "RPS14",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uS11"
   },
   {
    "label_asym": "T",
@@ -305,7 +324,8 @@
    "protein": "P62266",
    "gene": "RPS23",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uS12"
   },
   {
    "label_asym": "U",
@@ -315,7 +335,8 @@
    "protein": "P25398",
    "gene": "RPS12",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS12"
   },
   {
    "label_asym": "V",
@@ -325,7 +346,8 @@
    "protein": "P62269",
    "gene": "RPS18",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uS13"
   },
   {
    "label_asym": "W",
@@ -335,7 +357,8 @@
    "protein": "P62273",
    "gene": "RPS29",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uS14"
   },
   {
    "label_asym": "X",
@@ -345,7 +368,8 @@
    "protein": "P62277",
    "gene": "RPS13",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uS15"
   },
   {
    "label_asym": "Y",
@@ -355,7 +379,8 @@
    "protein": "P62280",
    "gene": "RPS11",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uS17"
   },
   {
    "label_asym": "Z",
@@ -365,7 +390,8 @@
    "protein": "P08708",
    "gene": "RPS17",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS17"
   },
   {
    "label_asym": "AA",
@@ -375,7 +401,8 @@
    "protein": "P62841",
    "gene": "RPS15",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uS19"
   },
   {
    "label_asym": "BA",
@@ -385,7 +412,8 @@
    "protein": "P39019",
    "gene": "RPS19",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS19"
   },
   {
    "label_asym": "CA",
@@ -395,7 +423,8 @@
    "protein": "P63220",
    "gene": "RPS21",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS21"
   },
   {
    "label_asym": "DA",
@@ -405,7 +434,8 @@
    "protein": "P62847",
    "gene": "RPS24",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS24"
   },
   {
    "label_asym": "EA",
@@ -415,7 +445,8 @@
    "protein": "P62851",
    "gene": "RPS25",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS25"
   },
   {
    "label_asym": "FA",
@@ -425,7 +456,8 @@
    "protein": "P62854",
    "gene": "RPS26",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS26"
   },
   {
    "label_asym": "GA",
@@ -435,7 +467,8 @@
    "protein": "P42677",
    "gene": "RPS27",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS27"
   },
   {
    "label_asym": "HA",
@@ -445,7 +478,8 @@
    "protein": "P62857",
    "gene": "RPS28",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS28"
   },
   {
    "label_asym": "IA",
@@ -455,7 +489,8 @@
    "protein": "P62861",
    "gene": "FAU",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS30"
   },
   {
    "label_asym": "JA",
@@ -465,7 +500,8 @@
    "protein": "P62979",
    "gene": "RPS27A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eS31"
   },
   {
    "label_asym": "KA",
@@ -475,7 +511,8 @@
    "protein": "P63244",
    "gene": "RACK1",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "RACK1"
   },
   {
    "label_asym": "LA",
@@ -485,7 +522,8 @@
    "protein": "P62906",
    "gene": "RPL10A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL1"
   },
   {
    "label_asym": "MA",
@@ -495,7 +533,8 @@
    "protein": "P62917",
    "gene": "RPL8",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL2"
   },
   {
    "label_asym": "NA",
@@ -505,7 +544,8 @@
    "protein": "P39023",
    "gene": "RPL3",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL3"
   },
   {
    "label_asym": "OA",
@@ -515,7 +555,8 @@
    "protein": "P36578",
    "gene": "RPL4",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL4"
   },
   {
    "label_asym": "PA",
@@ -525,7 +566,8 @@
    "protein": "P62913",
    "gene": "RPL11",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL5"
   },
   {
    "label_asym": "QA",
@@ -535,7 +577,8 @@
    "protein": "P32969",
    "gene": "RPL9",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL6"
   },
   {
    "label_asym": "RA",
@@ -545,7 +588,8 @@
    "protein": "Q02878",
    "gene": "RPL6",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL6"
   },
   {
    "label_asym": "SA",
@@ -555,7 +599,8 @@
    "protein": "P62424",
    "gene": "RPL7A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL8"
   },
   {
    "label_asym": "TA",
@@ -565,7 +610,8 @@
    "protein": "P05388",
    "gene": "RPLP0",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL10"
   },
   {
    "label_asym": "UA",
@@ -575,7 +621,8 @@
    "protein": "P30050",
    "gene": "RPL12",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL11"
   },
   {
    "label_asym": "VA",
@@ -585,7 +632,8 @@
    "protein": "P40429",
    "gene": "RPL13A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL13"
   },
   {
    "label_asym": "WA",
@@ -595,7 +643,8 @@
    "protein": "P26373",
    "gene": "RPL13",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL13"
   },
   {
    "label_asym": "XA",
@@ -605,7 +654,8 @@
    "protein": "P62829",
    "gene": "RPL23",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL14"
   },
   {
    "label_asym": "YA",
@@ -615,7 +665,8 @@
    "protein": "P50914",
    "gene": "RPL14",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL14"
   },
   {
    "label_asym": "ZA",
@@ -625,7 +676,8 @@
    "protein": "P46776",
    "gene": "RPL27A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL15"
   },
   {
    "label_asym": "AB",
@@ -635,7 +687,8 @@
    "protein": "P61313",
    "gene": "RPL15",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL15"
   },
   {
    "label_asym": "BB",
@@ -645,7 +698,8 @@
    "protein": "P27635",
    "gene": "RPL10",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL16"
   },
   {
    "label_asym": "CB",
@@ -655,7 +709,8 @@
    "protein": "P46777",
    "gene": "RPL5",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL18"
   },
   {
    "label_asym": "DB",
@@ -665,7 +720,8 @@
    "protein": "Q07020",
    "gene": "RPL18",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL18"
   },
   {
    "label_asym": "EB",
@@ -675,7 +731,8 @@
    "protein": "P84098",
    "gene": "RPL19",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL19"
   },
   {
    "label_asym": "FB",
@@ -685,7 +742,8 @@
    "protein": "Q02543",
    "gene": "RPL18A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL20"
   },
   {
    "label_asym": "GB",
@@ -695,7 +753,8 @@
    "protein": "P46778",
    "gene": "RPL21",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL21"
   },
   {
    "label_asym": "HB",
@@ -705,7 +764,8 @@
    "protein": "P18621",
    "gene": "RPL17",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL22"
   },
   {
    "label_asym": "IB",
@@ -715,7 +775,8 @@
    "protein": "P35268",
    "gene": "RPL22",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL22"
   },
   {
    "label_asym": "JB",
@@ -725,7 +786,8 @@
    "protein": "P62750",
    "gene": "RPL23A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL23"
   },
   {
    "label_asym": "KB",
@@ -735,7 +797,8 @@
    "protein": "P61254",
    "gene": "RPL26",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL24"
   },
   {
    "label_asym": "LB",
@@ -745,7 +808,8 @@
    "protein": "P83731",
    "gene": "RPL24",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL24"
   },
   {
    "label_asym": "MB",
@@ -755,7 +819,8 @@
    "protein": "P61353",
    "gene": "RPL27",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL27"
   },
   {
    "label_asym": "NB",
@@ -765,7 +830,8 @@
    "protein": "P46779",
    "gene": "RPL28",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL28"
   },
   {
    "label_asym": "OB",
@@ -775,7 +841,8 @@
    "protein": "P42766",
    "gene": "RPL35",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL29"
   },
   {
    "label_asym": "PB",
@@ -785,7 +852,8 @@
    "protein": "P47914",
    "gene": "RPL29",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL29"
   },
   {
    "label_asym": "QB",
@@ -795,7 +863,8 @@
    "protein": "P18124",
    "gene": "RPL7",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "uL30"
   },
   {
    "label_asym": "RB",
@@ -805,7 +874,8 @@
    "protein": "P62888",
    "gene": "RPL30",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL30"
   },
   {
    "label_asym": "SB",
@@ -815,7 +885,8 @@
    "protein": "P62899",
    "gene": "RPL31",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL31"
   },
   {
    "label_asym": "TB",
@@ -825,7 +896,8 @@
    "protein": "P62910",
    "gene": "RPL32",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL32"
   },
   {
    "label_asym": "UB",
@@ -835,7 +907,8 @@
    "protein": "P18077",
    "gene": "RPL35A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL33"
   },
   {
    "label_asym": "VB",
@@ -845,7 +918,8 @@
    "protein": "P49207",
    "gene": "RPL34",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL34"
   },
   {
    "label_asym": "WB",
@@ -855,7 +929,8 @@
    "protein": "Q9Y3U8",
    "gene": "RPL36",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL36"
   },
   {
    "label_asym": "XB",
@@ -865,7 +940,8 @@
    "protein": "P61927",
    "gene": "RPL37",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL37"
   },
   {
    "label_asym": "YB",
@@ -875,7 +951,8 @@
    "protein": "P63173",
    "gene": "RPL38",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL38"
   },
   {
    "label_asym": "ZB",
@@ -885,7 +962,8 @@
    "protein": "P62891",
    "gene": "RPL39",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL39"
   },
   {
    "label_asym": "AC",
@@ -895,7 +973,8 @@
    "protein": "P62987",
    "gene": "UBA52",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL40"
   },
   {
    "label_asym": "BC",
@@ -905,7 +984,8 @@
    "protein": "P62945",
    "gene": "RPL41",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL41"
   },
   {
    "label_asym": "CC",
@@ -915,7 +995,8 @@
    "protein": "J3KQN4",
    "gene": "RPL36A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL42"
   },
   {
    "label_asym": "DC",
@@ -925,7 +1006,8 @@
    "protein": "P61513",
    "gene": "RPL37A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "eL43"
   },
   {
    "label_asym": "EC",
@@ -935,7 +1017,8 @@
    "protein": "",
    "gene": "",
    "role": "mRNA",
-   "particle": "1"
+   "particle": "1",
+   "description": "mRNA"
   },
   {
    "label_asym": "FC",
@@ -945,7 +1028,8 @@
    "protein": "",
    "gene": "",
    "role": "tRNA",
-   "particle": "1"
+   "particle": "1",
+   "description": "A-site tRNA"
   },
   {
    "label_asym": "GC",
@@ -955,7 +1039,8 @@
    "protein": "",
    "gene": "",
    "role": "tRNA",
-   "particle": "1"
+   "particle": "1",
+   "description": "P-site tRNA"
   },
   {
    "label_asym": "HC",
@@ -965,7 +1050,8 @@
    "protein": "P68104",
    "gene": "EEF1A1",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "eEF1A"
   }
  ],
  "modes": [

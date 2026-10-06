@@ -128,7 +128,8 @@
    "protein": "P30050",
    "gene": "RPL12",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L12"
   },
   {
    "label_asym": "B",
@@ -138,7 +139,8 @@
    "protein": "P62906",
    "gene": "RPL10A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L10a"
   },
   {
    "label_asym": "C",
@@ -148,7 +150,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "1"
+   "particle": "1",
+   "description": "5.8S rRNA"
   },
   {
    "label_asym": "D",
@@ -158,7 +161,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "1"
+   "particle": "1",
+   "description": "ITS2 rRNA"
   },
   {
    "label_asym": "E",
@@ -168,7 +172,8 @@
    "protein": "",
    "gene": "",
    "role": "rRNA",
-   "particle": "1"
+   "particle": "1",
+   "description": "28S rRNA"
   },
   {
    "label_asym": "F",
@@ -178,7 +183,8 @@
    "protein": "P26373",
    "gene": "RPL13",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L13"
   },
   {
    "label_asym": "G",
@@ -188,7 +194,8 @@
    "protein": "P40429",
    "gene": "RPL13A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L13a"
   },
   {
    "label_asym": "H",
@@ -198,7 +205,8 @@
    "protein": "P50914",
    "gene": "RPL14",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L14"
   },
   {
    "label_asym": "I",
@@ -208,7 +216,8 @@
    "protein": "P61313",
    "gene": "RPL15",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L15"
   },
   {
    "label_asym": "J",
@@ -218,7 +227,8 @@
    "protein": "P18621",
    "gene": "RPL17",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L17"
   },
   {
    "label_asym": "K",
@@ -228,7 +238,8 @@
    "protein": "Q07020",
    "gene": "RPL18",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L18"
   },
   {
    "label_asym": "L",
@@ -238,7 +249,8 @@
    "protein": "Q02543",
    "gene": "RPL18A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L18a"
   },
   {
    "label_asym": "M",
@@ -248,7 +260,8 @@
    "protein": "P46778",
    "gene": "RPL21",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L21"
   },
   {
    "label_asym": "N",
@@ -258,7 +271,8 @@
    "protein": "P62829",
    "gene": "RPL23",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L23"
   },
   {
    "label_asym": "O",
@@ -268,7 +282,8 @@
    "protein": "P62750",
    "gene": "RPL23A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L23a"
   },
   {
    "label_asym": "P",
@@ -278,7 +293,8 @@
    "protein": "P61254",
    "gene": "RPL26",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L26"
   },
   {
    "label_asym": "Q",
@@ -288,7 +304,8 @@
    "protein": "P46776",
    "gene": "RPL27A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L27a"
   },
   {
    "label_asym": "R",
@@ -298,7 +315,8 @@
    "protein": "P39023",
    "gene": "RPL3",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L3"
   },
   {
    "label_asym": "S",
@@ -308,7 +326,8 @@
    "protein": "P62899",
    "gene": "RPL31",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L31"
   },
   {
    "label_asym": "T",
@@ -318,7 +337,8 @@
    "protein": "P62910",
    "gene": "RPL32",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L32"
   },
   {
    "label_asym": "U",
@@ -328,7 +348,8 @@
    "protein": "P42766",
    "gene": "RPL35",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L35"
   },
   {
    "label_asym": "V",
@@ -338,7 +359,8 @@
    "protein": "P18077",
    "gene": "RPL35A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L35a"
   },
   {
    "label_asym": "W",
@@ -348,7 +370,8 @@
    "protein": "Q9Y3U8",
    "gene": "RPL36",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L36"
   },
   {
    "label_asym": "X",
@@ -358,7 +381,8 @@
    "protein": "P61927",
    "gene": "RPL37",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L37"
   },
   {
    "label_asym": "Y",
@@ -368,7 +392,8 @@
    "protein": "Q9Y3T9",
    "gene": "NOC2L",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Nucleolar complex protein 2 homolog"
   },
   {
    "label_asym": "Z",
@@ -378,7 +403,8 @@
    "protein": "Q9BVP2",
    "gene": "GNL3",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Guanine nucleotide-binding protein-like 3"
   },
   {
    "label_asym": "AA",
@@ -388,7 +414,8 @@
    "protein": "O95478",
    "gene": "NSA2",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Ribosome biogenesis protein NSA2 homolog"
   },
   {
    "label_asym": "BA",
@@ -398,7 +425,8 @@
    "protein": "Q9Y221",
    "gene": "NIP7",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosome subunit biogenesis protein NIP7 homolog"
   },
   {
    "label_asym": "CA",
@@ -408,7 +436,8 @@
    "protein": "Q8TDD1",
    "gene": "DDX54",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "ATP-dependent RNA helicase DDX54"
   },
   {
    "label_asym": "DA",
@@ -418,7 +447,8 @@
    "protein": "Q9BRT6",
    "gene": "LLPH",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Protein LLP homolog"
   },
   {
    "label_asym": "EA",
@@ -428,7 +458,8 @@
    "protein": "Q9BXY0",
    "gene": "MAK16",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Protein MAK16 homolog"
   },
   {
    "label_asym": "FA",
@@ -438,7 +469,8 @@
    "protein": "P56182",
    "gene": "RRP1",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Ribosomal RNA processing protein 1 homolog A"
   },
   {
    "label_asym": "GA",
@@ -448,7 +480,8 @@
    "protein": "Q6RFH5",
    "gene": "WDR74",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "WD repeat-containing protein 74"
   },
   {
    "label_asym": "HA",
@@ -458,7 +491,8 @@
    "protein": "Q9H9Y2",
    "gene": "RPF1",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Ribosome production factor 1"
   },
   {
    "label_asym": "IA",
@@ -468,7 +502,8 @@
    "protein": "P36578",
    "gene": "RPL4",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L4"
   },
   {
    "label_asym": "JA",
@@ -478,7 +513,8 @@
    "protein": "Q02878",
    "gene": "RPL6",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L6"
   },
   {
    "label_asym": "KA",
@@ -488,7 +524,8 @@
    "protein": "P18124",
    "gene": "RPL7",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L7"
   },
   {
    "label_asym": "LA",
@@ -498,7 +535,8 @@
    "protein": "P62424",
    "gene": "RPL7A",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L7a"
   },
   {
    "label_asym": "MA",
@@ -508,7 +546,8 @@
    "protein": "P32969",
    "gene": "RPL9",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L9"
   },
   {
    "label_asym": "NA",
@@ -518,7 +557,8 @@
    "protein": "Q9BYG3",
    "gene": "NIFK",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "MKI67 FHA domain-interacting nucleolar phosphoprotein"
   },
   {
    "label_asym": "OA",
@@ -528,7 +568,8 @@
    "protein": "Q6DKI1",
    "gene": "RPL7L1",
    "role": "rp",
-   "particle": "1"
+   "particle": "1",
+   "description": "60S ribosomal protein L7-like 1"
   },
   {
    "label_asym": "PA",
@@ -538,7 +579,8 @@
    "protein": "Q8IY81",
    "gene": "FTSJ3",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "pre-rRNA 2'-O-ribose RNA methyltransferase FTSJ3"
   },
   {
    "label_asym": "QA",
@@ -548,7 +590,8 @@
    "protein": "P56537",
    "gene": "EIF6",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Eukaryotic translation initiation factor 6"
   },
   {
    "label_asym": "RA",
@@ -558,7 +601,8 @@
    "protein": "O76021",
    "gene": "RSL1D1",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Ribosomal L1 domain-containing protein 1"
   },
   {
    "label_asym": "SA",
@@ -568,7 +612,8 @@
    "protein": "O00541",
    "gene": "PES1",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Pescadillo homolog"
   },
   {
    "label_asym": "TA",
@@ -578,7 +623,8 @@
    "protein": "Q99848",
    "gene": "EBNA1BP2",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Probable rRNA-processing protein EBP2"
   },
   {
    "label_asym": "UA",
@@ -588,7 +634,8 @@
    "protein": "Q8TDN6",
    "gene": "BRIX1",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Ribosome biogenesis protein BRX1 homolog"
   },
   {
    "label_asym": "VA",
@@ -598,7 +645,8 @@
    "protein": "Q9UKD2",
    "gene": "MRTO4",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "mRNA turnover protein 4 homolog"
   },
   {
    "label_asym": "WA",
@@ -608,7 +656,8 @@
    "protein": "Q9BZE4",
    "gene": "GTPBP4",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "GTP-binding protein 4"
   },
   {
    "label_asym": "XA",
@@ -618,7 +667,8 @@
    "protein": "Q14137",
    "gene": "BOP1",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Ribosome biogenesis protein BOP1"
   },
   {
    "label_asym": "YA",
@@ -628,7 +678,8 @@
    "protein": "Q15050",
    "gene": "RRS1",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Ribosome biogenesis regulatory protein homolog"
   },
   {
    "label_asym": "ZA",
@@ -638,7 +689,8 @@
    "protein": "Q8WTT2",
    "gene": "NOC3L",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Nucleolar complex protein 3 homolog"
   },
   {
    "label_asym": "AB",
@@ -648,7 +700,8 @@
    "protein": "Q9UHA3",
    "gene": "RSL24D1",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Probable ribosome biogenesis protein RLP24"
   },
   {
    "label_asym": "BB",
@@ -658,7 +711,8 @@
    "protein": "Q9NVP1",
    "gene": "DDX18",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "ATP-dependent RNA helicase DDX18"
   },
   {
    "label_asym": "CB",
@@ -668,7 +722,8 @@
    "protein": "P46087",
    "gene": "NOP2",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Probable 28S rRNA (cytosine(4447)-C(5))-methyltransferase"
   },
   {
    "label_asym": "DB",
@@ -678,7 +733,8 @@
    "protein": "Q9Y3C1",
    "gene": "NOP16",
    "role": "factor",
-   "particle": "1"
+   "particle": "1",
+   "description": "Nucleolar protein 16"
   }
  ],
  "modes": [
