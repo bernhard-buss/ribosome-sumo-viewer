@@ -37,11 +37,21 @@
   (`data-n` spans filled by `fillHelpNumbers()`), not from typed constants.
 - A view that must hold after a scene reload travels inside the scene as a MolViewSpec `camera` node
   (`buildScene(camera)`); setting the camera after `loadMvsData` races with the camera the reload restores.
+- The address holds the configuration: `stateQuery()` writes every non-default choice as a query
+  parameter (`s`, `colour`, `partners`, `q`, `region`, `env`, `filter`, `sig`, `sort`, `site`,
+  `ribosome`, `sumo`, `view` | `cam`), `syncUrl()` puts it in the address (keeping the `#help…` /
+  `#stats` part), `readUrlState()` reads it once at page load and `loadStructure_(id, {state})`
+  applies it. A new control must be added to all three and to the help entry `start/share`.
+  A table of the visitor is never written to the address.
+- Cameras in the page are cameras as seen (`camera.getSnapshot()`); Mol* moves the camera of a
+  MolViewSpec scene away from its target by `camFactor()`, so `buildScene()` divides by it.
+  Without that a stored camera drifts on every reload. The camera is not read while
+  `document.hidden` (the Browser pane of the test harness reports hidden: override it to test).
 - Test hook: `window.__rsv` (`viewer`, `meta`, `sites`, `user`, `setSiteMode`,
   `setProteinMode`, `loadUserText(name, text)`, `buildScene`, `setView`, `select`, `stats`, `openStats`,
   `showFromStats("hotspot:H1")`, `structures`, `structure`, `setStructure(id, {site})`, `setPartners(bool)`,
-  `toggleSumo()` (at the selected site), `sumoAt`).
+  `toggleSumo()` (at the selected site), `sumoAt`, `stateQuery()`, `syncUrl()`).
 - Check after changes: `node --check` on the extracted script; load the page from a static
   server; no console errors; a deep link such as `#help/env/classes` opens that entry;
   `?s=9RPV#stats` opens the statistics of the disome; switching structures keeps the
-  selected site.
+  selected site; a link copied with *Copy link* reproduces the state when opened.

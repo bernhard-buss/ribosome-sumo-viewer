@@ -74,8 +74,9 @@
   .verchip:hover { border-color: #9aa3af; color: var(--ink); }
   #vernew { margin-left: 6px; background: var(--accent); color: #fff; border-radius: 999px; padding: 0 6px; font-size: 10.5px; }
   #vernew[hidden] { display: none; }
-  #helpbtn, #hclose, #statsbtn, #sclose { font: inherit; font-size: 13px; padding: 4px 12px; border: 1px solid var(--line); background: #fff; border-radius: 5px; cursor: pointer; color: var(--ink); }
-  #helpbtn:hover, #hclose:hover, #statsbtn:hover, #sclose:hover { border-color: #9aa3af; }
+  #helpbtn, #hclose, #statsbtn, #sclose, #linkbtn { font: inherit; font-size: 13px; padding: 4px 12px; border: 1px solid var(--line); background: #fff; border-radius: 5px; cursor: pointer; color: var(--ink); }
+  #helpbtn:hover, #hclose:hover, #statsbtn:hover, #sclose:hover, #linkbtn:hover { border-color: #9aa3af; }
+  #linkbtn { min-width: 86px; }
   a.hl, span.hl { color: var(--accent); text-decoration: none; font-weight: 400; font-size: 13px; margin-left: 3px; cursor: pointer; letter-spacing: 0; text-transform: none; }
   a.hl:hover { text-decoration: underline; }
   .stagehelp { position: absolute; left: 12px; top: 12px; z-index: 4; font-size: 12px; color: var(--muted); background: rgba(255,255,255,.88); border: 1px solid var(--line);
@@ -158,6 +159,7 @@
   <span class="sub">SUMO2/3 acceptor sites of the ribosomal proteins on structures of the human ribosome, in control, MG132 and heat shock</span>
   <span class="hdr-right">
     <a class="verchip" href="#help/changelog" data-help="changelog" title="Version — open the changelog"><span id="ver"></span><span id="vernew" hidden>new</span></a>
+    <span><button id="linkbtn" title="Copy a link that reproduces what is shown: structure, colouring, filters, selected site and the view">Copy link</button><a class="hl" href="#help/start/share" data-help="start/share" title="Help: sharing a view">ⓘ</a></span>
     <button id="statsbtn" title="Statistics on the sites">Statistics</button>
     <button id="helpbtn" data-help="" title="Help (press ?)">Help</button>
   </span>
@@ -254,7 +256,7 @@
         <section data-topic="start" data-title="Quick start">
           <article data-entry="what"><h3>What this shows</h3>
             <p>The human ribosome with the SUMO2/3 acceptor lysines of its proteins, on a choice of structures: the mature 80S, translating and idle ribosomes, two collided ribosomes, and assembly intermediates of both subunits. On the structure shown now (<span data-struct="short"></span>, PDB <span data-struct="id"></span>) <span data-n="sites"></span> sites on <span data-n="proteins"></span> ribosomal proteins are listed; <span data-n="modelled"></span> of them have coordinates and are drawn as enlarged, coloured residues. Each site carries its response to proteasome inhibition (MG132) and to heat shock, and a description of where the lysine sits in the particle.</p></article>
-          <article data-entry="steps"><h3>Seven steps</h3>
+          <article data-entry="steps"><h3>Eight steps</h3>
             <ol>
               <li><b>Choose a structure</b> under <i>Structure</i>; the page opens on the mature 80S. <a data-help="structures/choose" href="#help/structures/choose">Structures</a>.</li>
               <li><b>Look around.</b> Drag to rotate, scroll to zoom. <a data-help="view/mouse" href="#help/view/mouse">All controls</a>.</li>
@@ -262,20 +264,33 @@
               <li><b>Jump to a standard view</b> — the 40S or 60S solvent side, the two faces between the subunits, top, bottom. <a data-help="view/views" href="#help/view/views">Views</a>.</li>
               <li><b>Find a site.</b> Type a protein name above the table, sort by a column, click a row: the structure centres on that lysine and its details appear below the table. <a data-help="table/select" href="#help/table/select">Table</a>.</li>
               <li><b>Ask whether a SUMO fits.</b> The colouring <i>Room for SUMO</i> shows at which sites a SUMO has space; the details of a site can draw one there. <a data-help="room/what" href="#help/room/what">Room for SUMO</a>.</li>
+              <li><b>Share what you see.</b> <i>Copy link</i> gives an address that opens the same structure, colouring, filters, site and view. <a data-help="start/share" href="#help/start/share">Sharing a view</a>.</li>
               <li><b>Add your own numbers.</b> <i>Load a table…</i> colours proteins or sites with values from a file on your computer; the file stays on your computer. <a data-help="data/format" href="#help/data/format">Your data</a>.</li>
             </ol></article>
           <article data-entry="reading"><h3>Reading the picture</h3>
             <p>Every atom is drawn as a sphere. rRNA is light grey, the proteins of the small (40S) subunit sand, those of the large (60S) subunit blue-grey. Factors bound to the ribosome are olive, tRNA teal, mRNA black. SUMO sites are drawn larger and in colour, so that a single lysine remains visible when the whole ribosome is in view.</p>
             <p>The enlargement is a marker, not the size of the residue. A site that is buried inside the particle shows only where its marker reaches the surface, or not at all; the table lists it all the same, and selecting it moves the view to its position.</p></article>
+          <article data-entry="share"><h3>Sharing a view</h3>
+            <p>The address of the page holds what is shown. Whatever you choose is written into it as you go, so copying the address, or pressing <i>Copy link</i> at the top, gives a link that opens the viewer in the same state on another computer.</p>
+            <table class="htable"><tr><th>In the link</th><th>Parameter</th></tr>
+              <tr><td>structure</td><td><code>s</code>, the PDB code</td></tr>
+              <tr><td>colouring of the sites; partners hidden</td><td><code>colour</code>, <code>partners=off</code></td></tr>
+              <tr><td>search text, region, environment, third menu, MG132 checkbox</td><td><code>q</code>, <code>region</code>, <code>env</code>, <code>filter</code>, <code>sig</code></td></tr>
+              <tr><td>sorting of the table</td><td><code>sort</code>, with a minus sign for descending</td></tr>
+              <tr><td>selected site, and a SUMO drawn at it</td><td><code>site</code> (and <code>ribosome</code> in the disome), <code>sumo</code></td></tr>
+              <tr><td>the view: a standard view, or the camera exactly as you turned and zoomed it</td><td><code>view</code>, or <code>cam</code> (position, target and up direction)</td></tr>
+              <tr><td>an open Help entry or the Statistics window</td><td>the part after <code>#</code></td></tr></table>
+            <p>What is at its default is left out, so the link of the opening view is the bare address. A camera move is written a moment after it has come to rest.</p>
+            <p>Not in the link: a table of your own, and the colouring of proteins by it. The table is a file on your computer and is never part of an address; send the file along and load it on the other side. Changes made in Mol*'s own panels are not in the link either.</p></article>
           <article data-entry="keys"><h3>Keyboard</h3>
-            <p><kbd>?</kbd> opens this help, <kbd>Esc</kbd> closes it. Every <span class="hl">ⓘ</span> on the page opens the help at the entry for the control next to it. The address of an open entry (for example <code>#help/env/classes</code>) can be copied and shared.</p></article>
+            <p><kbd>?</kbd> opens this help, <kbd>Esc</kbd> closes it. Every <span class="hl">ⓘ</span> on the page opens the help at the entry for the control next to it. The address of an open entry (for example <code>#help/env/classes</code>) can be copied and shared, like the rest of the address: see <a data-help="start/share" href="#help/start/share">Sharing a view</a>.</p></article>
         </section>
 
         <section data-topic="structures" data-title="Structures" hidden>
           <article data-entry="choose"><h3>Choosing a structure</h3>
             <p>A structure is one state of the ribosome, and a lysine that is enclosed in one state can be free in another. The <i>Structure</i> menu therefore offers several, all of the human ribosome and all from the PDB:</p>
             <div id="hstructs"></div>
-            <p>Choosing a structure replaces the picture, the site table and the Statistics window. The colouring, the selected site and a table of your own carry over. The address then ends in <code>?s=</code> and the PDB code (for example <code>?s=8G60</code>) and can be shared; without it the page opens on the mature 80S.</p>
+            <p>Choosing a structure replaces the picture, the site table and the Statistics window. The colouring, the selected site and a table of your own carry over. The address then holds <code>s=</code> and the PDB code (for example <code>?s=8G60</code>), beside everything else that is chosen, and can be shared (<a data-help="start/share" href="#help/start/share">Sharing a view</a>); without it the page opens on the mature 80S.</p>
             <p>The <b>mature 80S</b> is the reference: it has the highest resolution, and the statistics on regions, clustering and hotspots are computed on it. The <b>decoding 80S</b> adds mRNA, two tRNAs and eEF1A, and resolves the L1 stalk (RPL10A), RPL10 and part of the P stalk base (RPL12), which the mature structure does not. The <b>idle 80S</b> carries eEF2 and SERBP1, the state of ribosomes that are not translating. The <b>collided disome</b> is a stalled ribosome with the next ribosome run into it, bound by the kinase ZAK and by EDF1. The <b>pre-60S</b> and <b>pre-40S</b> particles are subunits in the making, with assembly factors in place of what is still to come.</p></article>
           <article data-entry="sites"><h3>One site in several structures</h3>
             <p>Each structure lists the sites of the ribosomal proteins it contains. The numbers differ because the structures differ: a precursor of the large subunit has no 40S proteins, the decoding ribosome has stalk proteins that the mature structure lacks, and the disome holds every protein twice, so each of its sites appears once for the stalled and once for the collided ribosome.</p>
@@ -373,18 +388,20 @@
 
         <section data-topic="room" data-title="Room for SUMO" hidden>
           <article data-entry="what"><h3>What it measures</h3>
-            <p>An exposed lysine can be reached by water. SUMO is a protein of 93 residues, and the lysine environment does not say whether it fits. <i>Room for SUMO</i> asks exactly that: the folded core of SUMO2 is placed at the lysine in <span data-s="fit.placements" data-fmt="n"></span> ways, and the share of placements that overlap nothing is the measure.</p>
+            <p>An exposed lysine can be reached by water. SUMO is a protein of 93 residues, about 11 kDa, and the lysine environment does not say whether it fits. <i>Room for SUMO</i> asks exactly that. Picture a SUMO held by its tail at the lysine and turned in every direction, closer and farther: in how many of these positions does it bump into nothing? The folded core of SUMO2 is placed at the lysine in <span data-s="fit.placements" data-fmt="n"></span> such ways, and the share of placements that overlap nothing is the measure.</p>
             <table class="htable"><tr><th>Class</th><th>Share of placements that fit</th><th>Reading</th></tr>
               <tr><td><span class="dot" data-env="exposed"></span>room</td><td>at least <span data-s="fit.room" data-fmt="pct"></span></td><td>a SUMO can sit at this lysine in the structure as it is</td></tr>
               <tr><td><span class="dot" data-env="rRNA contact"></span>tight</td><td>between the two</td><td>a few placements fit; a small movement decides</td></tr>
               <tr><td><span class="dot" data-env="buried"></span>none</td><td>fewer than <span data-s="fit.none" data-fmt="pct"></span></td><td>this lysine cannot carry SUMO in this state unless the structure gives way</td></tr></table>
+            <p>For a sense of scale: a lysine on the open surface of a protein reaches about 30 to 40 % (RanGAP1's SUMO site alone reaches <span data-s="fit.check.fit_target" data-fmt="pct"></span>); half of all placements would need the lysine on a stalk. On a ribosome, with neighbours on most sides, a few per cent is already a comfortable fit. An exposed lysine can have no room when its nitrogen is open to water at the bottom of a cleft, and a lysine classed buried can have room when its nitrogen sits at the surface next to what it touches.</p>
             <p>The share is computed for every structure of the menu, so one site can have room in an assembly intermediate and none in the mature ribosome. The detail card of a site gives the share, and the colouring <i>Room for SUMO</i> paints the classes.</p></article>
           <article data-entry="method"><h3>How it is computed</h3>
-            <p>The core of SUMO2 (residues 17–88, PDB <a href="https://www.rcsb.org/structure/1WM3" target="_blank" rel="noopener"><span data-s="fit.sumo"></span></a>) is rigid. The five residues after it and the bond to the lysine form a flexible tether. A placement fits when three things hold: the last residue of the core lies <span data-s="fit.tether.0"></span> to <span data-s="fit.tether.1"></span> Å from the lysine's nitrogen; the tether has a way out, that is, there is room for the glycine bonded to the nitrogen and the straight line from there to the core is free; and no backbone or Cβ atom of the core comes within <span data-s="fit.clash"></span> Å of an atom of the structure. Placements are combinations of tether directions, tether lengths and orientations of the core, the same set at every lysine.</p>
+            <p>The core of SUMO2 (residues 17–88, PDB <a href="https://www.rcsb.org/structure/1WM3" target="_blank" rel="noopener"><span data-s="fit.sumo"></span></a>) is rigid. The five residues after it and the bond to the lysine form a flexible tether. A placement fits when three things hold: the last residue of the core lies <span data-s="fit.tether.0"></span> to <span data-s="fit.tether.1"></span> Å from the lysine's nitrogen, the span of the five tail residues from compact to stretched; the tether has a way out, that is, there is room for the glycine bonded to the nitrogen and the straight line from there to the core is free; and no backbone or Cβ atom of the core comes within <span data-s="fit.clash"></span> Å of an atom of the structure. The placements are <span data-s="fit.directions"></span> tether directions × <span data-s="fit.lengths"></span> tether lengths × <span data-s="fit.rotations"></span> orientations of the core, the same set at every lysine, so that the shares compare between lysines and between structures.</p>
             <p>The test is lenient: side chains of SUMO are not tested, because they can rearrange. A class <i>none</i> is therefore the firm statement; a class <i>room</i> says that the backbone of SUMO has space, which is necessary, not sufficient.</p>
+            <p>The set of placements is finite. The class boundaries are chosen so that this hardly matters: with four times as many placements the class <i>room</i> stays the same for all but a handful of lysines, and a few per cent of the lysines classed <i>none</i> move to <i>tight</i>. A single lysine near a boundary can be on either side; the shares themselves are the better guide there.</p>
             <p>The model was tested on a crystal structure of SUMO2 conjugated to RanGAP1 (PDB <a href="https://www.rcsb.org/structure/3UIO" target="_blank" rel="noopener">3UIO</a>): the SUMO seen there passes the test, its tether measures <span data-s="fit.check.tether" data-fmt="1"></span> Å, and <span data-s="fit.check.fit_complex" data-fmt="pct"></span> of the placements fit with the enzymes of that structure bound, <span data-s="fit.check.fit_target" data-fmt="pct"></span> on RanGAP1 alone.</p></article>
           <article data-entry="taken"><h3>What takes the room away</h3>
-            <p>The same placements are tested four times, each time with less of the structure: as it is; without the partners (factors, tRNA, mRNA); without the other ribosome of a disome; and on the lysine's own subunit alone. When a site has no room in the structure as it is and gains room once something is taken away, that something is named: <i>room taken by its partners</i>, <i>by the other ribosome</i>, <i>by the other subunit</i>. The third menu above the table filters by it.</p>
+            <p>The same placements are tested four times, each time with less of the structure: as it is; without the partners (factors, tRNA, mRNA); without the other ribosome of a disome; and on the lysine's own subunit alone. Each step can only add room, so the four shares in the detail card never decrease from one to the next; where a share does not change, the thing removed was not in the way, and the card leaves it out. When a site has no room in the structure as it is and gains room once something is taken away, that something is named: <i>room taken by its partners</i>, <i>by the other ribosome</i>, <i>by the other subunit</i>. If more than one is in the way, the first of these in that order whose removal gives room is named. A site that has no room even on its own subunit is enclosed by its own subunit, and nothing is named. The third menu above the table filters by it.</p>
             <p>A site whose room the other subunit takes can carry SUMO on a free subunit but not in the assembled ribosome: a SUMO there stands in the way of the subunits joining, or has to be removed first. The same holds for the factor or the neighbouring ribosome.</p></article>
           <article data-entry="show"><h3>Showing a SUMO</h3>
             <p>In the detail card of a site with a possible placement, <i>Show a SUMO here</i> draws the core of SUMO2 in green at one of the placements that fit, one from the middle of the possible directions. It is an example, not a prediction: with <span data-n="sites"></span> sites and thousands of possible placements each, the picture shows where a SUMO can be, not where it is. The tether is not drawn, so the SUMO sits up to <span data-s="fit.tether.1"></span> Å from the lysine.</p>
@@ -513,7 +530,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/molstar@5.12.0/build/viewer/molstar.js"></script>
 <script>
-const VERSION = "0.6";
+const VERSION = "0.7";
 const VIEW_LABELS = { "40S_solvent": "40S solvent side", "60S_solvent": "60S solvent side", "mRNA_entry": "mRNA entry side",
                       "mRNA_exit": "mRNA exit side", "top": "top", "bottom": "bottom",
                       "side_40S": "40S side", "side_60S": "60S side", "across_1": "edge-on, first side", "across_2": "edge-on, second side",
@@ -579,9 +596,19 @@ function colourNodes(pairs) {          // [[selector, colour]] -> one colour nod
   for (const [sel, col] of pairs) if (col) (by.get(col) || by.set(col, []).get(col)).push(sel);
   return [...by].map(([color, selector]) => ({ kind: "color", params: { color, selector } }));
 }
+// Mol* reads the camera of a MolViewSpec scene for a reference field of view and moves it away from the
+// target by this factor to show the same with its own. Cameras in this page are cameras as seen (what
+// camera.getSnapshot() returns and requestCameraReset() takes); buildScene() divides by the factor.
+function camFactor() {
+  try { const c = viewer.plugin.canvas3d.camera.state; return c.mode === "orthographic" ? 1 / (2 * Math.tan(c.fov / 2)) : 1 / (2 * Math.sin(c.fov / 2)); }
+  catch (e) { return 1; }
+}
 function buildScene(camera) {
   const sc = structuredClone(template), nodes = [...walk(sc.root)];
-  if (camera) sc.root.children.push({ kind: "camera", params: camera });
+  if (camera) {      // `camera` is the camera as it is to be seen; Mol* moves a MolViewSpec camera away from its target by camFactor()
+    const f = camFactor(), t = camera.target;
+    sc.root.children.push({ kind: "camera", params: { target: t, up: camera.up, position: camera.position.map((v, i) => t[i] + (v - t[i]) / f) } });
+  }
   for (const n of nodes) if (n.params && n.params.uri && !/^[a-z]+:/i.test(n.params.uri)) n.params.uri = new URL(`data/${sid}/` + n.params.uri, location.href).href;
   // the components carry their name in `custom.rsv`: rrna, proteins, partners (factors, tRNA, mRNA), sites
   const part = name => nodes.find(n => n.kind === "component" && n.custom && n.custom.rsv === name);
@@ -623,7 +650,7 @@ function applyScene(keepCamera = true, camera = null) {
       await viewer.loadMvsData(JSON.stringify(buildScene(camera)), "mvsj", { replaceExisting: true, keepCamera: keepCamera && !camera });
     } catch (e) { $("busy").textContent = "The structure could not be drawn (its coordinates come from the PDB): " + e.message; console.error(e); return; }
     if (seq === sceneSeq) $("busy").hidden = true;
-    renderControls();
+    renderControls(); syncSoon(300);
   });
   sceneQueue = job.catch(() => {});
   return job;
@@ -736,6 +763,7 @@ function setUser(u) { showUser(u); renderTable(); applyScene(true); }
 
 function setView(v) {
   viewer.plugin.canvas3d.requestCameraReset({ durationMs: 350, snapshot: { target: v.target, position: v.position, up: v.up, radius: meta.radius } });
+  syncSoon(700);
 }
 
 function focusSite(s) {
@@ -781,6 +809,7 @@ function renderTable() {
       ${uc ? `<td class="num">${esc(userValue(s, uc) ?? "–")}</td>` : ""}</tr>`).join("");
   $("uth").hidden = !uc; $("uth").textContent = uc || ""; $("uth").title = uc ? "Your data: " + uc : "";
   $("count").textContent = `${rows.length} of ${sites.length} ${multi() ? "site copies" : "sites"}`;
+  syncUrl();
 }
 
 function renderDetail(s) {
@@ -822,13 +851,14 @@ function renderDetail(s) {
 function toggleSumo() {                                // draw (or remove) a SUMO at the selected site
   const s = sites[selected]; if (!s) return;
   sumoAt = sumoAt === siteKey(s) ? null : siteKey(s);
-  renderDetail(s); applyScene(true);
+  renderDetail(s); syncUrl(); applyScene(true);
 }
 function select(i, focus = true) {
   const s = sites[i]; selected = i; renderDetail(s);
   if (focus) focusSite(s);
   else if (s.x != null) viewer.structureInteractivity({ elements: { label_asym_id: s.label_asym, label_seq_id: s.label_seq }, action: "select" });
   for (const tr of $("rows").children) tr.classList.toggle("sel", +tr.dataset.i === i);
+  syncUrl(); if (focus) syncSoon(700);
 }
 
 // ---- statistics window: stored results of the analysis (data/stats.json) -----
@@ -1007,7 +1037,7 @@ function showFromStats(what) {                       // a Show button: colouring
   if (kind === "taken") { siteMode = "room"; $("fmore").value = "taken"; }
   $("stats").close(); syncHash(); renderTable();
   const h = kind === "hotspot" && (stats.hotspots || []).find(x => x.hotspot === value);
-  applyScene(true, h ? cameraOn([h.x, h.y, h.z], 150) : null);
+  applyScene(true, h ? cameraOn([h.x, h.y, h.z], 195) : null);
 }
 // A camera that looks at a point from outside the particle, along the line from its centre.
 function cameraOn(point, distance) {
@@ -1155,6 +1185,59 @@ function initHelp() {
   if (!seen) store.set(SEEN_KEY, VERSION); else if (seen !== VERSION) $("vernew").hidden = false;
 }
 
+// ---- the address holds the configuration ---------------------------------------
+// Whatever is chosen on the page is written to the query of the address, so that the address (or the
+// Copy link button) reproduces it: structure (s), colouring (colour), partners, the filters (q, region,
+// env, filter, sig), the sorting (sort), the selected site (site, ribosome), a drawn SUMO (sumo) and the
+// camera (view = a standard view, cam = position, target and up). Defaults are left out. A table of
+// your own is not part of it: it never leaves your computer.
+const SORT_KEYS = ["label", "region", "environment", "lfc_mg132", "q_mg132", "z_hs"];
+let urlReady = false, lastCam = null, syncTimer = null, camBusy = false;   // camBusy: a structure is loading, the camera is not its own yet
+function readUrlState() {
+  const p = new URLSearchParams(location.search), cam = (p.get("cam") || "").split(",").map(Number);
+  const st = {}; for (const k of ["s", "colour", "partners", "q", "region", "env", "filter", "sig", "sort", "site", "ribosome", "sumo", "view"]) st[k] = p.get(k);
+  st.cam = cam.length === 9 && cam.every(Number.isFinite) ? cam : null;
+  return st;
+}
+// The camera as a parameter: nothing for the first standard view, the name of another standard view, or
+// position, target and up. A pane that is not drawing (a hidden tab) has no camera to read: keep the last.
+function cameraParam() {
+  let c = null;
+  try { c = document.hidden || camBusy ? null : viewer.plugin.canvas3d.camera.getSnapshot(); } catch (e) {}
+  if (!c) return lastCam;
+  const pos = [...c.position], tgt = [...c.target], up = [...c.up], centre = meta.views[0].target;
+  const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+  if (![...pos, ...tgt, ...up].every(Number.isFinite) || dist(pos, tgt) < 1 || Math.hypot(...up) < 0.5 || dist(tgt, centre) > 2 * meta.radius) return lastCam;
+  const near = (a, b, tol) => a.every((v, i) => Math.abs(v - b[i]) <= tol);
+  const view = meta.views.find(v => near(pos, v.position, 2) && near(tgt, v.target, 2) && near(up, v.up, 0.02));
+  lastCam = view ? (view === meta.views[0] ? null : ["view", view.id])
+                 : ["cam", pos.concat(tgt).map(v => v.toFixed(1)).concat(up.map(v => v.toFixed(3))).join(",")];
+  return lastCam;
+}
+function stateQuery() {
+  const out = [], put = (k, v) => out.push(k + "=" + encodeURIComponent(v).replace(/%3A/g, ":").replace(/%2C/g, ",").replace(/%20/g, "+"));
+  if (!entry.reference) put("s", sid);
+  if (siteMode !== "mg132" && !siteMode.startsWith("user:")) put("colour", siteMode);
+  if (!showPartners && meta.partners.length) put("partners", "off");
+  if ($("q").value.trim()) put("q", $("q").value.trim());
+  if ($("fregion").value) put("region", $("fregion").value);
+  if ($("fenv").value) put("env", $("fenv").value);
+  if ($("fmore").value) put("filter", $("fmore").value);
+  if ($("fsig").checked) put("sig", "1");
+  if (SORT_KEYS.includes(sort.k) && (sort.k !== "lfc_mg132" || sort.dir !== -1)) put("sort", (sort.dir < 0 ? "-" : "") + sort.k);
+  const sel = selected != null ? sites[selected] : null;
+  if (sel) { put("site", sel.label); if (multi()) put("ribosome", sel.particle); if (sumoAt === siteKey(sel)) put("sumo", "1"); }
+  const c = cameraParam(); if (c) put(c[0], c[1]);
+  return out.length ? "?" + out.join("&") : "";
+}
+function syncUrl() {                                   // the open window (#help…, #stats) stays in the address
+  if (!urlReady) return;
+  const q = stateQuery();
+  if (q === location.search) return;                   // browsers limit how often an address may be rewritten
+  try { history.replaceState(null, "", location.pathname + q + location.hash); } catch (e) {}
+}
+function syncSoon(ms = 500) { clearTimeout(syncTimer); syncTimer = setTimeout(syncUrl, ms); }   // after a camera move has come to rest
+
 let USER_HINT;
 // Show another structure: its scene, sites and statistics replace the current ones; the colouring,
 // a loaded table and (with opts.site) the selected site carry over.
@@ -1170,7 +1253,8 @@ const loadStructure = (id, opts) => loadStructure_(id, opts).catch(e => {
 });
 async function loadStructure_(id, opts = {}) {
   if (!structures.some(x => x.id === id)) id = refId();
-  const seq = ++loadSeq, keep = opts.site || null;
+  const st = opts.state || null;                       // the configuration in the address, at page load only
+  const seq = ++loadSeq, keep = opts.site || (st && st.site ? { label: st.site, particle: st.ribosome } : null);
   $("busy").hidden = false; $("busy").textContent = "Loading the structure…";
   const get = f => fetch(`data/${id}/${f}`).then(
     r => { if (!r.ok) throw new Error(`the file data/${id}/${f} is missing (${r.status}).`); return r.json(); },
@@ -1178,27 +1262,43 @@ async function loadStructure_(id, opts = {}) {
   const got = await Promise.all(["meta.json", "sites.json", "scene_mg132.mvsj", "stats.json"].map(get));
   if (seq !== loadSeq) return;                         // another structure was chosen meanwhile
   [meta, sites, template, stats] = got;
-  sid = id; entry = structures.find(x => x.id === id); selected = null; sumoAt = null;
+  sid = id; entry = structures.find(x => x.id === id); selected = null; sumoAt = null; lastCam = null; camBusy = true;
   sites.forEach((s, i) => s.i = i);
+  if (st) {
+    if (st.colour) siteMode = st.colour;
+    showPartners = st.partners !== "off"; $("partners").checked = showPartners;
+    const m = /^(-?)(\w+)$/.exec(st.sort || ""); if (m && SORT_KEYS.includes(m[2])) sort = { k: m[2], dir: m[1] ? -1 : 1 };
+  }
   if (!siteMode.startsWith("user:") && !meta.modes.some(m => m.id === siteMode)) siteMode = "mg132";
   $("structure").value = id;
   $("structinfo").innerHTML = esc(entry.state.charAt(0).toUpperCase() + entry.state.slice(1)) + ". " +
     esc(entry.label).replace("PDB " + id, `<a href="https://www.rcsb.org/structure/${id}" target="_blank" rel="noopener">PDB ${id}</a>`) + ".";
   $("footstruct").innerHTML = esc(entry.label).replace("PDB " + id, `<a href="https://www.rcsb.org/structure/${id}">PDB ${id}</a>`);
-  const url = new URL(location.href); if (entry.reference) url.searchParams.delete("s"); else url.searchParams.set("s", id);
-  history.replaceState(null, "", url);
   fillFilterMenus(); fillHelpNumbers(); renderStats();
+  if (st) {                                            // filters of the address, where this structure offers them
+    const choose = (el, v) => { $(el).value = v && [...$(el).options].some(o => o.value === v) ? v : ""; };
+    $("q").value = st.q || ""; choose("fregion", st.region); choose("fenv", st.env); choose("fmore", st.filter); $("fsig").checked = st.sig === "1";
+  }
+  if (opts.onData) opts.onData();
   $("views").innerHTML = meta.views.map(v => `<button data-id="${v.id}">${esc(VIEW_LABELS[v.id] || v.id)}</button>`).join("");
   if (userRaw) { try { showUser(loadUserTable(userRaw.name, userRaw.text)); }
                  catch (err) { showUser(null); $("userinfo").innerHTML = `<b>${esc(userRaw.name)}</b>: ${esc(err.message)}. <a href="#" id="clear">Remove</a>`; } }
   $("detail").innerHTML = DETAIL_HINT;
   const t = keep && sites.find(x => x.label === keep.label && x.x != null && (!keep.particle || !multi() || x.particle === keep.particle)) ||
             keep && sites.find(x => x.label === keep.label);
-  if (t && !visibleSites().includes(t)) { $("q").value = ""; $("fenv").value = ""; $("fsig").checked = false; $("fregion").value = ""; $("fmore").value = ""; }   // the filters would hide the site that was followed here
+  if (!st && t && !visibleSites().includes(t)) { $("q").value = ""; $("fenv").value = ""; $("fsig").checked = false; $("fregion").value = ""; $("fmore").value = ""; }   // the filters would hide the site that was followed here
+  if (st && st.sumo === "1" && t && sumoPose(t)) sumoAt = siteKey(t);
   renderTable(); renderControls();                    // the controls of the new structure, before its scene has loaded
-  const v0 = meta.views[0];
-  await applyScene(false, t && t.x != null ? cameraOn([t.x, t.y, t.z], 150) : { target: v0.target, position: v0.position, up: v0.up });
-  if (seq === loadSeq && t) { select(t.i, false); document.querySelector(`#rows tr[data-i="${t.i}"]`)?.scrollIntoView({ block: "nearest" }); }
+  // the camera: the one of the address, else on the site that was followed here, else the first standard view
+  const view = st && st.view && meta.views.find(v => v.id === st.view), v0 = view || meta.views[0];
+  const camera = st && st.cam ? { position: st.cam.slice(0, 3), target: st.cam.slice(3, 6), up: st.cam.slice(6, 9) }
+               : !view && t && t.x != null ? cameraOn([t.x, t.y, t.z], 195) : { target: v0.target, position: v0.position, up: v0.up };
+  if (st) lastCam = st.cam ? ["cam", st.cam.join(",")] : view && view !== meta.views[0] ? ["view", view.id] : null;
+  await applyScene(false, camera);
+  if (seq !== loadSeq) return;
+  camBusy = false;
+  if (t) { select(t.i, false); document.querySelector(`#rows tr[data-i="${t.i}"]`)?.scrollIntoView({ block: "nearest" }); }
+  urlReady = true; syncSoon(300);
 }
 let DETAIL_HINT;
 async function main() {
@@ -1221,16 +1321,25 @@ async function main() {
                    setPartners: on => { showPartners = on; $("partners").checked = on; return applyScene(); },
                    setSiteMode: m => { siteMode = m; return applyScene(); }, setProteinMode: m => { protMode = m; return applyScene(); },
                    loadUserText: (name, text) => { userRaw = { name, text }; setUser(loadUserTable(name, text)); }, buildScene, setView, select,
-                   toggleSumo, get sumoAt() { return sumoAt; } };
+                   toggleSumo, get sumoAt() { return sumoAt; }, stateQuery, syncUrl };
   initHelp();
   initStats();
-  const deep = location.hash;                          // loadStructure rewrites the address
-  await loadStructure(new URLSearchParams(location.search).get("s") || refId());
-  if (deep.startsWith("#help")) openHelp(deep.slice(6)); else if (deep === "#stats") openStats();
+  const st = readUrlState(), deep = location.hash;     // the address is rewritten once the page is set up
+  await loadStructure(st.s || refId(), { state: st, onData: () => { if (deep.startsWith("#help")) openHelp(deep.slice(6)); else if (deep === "#stats") openStats(); } });
+
+  // a camera move ends up in the address once it has come to rest
+  for (const ev of ["pointerup", "wheel", "touchend", "keyup"]) $("viewer").addEventListener(ev, () => syncSoon(600), { passive: true });
+  try { viewer.plugin.canvas3d.camera.stateChanged.subscribe(() => syncSoon(600)); } catch (e) {}
+  $("linkbtn").addEventListener("click", async () => {
+    syncUrl();
+    const b = $("linkbtn"), say = t => { b.textContent = t; setTimeout(() => { b.textContent = "Copy link"; }, 1600); };
+    try { await navigator.clipboard.writeText(location.href); say("Link copied"); }
+    catch (e) { window.prompt("Copy this link:", location.href); }
+  });
 
   $("structure").addEventListener("change", e => loadStructure(e.target.value, { site: selected != null ? sites[selected] : null }));
   $("busy").addEventListener("click", () => { if (!/^Loading/.test($("busy").textContent)) $("busy").hidden = true; });
-  $("partners").addEventListener("change", e => { showPartners = e.target.checked; applyScene(); });
+  $("partners").addEventListener("change", e => { showPartners = e.target.checked; syncUrl(); applyScene(); });
   $("modes").addEventListener("click", e => { const b = e.target.closest("button"); if (b && b.dataset.id !== siteMode) { siteMode = b.dataset.id; renderTable(); applyScene(); } });
   $("pmodes").addEventListener("change", e => { protMode = e.target.value; renderTable(); applyScene(); });
   $("views").addEventListener("click", e => { const b = e.target.closest("button"); if (b) setView(meta.views.find(v => v.id === b.dataset.id)); });

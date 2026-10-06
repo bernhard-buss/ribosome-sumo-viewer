@@ -4,6 +4,23 @@ The version next to the title is raised with every change of what the viewer can
 Changes of the data files are listed with the version that shipped them. This file is
 the only place the history is written; the Changelog page of the in-page help renders it.
 
+## 0.7 — 2026-10-05
+Shareable links. The address of the page now holds everything that is chosen, and a
+*Copy link* button at the top copies it: a link opens the viewer in the same state.
+
+- In the link: the structure, the colouring of the sites, hidden partners, the search text
+  and the three filter menus with the MG132 checkbox, the sorting of the table, the selected
+  site and a SUMO drawn at it, and the view — a standard view by name, or the camera exactly
+  as it was turned and zoomed. An open Help entry or the Statistics window stays in the link
+  as before. Defaults are left out, so the opening view has the bare address.
+- Not in the link: a table of your own and the protein colouring by it; the file never
+  leaves your computer.
+- A link to the Statistics window or a Help entry opens it as soon as the data is there,
+  without waiting for the structure to be drawn.
+- Fix: since 0.5 the opening view of a structure was drawn about a third farther away than
+  the same view chosen with its button; both now match.
+- New help entry *Sharing a view* (Quick start).
+
 ## 0.6 — 2026-10-05
 Room for SUMO. For every site in every structure the viewer now says whether a SUMO fits at
 the lysine: the core of SUMO2 is placed on its tether in many ways, and the share of

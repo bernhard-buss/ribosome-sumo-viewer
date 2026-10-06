@@ -45,6 +45,16 @@ at one of the placements that fit. The model is checked on a crystal structure
 of a SUMO2 conjugate ([3UIO](https://www.rcsb.org/structure/3UIO)); the help
 topic *Room for SUMO* has the method and its limits.
 
+## Sharing a view
+
+The address of the page holds what is shown: structure, colouring, hidden
+partners, filters, sorting, the selected site, a SUMO drawn at it, and the
+view (a standard view, or the camera as it was turned and zoomed). It is
+updated as you go; *Copy link* copies it. For example
+`?s=9RPV&colour=room&site=RACK1+K264&ribosome=stalled&sumo=1` opens the
+collided disome coloured by room for SUMO, with that site selected and a SUMO
+drawn at it. A table of your own is never part of a link.
+
 ## Help and versions
 
 The **Help** button (or the `?` key) opens the in-page help: nine topics, a
