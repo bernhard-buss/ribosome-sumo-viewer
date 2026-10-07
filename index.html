@@ -78,14 +78,27 @@
   #helpbtn:hover, #hclose:hover, #statsbtn:hover, #sclose:hover, #linkbtn:hover { border-color: #9aa3af; }
   #linkbtn { min-width: 86px; }
   a.hl, span.hl { color: var(--accent); text-decoration: none; font-weight: 400; font-size: 13px; margin-left: 3px; cursor: pointer; letter-spacing: 0; text-transform: none; }
-  a.hl:hover { text-decoration: underline; }
-  .stagehelp { position: absolute; left: 12px; top: 12px; z-index: 4; font-size: 12px; color: var(--muted); background: rgba(255,255,255,.88); border: 1px solid var(--line);
+  a.hl:hover { text-decoration: none; color: var(--ink); }
+  #overlays { position: absolute; left: 12px; top: 12px; z-index: 4; display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
+              max-width: min(420px, calc(100% - 72px)); pointer-events: none; }
+  #overlays > * { pointer-events: auto; }
+  .stagehelp { font-size: 12px; color: var(--muted); background: rgba(255,255,255,.88); border: 1px solid var(--line);
                border-radius: 999px; padding: 2px 10px; text-decoration: none; }
   .stagehelp:hover { color: var(--accent); border-color: #9aa3af; }
-  #busy:not([hidden]) ~ .stagehelp { display: none; }
-  #pin { position: absolute; left: 12px; top: 44px; z-index: 4; max-width: min(360px, calc(100% - 24px)); font-size: 12.5px; line-height: 1.4; color: var(--ink);
+  #busy:not([hidden]) ~ #overlays .stagehelp, #overlays:has(#freebar:not([hidden])) .stagehelp { display: none; }
+  #pin { position: relative; max-width: 100%; font-size: 12.5px; line-height: 1.4; color: var(--ink);
          background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 8px; padding: 6px 28px 6px 10px; box-shadow: 0 2px 10px rgba(20,24,32,.12); }
   #pin[hidden] { display: none; }
+  #freebar { max-width: 100%; font-size: 12.5px; color: var(--ink); background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 10px;
+             padding: 5px 12px; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; box-shadow: 0 2px 10px rgba(20,24,32,.12); }
+  #freebar[hidden] { display: none; }
+  #freebar label { cursor: pointer; } #freebar .dim { color: var(--muted); }
+  #views.off button, #views.off { opacity: .45; pointer-events: none; }
+  #focusctl { position: absolute; right: 12px; bottom: 12px; z-index: 4; display: flex; align-items: center; gap: 3px; padding: 3px; flex-wrap: nowrap;
+              background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 10px rgba(20,24,32,.12); }
+  #focusctl button { padding: 3px 9px; }
+  #focusctl.off button { opacity: .45; pointer-events: none; }
+  .msp-highlight-toast-wrapper { bottom: 50px !important; }
   #pin b { font-weight: 600; } #pin .dim { color: var(--muted); }
   #pin button { position: absolute; right: 4px; top: 3px; border: 0; background: none; font: inherit; font-size: 15px; line-height: 1; color: var(--muted); cursor: pointer; padding: 2px 5px; }
   #pin button:hover { color: var(--ink); }
@@ -171,7 +184,8 @@
   </span>
 </header>
 <main>
-  <div id="stage"><div id="viewer"></div><div id="busy">Loading the structure…</div><a class="stagehelp" href="#help/view/mouse" data-help="view/mouse" title="Help: mouse and touch controls">ⓘ rotate · zoom · move</a><div id="pin" hidden></div></div>
+  <div id="stage"><div id="viewer"></div><div id="busy">Loading the structure…</div><div id="overlays"><a class="stagehelp" href="#help/view/mouse" data-help="view/mouse" title="Help: mouse and touch controls">ⓘ rotate · zoom · move</a><div id="freebar" hidden></div><div id="pin" hidden></div></div>
+    <div id="focusctl" class="seg off"><button id="focusbtn" aria-pressed="false" title="Close-up of the marked residue; what lies in front of it fades away">Focus</button><button id="overviewbtn" aria-pressed="true" title="The whole structure, from the same direction">Overview</button><a class="hl" href="#help/view/focus" data-help="view/focus" title="Help: focus and overview">ⓘ</a></div></div>
   <aside>
     <div class="block" id="structblock">
       <h2>Structure <a class="hl" href="#help/structures/choose" data-help="structures/choose" title="Help: the structures">ⓘ</a></h2>
@@ -219,6 +233,7 @@
           <th data-k="label">Site</th><th data-k="region">Region <a class="hl" href="#help/stats/regions" data-help="stats/regions" title="Help: the regions">ⓘ</a></th><th data-k="environment">Environment <a class="hl" href="#help/env/classes" data-help="env/classes" title="Help: the four environments">ⓘ</a></th>
           <th data-k="lfc_mg132" class="num" title="log2 fold change, MG132 vs control">log2 FC</th>
           <th data-k="q_mg132" class="num" title="q-value, MG132 vs control">q <a class="hl" href="#help/colour/significance" data-help="colour/significance" title="Help: q-values">ⓘ</a></th>
+          <th data-k="z_mg132" class="num" title="Z-score in MG132">Z MG132</th>
           <th data-k="z_hs" class="num" title="Z-score in heat shock">Z heat</th>
           <th data-k="user" class="num" id="uth" hidden></th>
         </tr></thead>
@@ -284,7 +299,8 @@
               <tr><td>search text, region, environment, third menu, MG132 checkbox</td><td><code>q</code>, <code>region</code>, <code>env</code>, <code>filter</code>, <code>sig</code></td></tr>
               <tr><td>sorting of the table</td><td><code>sort</code>, with a minus sign for descending</td></tr>
               <tr><td>selected site, and a SUMO drawn at it</td><td><code>site</code> (and <code>ribosome</code> in the disome), <code>sumo</code></td></tr>
-              <tr><td>the view: a standard view, or the camera exactly as you turned and zoomed it</td><td><code>view</code>, or <code>cam</code> (position, target and up direction)</td></tr>
+              <tr><td>the free protein of the selected site shown, coloured by confidence</td><td><code>free</code>, <code>plddt</code></td></tr>
+              <tr><td>the view: a standard view, or the camera exactly as you turned and zoomed it; the focus on the selected site</td><td><code>view</code>, or <code>cam</code> (position, target and up direction); <code>focus</code></td></tr>
               <tr><td>an open Help entry or the Statistics window</td><td>the part after <code>#</code></td></tr></table>
             <p>What is at its default is left out, so the link of the opening view is the bare address. A camera move is written a moment after it has come to rest.</p>
             <p>Not in the link: a table of your own, and the colouring of proteins by it. The table is a file on your computer and is never part of an address; send the file along and load it on the other side. Changes made in Mol*'s own panels are not in the link either.</p></article>
@@ -322,8 +338,12 @@
               <tr><td>Move sideways</td><td>drag with the right button, or <kbd>Ctrl</kbd> + drag</td><td>drag with two fingers</td></tr>
               <tr><td>Identify a residue</td><td>hover over it: protein, chain and residue appear at the bottom right of the structure; on a SUMO site also its name, environment and MG132 response</td><td>tap it (see the next row)</td></tr>
               <tr><td>Mark a residue</td><td colspan="2">click or tap it: the residue is outlined and its label is pinned at the top left of the structure until the next click; a SUMO site is also selected in the table, with its details below it. A click on empty space removes the mark.</td></tr>
-              <tr><td>Zoom to a residue</td><td colspan="2">double-click or double-tap it. The camera moves closer along the current line of sight; nothing is cut away in front of or behind the residue.</td></tr></table>
+              <tr><td>Zoom to a residue</td><td colspan="2">double-click or double-tap it. The camera moves closer along the current line of sight; nothing changes in how the structure is drawn.</td></tr>
+              <tr><td>Focus on a residue</td><td colspan="2">mark it, then <i>Focus</i> at the bottom right of the structure (see <a data-help="view/focus" href="#help/view/focus">Focus and overview</a>).</td></tr></table>
             <p>The complete list of key and mouse bindings is under <i>Settings / Controls Info</i> in the toolbar at the right edge of the structure.</p></article>
+          <article data-entry="focus"><h3>Focus and overview</h3>
+            <p>The two buttons at the bottom right of the structure switch between a close-up and the whole. <i>Focus</i> moves the camera onto the marked residue — the one last clicked, or else the site selected in the table — to about 70 Å, and opens a peek hole: within a narrow cone around the line of sight, what lies in front of the residue fades — atoms just in front of it are translucent, atoms farther in front more so, and from about 13 Å in front they are not drawn at all. Nothing is cut: the residue, what is level with it, what is beside the cone and everything behind it stay solid, so the surroundings of the lysine are seen as they are. The fade follows the camera as you turn and zoom. <i>Overview</i> brings the whole structure back, seen from the same direction. The buttons are available as soon as a residue is marked.</p>
+            <p>Choosing a site in the table focuses on it at once. A double click in the structure only moves the camera closer, without the fade, and a view button returns to the overview. In the focus, rotating and zooming work as usual, and a click on another residue moves the focus there.</p></article>
           <article data-entry="views"><h3>The standard views</h3>
             <p>The view buttons turn the ribosome to fixed orientations, derived from the structure itself so that they mean the same for every colouring and, through superposition, for every structure:</p>
             <table class="htable"><tr><th>View</th><th>You look at</th></tr>
@@ -361,6 +381,8 @@
             <p>Offered for every structure other than the mature 80S. Each site is painted with the environment that the same lysine has in the mature ribosome; a site that has no coordinates there, or whose protein is not part of it, is dark grey. Compare with <i>Lysine environment</i> to see which lysines change: see <a data-help="structures/compare" href="#help/structures/compare">Comparing with the mature 80S</a>.</p></article>
           <article data-entry="room"><h3>Room for SUMO</h3>
             <p>Colours each site by whether a SUMO fits at its lysine in the structure shown: room, tight or none; sites without a resolved side chain are dark grey. What the classes mean and how they are computed is under <a data-help="room/what" href="#help/room/what">Room for SUMO</a>.</p></article>
+          <article data-entry="room_free"><h3>Room on the free protein</h3>
+            <p>Colours each site by whether a SUMO fits at its lysine on the AlphaFold DB model of the protein alone: room, tight or none; sites of proteins without a model are dark grey. Switching between this colouring and <i>Room for SUMO</i> shows which sites gain their room once the protein is out of the particle. See <a data-help="room/free" href="#help/room/free">The free protein</a>.</p></article>
           <article data-entry="partner"><h3>Near a partner</h3>
             <p>Offered when the structure holds partners. Sites within <span data-s="partner_near"></span> Å of a factor are wine red, of a tRNA green, of the mRNA indigo, and of the other ribosome of a disome rose; all other sites are dark grey. A site near several is given the colour of the nearest. The site colours differ from the colours of the partners themselves so that a site remains visible against the factor it touches. Definitions: <a data-help="structures/partners" href="#help/structures/partners">Factors, tRNA and mRNA</a>.</p></article>
           <article data-entry="region"><h3>Region</h3>
@@ -413,6 +435,10 @@
           <article data-entry="show"><h3>Showing a SUMO</h3>
             <p>In the detail card of a site with a possible placement, <i>Show a SUMO here</i> draws the core of SUMO2 in green at one of the placements that fit, one from the middle of the possible directions. It is an example, not a prediction: with <span data-n="sites"></span> sites and thousands of possible placements each, the picture shows where a SUMO can be, not where it is. The tether is not drawn, so the SUMO sits up to <span data-s="fit.tether.1"></span> Å from the lysine.</p>
             <p>For a site whose room is taken, the button draws the SUMO where it would sit without what is in its way; it then overlaps that partner, ribosome or subunit in the picture. One SUMO is drawn at a time; choosing another structure removes it.</p></article>
+          <article data-entry="free"><h3>The free protein</h3>
+            <p>A lysine with no room on any particle may have room on the protein alone, before it is built into a ribosome or after it is released. For every ribosomal protein the predicted model of the protein by itself (<span data-s="free.source"></span>) stands in for the free protein, and the same placements are tried on it. The detail card gives the result — room and the share of placements that fit on the free protein — together with the confidence of the model at that lysine (pLDDT: very high ≥ 90, confident 70–90, low 50–70, very low below 50). A low confidence usually means a flexible segment: room there is real but the exact shape is not.</p>
+            <p><i>Show the free protein</i> in the detail card replaces the ribosome with the model of that protein, with the same colouring of its sites; the banner at the top offers to colour the protein by confidence instead of its subunit tint, and <i>Back to the ribosome</i> returns. On the model, too, a SUMO can be drawn at the selected site, at a placement that fits there; the tether and the core are the same as on the ribosome. The standard views do not apply to a model, which has its own frame of reference. The colouring <i>Room on the free protein</i> paints every site of the ribosome with its class on the free protein, so that the two can be compared on the particle itself.</p>
+            <p>The models are predictions of the protein alone, made for the whole sequence, with the tails that no structure resolves. They say where a SUMO fits on the isolated protein, not whether the protein is modified there; and a protein that is never free in the cell, because it is folded into the ribosome as it is made, is a case the model does not know about.</p></article>
           <article data-entry="limits"><h3>Limits</h3>
             <p>The structures are rigid here; parts that move in the cell can make room or take it. Segments without coordinates are not there to collide with, so room near a mobile tail is overestimated. One SUMO is placed; a chain of several needs more space, so <i>none</i> for one SUMO holds for a chain as well. Room for SUMO does not mean room for the enzymes that attach it.</p></article>
         </section>
@@ -425,19 +451,20 @@
               <tr><td>Environment</td><td>see <a data-help="env/classes" href="#help/env/classes">the four environments</a></td></tr>
               <tr><td>log2 FC</td><td>log2 fold change of SUMO2/3 modification, MG132 against control</td></tr>
               <tr><td>q</td><td>q-value of that change</td></tr>
-              <tr><td>Z heat</td><td>Z-score in heat shock</td></tr>
+              <tr><td>Z MG132, Z heat</td><td>Z-scores of the modification in MG132 and in heat shock (the Z-score in control is in the details)</td></tr>
               <tr><td><i>your column</i></td><td>after a table is loaded: the value of the column that is shown in the structure, for the site or, failing that, for its protein</td></tr></table></article>
           <article data-entry="filters"><h3>Filtering and sorting</h3>
             <p>The search box keeps the sites whose name contains the text (<code>RPS3</code>, <code>RACK1 K2</code>). The first menu restricts to a subunit or one of its regions, the second to one environment, the third to sites in a hotspot (any, or one in particular), at the subunit interface, near a partner, on one ribosome of the disome, by room for SUMO or by what takes that room, changed against the mature 80S, or with another modification recorded; it offers what applies to the structure shown. The checkbox keeps the sites that change significantly with MG132. The counter shows how many sites remain.</p>
             <p>The <i>Show</i> buttons of the Statistics window set these filters and the matching colouring for you.</p>
             <p>Click a column header to sort by it; click again to reverse. Number columns start with the largest value.</p></article>
           <article data-entry="select"><h3>Selecting a site</h3>
-            <p>Click a row. The structure centres on the lysine and outlines it, and the details appear below the table. Rows in grey are sites that are not modelled in the structure shown; they have details but no position to centre on. The line <i>Elsewhere</i> of the details tells whether another structure resolves them.</p></article>
+            <p>Click a row. The structure focuses on the lysine — a close-up in which what lies in front of it fades away (<i>Overview</i> at the bottom right of the structure brings the whole back; see <a data-help="view/focus" href="#help/view/focus">Focus and overview</a>) — and outlines it, and the details appear below the table. Rows in grey are sites that are not modelled in the structure shown; they have details but no position to focus on. The line <i>Elsewhere</i> of the details tells whether another structure resolves them.</p></article>
           <article data-entry="details"><h3>The site details</h3>
             <table class="htable"><tr><th>Line</th><th>Content</th></tr>
               <tr><td>Protein</td><td>gene symbol with a link to its UniProt entry, subunit, and the chain name in the PDB entry shown</td></tr>
               <tr><td>Environment</td><td>the class, and the accessible surface of NZ in the structure shown and in the free protein</td></tr>
               <tr><td>Room for SUMO</td><td>the class and the share of placements of a SUMO that fit at this lysine, also without the partners, on this ribosome alone and on the subunit alone where these differ; the button draws a SUMO at the site. See <a data-help="room/what" href="#help/room/what">Room for SUMO</a></td></tr>
+              <tr><td>Free protein</td><td>room for a SUMO on the AlphaFold DB model of the protein alone, with the confidence of the model at the lysine; the button shows that model in place of the ribosome. See <a data-help="room/free" href="#help/room/free">The free protein</a></td></tr>
               <tr><td>Nearest rRNA</td><td>distance from NZ to the closest rRNA atom, with rRNA, nucleotide and atom</td></tr>
               <tr><td>Partner</td><td>the nearest factor, tRNA, mRNA or other ribosome within <span data-s="partner_near"></span> Å, with the distance; see <a data-help="structures/partners" href="#help/structures/partners">partners</a></td></tr>
               <tr><td>Region</td><td>the region, the distance from NZ to the other subunit, and the hotspot the site belongs to, if any</td></tr>
@@ -484,6 +511,8 @@
           <article data-entry="room"><h3>Room for SUMO</h3>
             <p>The first table counts the classes room, tight and none among the MG132-responsive sites, the other sites and the other lysines of the same proteins, for lysines with a resolved side chain in the structure shown. The second gives the classes of the sites by the environment of their lysine: an exposed lysine need not have room for a SUMO. For the mature 80S a third table tests the differences (Fisher's exact test). The last table lists the sites that have room only when the partners, the other ribosome or the other subunit are taken away, with the share of placements that fit with and without it; a click on a row selects the site.</p>
             <p>Definitions and the test of the model: <a data-help="room/method" href="#help/room/method">how it is computed</a>.</p></article>
+          <article data-entry="free"><h3>On the free protein</h3>
+            <p>For the mature 80S the window adds the same questions on the AlphaFold DB models of the proteins alone: whether SUMO sites have room on the free protein more often than the other lysines, whether the lysines that have no room on any particle do, and whether the models are less confident (pLDDT below 70, that is, flexible) at SUMO sites than at other lysines. The next table counts, for the lysines without room on any particle, their room on the free protein, and the last lists the SUMO sites among them, each with a <i>Show</i> button that opens the model of the protein at the site. See <a data-help="room/free" href="#help/room/free">The free protein</a>.</p></article>
           <article data-entry="limits"><h3>Limits</h3>
             <p>Sites on one protein are not independent observations, so a single heavily modified protein can carry a result; the tests "with proteins as units" guard against this where it matters. Lysines that mass spectrometry cannot detect are counted as unmodified. Each structure is one state of the ribosome. A p-value near 0.05 in a table of many tests is weak evidence.</p></article>
         </section>
@@ -537,7 +566,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/molstar@5.12.0/build/viewer/molstar.js"></script>
 <script>
-const VERSION = "0.7.1";
+const VERSION = "0.8";
 const VIEW_LABELS = { "40S_solvent": "40S solvent side", "60S_solvent": "60S solvent side", "mRNA_entry": "mRNA entry side",
                       "mRNA_exit": "mRNA exit side", "top": "top", "bottom": "bottom",
                       "side_40S": "40S side", "side_60S": "60S side", "across_1": "edge-on, first side", "across_2": "edge-on, second side",
@@ -562,8 +591,15 @@ const refId = () => structures.find(x => x.reference).id;
 const modelledEnv = e => e != null && e !== "not modelled";
 let PARTNER_NEAR = "";   // distance (Å) that counts as near a partner; read from the data
 let FIT = null;           // parameters of the room-for-SUMO calculation (structures.json), null if the data has none
+let FREE = null;          // the free proteins (AlphaFold DB models): source, version, number of models, pLDDT colours
+let freeOf = null;        // accession of the free protein shown instead of the ribosome, or null
+let plddtOn = false;      // the free protein coloured by the confidence of its model
+const freeData = new Map();   // accession -> data/free/<accession>.json
+const PLDDT_BANDS = [["very high", 90], ["confident", 70], ["low", 50], ["very low", -1]];
+const plddtBand = v => v == null ? null : PLDDT_BANDS.find(([, lo]) => v >= lo)[0];
 let sumoAt = null;        // key (label|particle) of the site at which a SUMO is drawn, or null
 const sumoPose = s => s.room_taken_by && s.pose_without ? s.pose_without : s.pose;   // where it would sit without what is in its way, else a placement that fits
+const freePose = s => { const d = freeOf === s.protein && freeData.get(freeOf), l = d && d.lysines.find(l => l.position === s.position); return l ? l.pose : null; };
 const siteKey = s => s.label + "|" + (s.particle ?? "");
 const pct1 = v => v == null ? "–" : (100 * v).toFixed(v < 0.0995 ? 1 : 0) + " %";
 const TAKEN_SHORT = { "a partner": "its partners", "the other ribosome": "the other ribosome", "the other subunit": "the other subunit" };
@@ -610,7 +646,44 @@ function camFactor() {
   try { const c = viewer.plugin.canvas3d.camera.state; return c.mode === "orthographic" ? 1 / (2 * Math.tan(c.fov / 2)) : 1 / (2 * Math.sin(c.fov / 2)); }
   catch (e) { return 1; }
 }
+// The colour of a site under the current colouring, computed in the page (the ribosome scene takes
+// its colours from annotations.json; the free protein has no such file).
+function siteColour(s) {
+  if (siteMode.startsWith("user:")) { const col = siteMode.slice(5), row = user && user.site.get(s.label_asym + ":" + s.label_seq); return row && row[col] != null ? user.scales.site[col].colourOf(row[col]) : UNSET; }
+  const m = meta.modes.find(x => x.id === siteMode); if (!m) return UNSET;
+  const L = m.legend, key = { environment: "environment", environment_ref: "environment_ref", region: "region", partner: "near_partner", room: "room",
+                              room_free: "room_free", hotspot: "hotspot", comod: "other_mod_class" }[siteMode];
+  if (siteMode === "mg132") return s.sig_mg132 && s.lfc_mg132 != null ? rampColour(s.lfc_mg132, L.ramp, L.limits) : UNSET;
+  if (siteMode.startsWith("z_")) { const v = s[siteMode]; return v == null ? UNSET : rampColour(v, L.ramp, L.limits); }
+  return (key && L.colours && L.colours[s[key]]) || UNSET;
+}
+// The scene of a free protein: its AlphaFold DB model, tinted by subunit or coloured by confidence,
+// with the protein's sites in the current colouring and, if asked for, a SUMO at the selected site.
+function buildFreeScene(data, camera) {
+  const asym = "A", tint = (meta.chains.find(c => c.protein === data.accession) || {}).subunit === "40S" ? meta.base.prot_40S : meta.base.prot_60S;
+  const seen = new Set(), own = sites.filter(s => s.protein === data.accession && !seen.has(s.position) && seen.add(s.position));
+  const el = pos => ({ label_asym_id: asym, label_seq_id: pos });
+  const protRep = { kind: "representation", params: { type: "cartoon" }, children: [{ kind: "color", params: { color: tint } }] };
+  if (plddtOn) protRep.children.push(...colourNodes(data.residues.map(([seq, v]) => [el(seq), FREE.style[plddtBand(v)]])));
+  const protein = { kind: "component", params: { selector: "polymer" }, custom: { rsv: "free" }, children: [protRep] };
+  if (!camera) protein.children.push({ kind: "focus", params: {} });
+  const siteRep = { kind: "representation", params: { type: "spacefill", size_factor: 1.8 },
+                    children: [{ kind: "color", params: { color: UNSET } }, ...colourNodes(own.map(s => [el(s.position), siteColour(s)]))] };
+  const structure = { kind: "structure", params: { type: "model" }, children: [protein,
+    { kind: "component", params: { selector: own.map(s => el(s.position)) }, custom: { rsv: "sites" }, children: [siteRep] }] };
+  const root = { kind: "root", children: [{ kind: "canvas", params: { background_color: "white" } },
+    { kind: "download", params: { url: data.url }, children: [{ kind: "parse", params: { format: "bcif" }, children: [structure] }] }] };
+  const sel = sumoAt != null && sites.find(x => siteKey(x) === sumoAt), lys = sel && sel.protein === data.accession && data.lysines.find(l => l.position === sel.position);
+  if (lys && lys.pose && meta.sumo) {
+    const v = lys.pose.split(" ").map(Number), node = structuredClone(meta.sumo.node), tf = [...walk(node)].find(n => n.kind === "transform");
+    tf.params.rotation = [v[0], v[3], v[6], v[1], v[4], v[7], v[2], v[5], v[8]]; tf.params.translation = [v[9], v[10], v[11]];
+    root.children.push(node);
+  }
+  if (camera) { const f = camFactor(), t = camera.target; root.children.push({ kind: "camera", params: { target: t, up: camera.up, position: camera.position.map((v, i) => t[i] + (v - t[i]) / f) } }); }
+  return { kind: "single", root, metadata: { version: template.metadata ? template.metadata.version : "1", title: `Free ${data.gene || data.accession} (AlphaFold DB model)` } };
+}
 function buildScene(camera) {
+  if (freeOf && freeData.has(freeOf)) return buildFreeScene(freeData.get(freeOf), camera);
   const sc = structuredClone(template), nodes = [...walk(sc.root)];
   if (camera) {      // `camera` is the camera as it is to be seen; Mol* moves a MolViewSpec camera away from its target by camFactor()
     const f = camFactor(), t = camera.target;
@@ -657,7 +730,7 @@ function applyScene(keepCamera = true, camera = null) {
       await viewer.loadMvsData(JSON.stringify(buildScene(camera)), "mvsj", { replaceExisting: true, keepCamera: keepCamera && !camera });
     } catch (e) { $("busy").textContent = "The structure could not be drawn (its coordinates come from the PDB): " + e.message; console.error(e); return; }
     if (seq === sceneSeq) $("busy").hidden = true;
-    renderControls(); syncSoon(300);
+    renderControls(); syncSoon(300); if (focusOn) { peekView = ""; peekSoon(300); }
   });
   sceneQueue = job.catch(() => {});
   return job;
@@ -677,6 +750,11 @@ function legendHtml(L, withBase) {
     .concat(withBase && showPartners ? meta.partners.map(q => [q.label, q.colour]) : [])
     .concat(withBase && sumoAt != null && meta.sumo ? [["SUMO placed at the selected site", meta.sumo.colour]] : []);
   const row = list => list.length ? `<div class="keys">` + list.map(([k, c]) => `<span><span class="dot" style="background:${c}"></span>${esc((L.labels || {})[k] || k)}</span>`).join("") + `</div>` : "";
+  if (freeOf && withBase) {                             // the free protein: its tint or its confidence bands
+    const tint = (meta.chains.find(c => c.protein === freeOf) || {}).subunit === "40S" ? meta.base.prot_40S : meta.base.prot_60S;
+    const pl = plddtOn ? PLDDT_BANDS.map(([b, lo], i) => [`pLDDT ${b}${i === 0 ? " (≥ 90)" : i === 3 ? " (< 50)" : ` (${lo}–${PLDDT_BANDS[i - 1][1]})`}`, FREE.style[b]]) : [["free protein (AlphaFold model)", tint]];
+    return h + row(keys) + row(pl.concat(sumoAt != null && meta.sumo ? [["SUMO placed at the selected site", meta.sumo.colour]] : []));
+  }
   return h + row(keys) + row(base);       // the site colours, then what the particle itself is drawn in
 }
 function renderControls() {
@@ -770,7 +848,148 @@ function setUser(u) { showUser(u); renderTable(); applyScene(true); }
 
 function setView(v) {
   viewer.plugin.canvas3d.requestCameraReset({ durationMs: 350, snapshot: { target: v.target, position: v.position, up: v.up, radius: meta.radius } });
-  syncSoon(700);
+  focusOn = false; updateFocusCtl(); syncSoon(700);
+}
+
+// ---- focus and overview -------------------------------------------------------------------
+// Focus: a close-up of the marked residue (the pinned click, else the selected site): the camera
+// moves onto it, nothing is cut away, and what lies in front of it fades with its distance (the
+// peek, below). Overview: the whole structure, seen from the same direction. A click in the table
+// focuses; a double click in the structure only moves the camera closer; a view button returns to
+// the overview.
+const FOCUS_DISTANCE = 70;               // Å from the camera to the residue
+let focusOn = false;
+function markedPoint() {
+  if (lastClick && lastClick.loci && !$("pin").hidden) {
+    try { const b = structLib().StructureElement.Loci.getBoundary(lastClick.loci).sphere; return [b.center[0], b.center[1], b.center[2]]; } catch (e) {}
+  }
+  const s = selected != null ? sites[selected] : null; if (!s) return null;
+  if (freeOf) { const l = s.protein === freeOf && freeData.get(freeOf).lysines.find(x => x.position === s.position); return l && l.x != null ? [l.x, l.y, l.z] : null; }
+  return s.x != null ? [s.x, s.y, s.z] : null;
+}
+function setFocus(on, ms = 350) {
+  const p = on && markedPoint();
+  if (p) { zoomTo(p, FOCUS_DISTANCE, ms); focusOn = true; peekSoon(ms + 150); if (!peekWatching) { peekWatching = true; requestAnimationFrame(peekWatch); } }
+  else if (!on) { viewer.plugin.canvas3d.requestCameraReset({ durationMs: ms }); focusOn = false; clearPeek(); }
+  updateFocusCtl(); syncSoon(ms + 300);
+}
+
+// ---- the peek ---------------------------------------------------------------------------------
+// In the focus, what lies between the camera and the marked residue is drawn translucent, the more
+// so the farther in front of the residue it is, until it vanishes: a peek hole that replaces the
+// clipping. The hole is a cone around the line of sight, narrow at the residue and widening towards
+// the camera. Atoms level with the residue or behind it, beside the cone, and the residue itself
+// stay opaque. The layers follow the camera as it turns (an update takes a few milliseconds).
+const PEEK_STEPS = [[2, 0.7], [5, 0.85], [9, 0.95], [13, 1]];   // [Å in front of the residue, transparency] (last: invisible)
+const PEEK_CONE = [7, 0.4];              // radius of the cone (Å) at the residue, and its growth per Å towards the camera
+const PEEK_TAG = "rsv-peek", PEEK_EVERY = 100;  // ms between updates while the camera turns
+let peekTimer = null, peekBusy = false, peekAgain = false, peekLast = 0;
+function peekSoon(ms = 400) { clearTimeout(peekTimer); peekTimer = setTimeout(updatePeek, ms); }
+function peekFollow() {                  // on a camera change: at once if the last update is old enough, and once more when it rests
+  if (!focusOn) return;
+  if (performance.now() - peekLast >= PEEK_EVERY && !peekBusy) updatePeek();
+  peekSoon(120);
+}
+let peekWatching = false, peekSeen = null;
+function peekWatch() {                   // while the focus is on: one camera snapshot per frame, an update when the view has turned
+  if (!focusOn) { peekWatching = false; peekSeen = null; return; }
+  try {
+    const c = viewer.plugin.canvas3d.camera.getSnapshot(), k = [...c.position, ...c.target].map(v => v.toFixed(1)).join(",");
+    if (k !== peekSeen) { peekSeen = k; peekFollow(); }
+  } catch (e) {}
+  requestAnimationFrame(peekWatch);
+}
+function markedResidue() {               // chain and residue of the marked residue, kept opaque
+  if (lastClick && lastClick.loci && !$("pin").hidden) return residueOf(lastClick.loci);
+  const s = selected != null ? sites[selected] : null; if (!s) return null;
+  return freeOf ? { asym: "A", seq: s.position } : { asym: s.label_asym, seq: s.label_seq };
+}
+const peekCells = ref => viewer.plugin.state.data.selectQ(q => (ref ? q.byRef(ref) : q.root).subtree().withTag(PEEK_TAG));
+async function clearPeek() {
+  clearTimeout(peekTimer); peekView = "";
+  const cells = peekCells(); if (!cells.length) return;
+  const b = viewer.plugin.build(); for (const c of cells) b.delete(c.transform.ref);
+  try { await b.commit(); } catch (e) {}
+}
+// The atoms of every structure on the stage, once per focus target: coordinates in typed arrays,
+// the unit and the index within it, and a mask of the marked residue. The cone test then runs over
+// plain arrays (a few milliseconds), not through Mol*'s query machinery.
+let peekCache = null;    // { key, items: [{ st, structure, n, px, py, pz, unitOf, idx, marked }] }
+function peekAtoms(p) {
+  const plugin = viewer.plugin, S = structLib(), SP = S.StructureProperties, m = markedResidue();
+  const sts = plugin.managers.structure.hierarchy.current.structures.filter(st => st.cell.obj && st.cell.obj.data);
+  const key = sts.map(st => st.cell.transform.ref).join("|") + "@" + p.join(",") + "@" + (m ? m.asym + ":" + m.seq : "");
+  if (peekCache && peekCache.key === key) return peekCache.items;
+  const items = [];
+  for (const st of sts) {
+    const structure = st.cell.obj.data, n = structure.elementCount;
+    const px = new Float32Array(n), py = new Float32Array(n), pz = new Float32Array(n), unitOf = new Int32Array(n), idx = new Int32Array(n), marked = new Uint8Array(n);
+    const markedIn = new Map();                                   // unit id -> the marked residue's atoms in it
+    if (m) {
+      const q = S.Queries.generators.atoms({ chainTest: ctx => SP.chain.label_asym_id(ctx.element) === m.asym, residueTest: ctx => SP.residue.label_seq_id(ctx.element) === m.seq });
+      for (const unit of S.StructureSelection.unionStructure(S.StructureQuery.run(q, structure)).units) markedIn.set(unit.id, new Set(unit.elements));
+    }
+    let k = 0;
+    structure.units.forEach((unit, u) => {
+      const { elements } = unit, conf = unit.conformation;       // the accessors need their object
+      const mk = markedIn.get(unit.id);
+      for (let i = 0; i < elements.length; i++, k++) {
+        const e = elements[i]; px[k] = conf.x(e); py[k] = conf.y(e); pz[k] = conf.z(e); unitOf[k] = u; idx[k] = i;
+        if (mk && mk.has(e)) marked[k] = 1;
+      }
+    });
+    items.push({ st, structure, n: k, px, py, pz, unitOf, idx, marked });
+  }
+  peekCache = { key, items };
+  return items;
+}
+let peekView = "";       // direction and reach of the last update: a zoom alone changes neither
+async function updatePeek(force = false) {
+  const plugin = viewer.plugin, p = focusOn && markedPoint();
+  if (!p) return clearPeek();
+  try { if (plugin.canvas3d.camera.transition.inTransition) return peekSoon(200); } catch (e) {}   // a state update would cut the camera move short
+  if (peekBusy) { peekAgain = true; return; }
+  const c = plugin.canvas3d.camera.getSnapshot();
+  const d = [0, 1, 2].map(i => c.position[i] - p[i]), dist = Math.hypot(...d) || 1, dir = d.map(v => v / dist);
+  const far = Math.max(FOCUS_DISTANCE, Math.ceil(dist / 20) * 20) + 10;
+  const view = dir.map(v => v.toFixed(2)).join(",") + "/" + far + "/" + p.join(",");
+  if (!force && view === peekView && peekCells().length) return;        // only the distance changed: the cone is the same
+  peekBusy = true; peekLast = performance.now();
+  try {
+    const S = structLib(), T = molstar.lib.plugin.StateTransforms, b = plugin.build(), s0 = PEEK_STEPS[0][0];
+    for (const it of peekAtoms(p)) {
+      const bins = PEEK_STEPS.map(() => new Map());          // step -> unit index -> indices within the unit (ascending)
+      const { n, px, py, pz, unitOf, idx, marked } = it;
+      for (let k = 0; k < n; k++) {
+        if (marked[k]) continue;
+        const x = px[k] - p[0], y = py[k] - p[1], z = pz[k] - p[2], along = x * dir[0] + y * dir[1] + z * dir[2];
+        if (along < s0 || along > far) continue;                                   // level with the residue, behind it, or beyond the camera
+        const w = PEEK_CONE[0] + PEEK_CONE[1] * along;
+        if (x * x + y * y + z * z - along * along > w * w) continue;             // beside the cone
+        let step = 0; while (step + 1 < PEEK_STEPS.length && along >= PEEK_STEPS[step + 1][0]) step++;
+        const m = bins[step]; let arr = m.get(unitOf[k]); if (!arr) { arr = []; m.set(unitOf[k], arr); } arr.push(idx[k]);
+      }
+      const layers = [];
+      bins.forEach((m, step) => {
+        if (!m.size) return;
+        const elements = []; m.forEach((arr, u) => elements.push({ unit: it.structure.units[u], indices: Int32Array.from(arr) }));
+        layers.push({ bundle: S.StructureElement.Bundle.fromLoci(S.StructureElement.Loci(it.structure, elements)), value: PEEK_STEPS[step][1] });
+      });
+      for (const comp of it.st.components) for (const r of comp.representations) {
+        const have = peekCells(r.cell.transform.ref);
+        if (have.length) b.to(have[0].transform.ref).update({ layers });
+        else b.to(r.cell.transform.ref).apply(T.Representation.TransparencyStructureRepresentation3DFromBundle, { layers }, { tags: PEEK_TAG });
+      }
+    }
+    await b.commit();
+    peekView = view;
+  } catch (e) { console.error(e); }
+  peekBusy = false;
+  if (peekAgain) { peekAgain = false; peekSoon(50); }
+}
+function updateFocusCtl() {
+  $("focusctl").classList.toggle("off", !focusOn && !markedPoint());
+  $("focusbtn").setAttribute("aria-pressed", String(focusOn)); $("overviewbtn").setAttribute("aria-pressed", String(!focusOn));
 }
 
 // Move the camera towards a point along the current line of sight; the clipping radius stays
@@ -782,16 +1001,23 @@ function zoomTo(point, distance = 70, ms = 350) {
   syncSoon(ms + 300);
 }
 function focusSite(s) {
+  if (freeOf) {                                        // the free protein: its own coordinates, or the model of this site's protein
+    if (s.protein !== freeOf) { showFree(s.protein); return; }
+    const l = freeData.get(freeOf).lysines.find(x => x.position === s.position);
+    viewer.structureInteractivity({ elements: { label_asym_id: "A", label_seq_id: s.position }, action: "select" });
+    if (l && l.x != null) setFocus(true);
+    return;
+  }
   if (s.x == null) return;
   viewer.structureInteractivity({ elements: { label_asym_id: s.label_asym, label_seq_id: s.label_seq }, action: "select" });
-  zoomTo([s.x, s.y, s.z]);
+  setFocus(true);
 }
 
 // ---- clicking in the structure ------------------------------------------------
 // A click marks the residue (outline) and pins its label on the stage, where it stays until the
 // next click; a click on empty space clears both. A double click zooms to the residue. Hovering
-// keeps Mol*'s own label at the bottom right. Mol*'s default, to focus the camera on a click
-// (which also narrows the clipping to the residue), is switched off in initInteraction().
+// keeps Mol*'s own label at the bottom right. Mol*'s default, to focus the camera on every click,
+// is switched off in initInteraction(); the Focus button does it on request (setFocus).
 let lastClick = null;      // { time, position, loci }
 const structLib = () => molstar.lib.structure;
 function residueOf(loci) {               // the first residue of a loci: structure, chain and residue identifiers
@@ -802,7 +1028,7 @@ function residueOf(loci) {               // the first residue of a loci: structu
            seq: SP.residue.label_seq_id(loc), auth_seq: SP.residue.auth_seq_id(loc), comp: SP.atom.label_comp_id(loc) };
 }
 function pinLabel(r, site) {
-  const pin = $("pin"), chain = meta.chains.find(c => c.label_asym === r.asym);
+  const pin = $("pin"), free = freeOf && freeData.get(freeOf), chain = free && r.entry === free.entry ? meta.chains.find(c => c.protein === freeOf) : meta.chains.find(c => c.label_asym === r.asym);
   let html;
   if (r.entry !== sid && meta.sumo && r.entry === meta.sumo.pdb_id) {
     const at = sites.find(x => siteKey(x) === sumoAt);
@@ -810,7 +1036,12 @@ function pinLabel(r, site) {
   } else if (site) {
     html = `<b>${esc(site.label)}</b>${multi() ? ` <span class="dim">${esc(site.particle)} ribosome</span>` : ""} · ${esc(site.environment)}${site.region ? `, ${esc(site.region)}` : ""}` +
       ` · MG132 log2 FC ${fmt(site.lfc_mg132)} (q ${fmtQ(site.q_mg132)})` + (site.fit != null ? ` · room for SUMO: ${esc(site.room)}, ${pct1(site.fit)}` : "") +
+      (free && site.fit_free != null ? ` · on the free protein: ${esc(site.room_free)}, ${pct1(site.fit_free)}` : "") +
       `<br><span class="dim">Details below the table.</span>`;
+  } else if (free && r.entry === free.entry) {
+    const l = free.lysines.find(x => x.position === r.seq), plddt = (free.residues.find(x => x[0] === r.seq) || [])[1];
+    html = `<b>${esc(r.comp)} ${r.auth_seq}</b> of free ${esc(free.gene || free.accession)} <span class="dim">· AlphaFold model, confidence ${plddt ?? "–"}</span>` +
+      (l ? `<br>Room for SUMO here: ${esc(l.room)}, ${pct1(l.fit)}` : `<br><span class="dim">Not a SUMO2/3 site.</span>`);
   } else {
     const who = chain ? (chain.gene || chain.description || chain.protein || "") : "";
     html = `<b>${esc(r.comp)} ${r.auth_seq}</b> of ${esc(who)}${chain && chain.role !== "rp" && chain.kind === "protein" ? " (factor)" : ""}, chain ${esc(r.auth_asym)}` +
@@ -822,6 +1053,7 @@ function pinLabel(r, site) {
 function unpin(clearSelection = true) {
   $("pin").hidden = true; $("pin").innerHTML = "";
   if (clearSelection) { try { viewer.plugin.managers.interactivity.lociSelects.deselectAll(); } catch (e) {} }
+  updateFocusCtl();
 }
 function onStructureClick(e) {
   const loci = e.current && e.current.loci;
@@ -829,10 +1061,12 @@ function onStructureClick(e) {
   const res = molstar.lib.loci.Loci.applyGranularity(loci, "residue");
   lastClick = { time: Date.now(), position: e.position ? [...e.position] : null, loci: res };
   try { viewer.plugin.managers.interactivity.lociSelects.selectOnly({ loci: res }); } catch (err) {}
-  const r = residueOf(res);
-  const site = r && r.entry === sid ? sites.find(x => x.label_asym === r.asym && x.label_seq === r.seq) : null;
+  const r = residueOf(res), free = freeOf && freeData.get(freeOf);
+  const site = !r ? null : free && r.entry === free.entry ? sites.find(x => x.protein === freeOf && x.position === r.seq)
+             : r.entry === sid ? sites.find(x => x.label_asym === r.asym && x.label_seq === r.seq) : null;
   if (r) pinLabel(r, site);
   if (site) { select(site.i, false); revealRow(site.i); }
+  if (focusOn) setFocus(true); else updateFocusCtl();
 }
 async function initInteraction() {
   const plugin = viewer.plugin;
@@ -846,6 +1080,8 @@ async function initInteraction() {
   plugin.behaviors.interaction.click.subscribe(onStructureClick);
   $("viewer").addEventListener("dblclick", () => { if (lastClick && lastClick.position && Date.now() - lastClick.time < 1500) zoomTo(lastClick.position); });
   $("pin").addEventListener("click", e => { if (e.target.id === "unpin") unpin(); });
+  $("focusbtn").addEventListener("click", () => setFocus(true));
+  $("overviewbtn").addEventListener("click", () => setFocus(false));
 }
 
 function visibleSites() {
@@ -881,7 +1117,7 @@ function renderTable() {
       ${s.x == null ? 'title="Not modelled in this structure"' : ""}>
       <td>${esc(s.gene)} K${s.position}${multi() ? `<span class="ptag">${esc(s.particle)}</span>` : ""}</td><td title="${esc(s.region)}">${esc(REGION_SHORT[s.region] || s.region)}</td>
       <td><span class="dot" style="background:${envCol[s.environment] || "#bbb"}"></span>${esc(s.environment)}</td>
-      <td class="num">${fmt(s.lfc_mg132)}</td><td class="num">${fmtQ(s.q_mg132)}</td><td class="num">${fmt(s.z_hs, 2)}</td>
+      <td class="num">${fmt(s.lfc_mg132)}</td><td class="num">${fmtQ(s.q_mg132)}</td><td class="num">${fmt(s.z_mg132, 2)}</td><td class="num">${fmt(s.z_hs, 2)}</td>
       ${uc ? `<td class="num">${esc(userValue(s, uc) ?? "–")}</td>` : ""}</tr>`).join("");
   $("uth").hidden = !uc; $("uth").textContent = uc || ""; $("uth").title = uc ? "Your data: " + uc : "";
   $("count").textContent = `${rows.length} of ${sites.length} ${multi() ? "site copies" : "sites"}`;
@@ -909,7 +1145,14 @@ function renderDetail(s) {
     const what = s.room_taken_by && s.pose_without ? `Show where a SUMO would sit without ${TAKEN_SHORT[s.room_taken_by]}` : "Show a SUMO here";
     rows.splice(2, 0, [`Room for SUMO <a class="hl" href="#help/room/what" data-help="room/what" title="Help: room for SUMO">ⓘ</a>`,
       `${esc(s.room)}: ${pct1(s.fit)} of the placements fit` + also.map(([k, v]) => ` · ${pct1(v)} ${k}`).join("") +
-      (sumoPose(s) && meta.sumo ? ` <button class="linkbtn" id="sumobtn">${shown ? "Hide the SUMO" : what}</button>` : "")]);
+      (!freeOf && sumoPose(s) && meta.sumo ? ` <button class="linkbtn" id="sumobtn">${shown ? "Hide the SUMO" : what}</button>` : "")]);
+  }
+  if (FREE && s.fit_free != null) {
+    const band = plddtBand(s.plddt), here = freeOf === s.protein, shown = sumoAt === siteKey(s);
+    rows.splice(s.fit != null ? 3 : 2, 0, [`Free protein <a class="hl" href="#help/room/free" data-help="room/free" title="Help: the free protein">ⓘ</a>`,
+      `AlphaFold model: ${esc(s.room_free)}, ${pct1(s.fit_free)} of the placements fit · confidence ${fmt(s.plddt, 0)} (${esc(band)})` +
+      ` <button class="linkbtn" id="freebtn">${here ? "Back to the ribosome" : "Show the free protein"}</button>` +
+      (here && freePose(s) && meta.sumo ? ` <button class="linkbtn" id="sumobtn">${shown ? "Hide the SUMO" : "Show a SUMO here"}</button>` : "")]);
   }
   if (s.other_mods) rows.push(["Also recorded", esc(s.other_mods) + " (UniProt)"]);
   const pl = placement.get(s.label);
@@ -924,6 +1167,27 @@ function renderDetail(s) {
   $("detail").innerHTML = `<div class="name">${esc(s.gene)} K${s.position}${multi() ? ` <span class="ptag">${esc(s.particle)} ribosome</span>` : ""} <a class="hl" href="#help/table/details" data-help="table/details" title="Help: the site details">ⓘ</a></div><dl>` + rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("") + `</dl>`;
 }
 
+// Show the AlphaFold DB model of a protein in place of the ribosome, or come back to it. The sites
+// keep their colouring; the standard views do not apply to the model.
+async function showFree(acc) {
+  if (acc && !freeData.has(acc)) {
+    try { freeData.set(acc, await (await fetch(`data/free/${acc}.json`)).json()); }
+    catch (e) { $("busy").hidden = false; $("busy").textContent = "The model of this protein could not be fetched."; return; }
+  }
+  freeOf = acc || null; focusOn = false;
+  if (sumoAt != null) { const at = sites.find(x => siteKey(x) === sumoAt); if (!at || !(freeOf ? freePose(at) : sumoPose(at))) sumoAt = null; }
+  $("views").classList.toggle("off", !!freeOf);
+  $("partnerswrap").hidden = !!freeOf || !meta.partners.length;
+  const d = freeOf && freeData.get(freeOf);
+  $("freebar").hidden = !freeOf;
+  if (d) $("freebar").innerHTML = `<span><b>Free ${esc(d.gene || d.accession)}</b> <span class="dim">· ${esc(d.entry)}, mean pLDDT ${d.plddt_mean}</span></span>` +
+    `<label><input type="checkbox" id="plddt"${plddtOn ? " checked" : ""}> colour by confidence</label><button class="linkbtn" id="backbtn">Back to the ribosome</button>` +
+    `<a class="hl" href="#help/room/free" data-help="room/free" title="Help: the free protein">ⓘ</a>`;
+  if (selected != null) renderDetail(sites[selected]);
+  syncUrl();
+  await applyScene(false, null);
+  if (!freeOf) { const v0 = meta.views[0]; setView(v0); } else updateFocusCtl();
+}
 function toggleSumo() {                                // draw (or remove) a SUMO at the selected site
   const s = sites[selected]; if (!s) return;
   sumoAt = sumoAt === siteKey(s) ? null : siteKey(s);
@@ -937,8 +1201,10 @@ function revealRow(i) {                 // scroll the table, not the page, so th
 function select(i, focus = true) {
   const s = sites[i]; selected = i; renderDetail(s);
   if (focus) focusSite(s);
+  else if (freeOf) viewer.structureInteractivity({ elements: { label_asym_id: "A", label_seq_id: s.position }, action: "select" });
   else if (s.x != null) viewer.structureInteractivity({ elements: { label_asym_id: s.label_asym, label_seq_id: s.label_seq }, action: "select" });
   for (const tr of $("rows").children) tr.classList.toggle("sel", +tr.dataset.i === i);
+  if (!focus) updateFocusCtl();
   syncUrl(); if (focus) syncSoon(700);
 }
 
@@ -1009,7 +1275,7 @@ function renderStats() {
       <td><button data-show="comod:${esc(r.modifier)}">Show</button></td></tr>`).join("");
   const nHot = stats.hotspots.reduce((n, h) => n + h.n_sites, 0);
   $("scontent").innerHTML = `
-    <div class="stoc"><a href="#s-access">Modified lysines</a><a href="#s-regions">Subunits and regions</a><a href="#s-cluster">Clustering</a><a href="#s-hot">Hotspots</a><a href="#s-comod">Other modifications</a>${stats.room && FIT ? `<a href="#s-room">Room for SUMO</a>` : ""}</div>
+    <div class="stoc"><a href="#s-access">Modified lysines</a><a href="#s-regions">Subunits and regions</a><a href="#s-cluster">Clustering</a><a href="#s-hot">Hotspots</a><a href="#s-comod">Other modifications</a>${stats.room && FIT ? `<a href="#s-room">Room for SUMO</a>` : ""}${stats.free && FREE ? `<a href="#s-free">Free protein</a>` : ""}</div>
     <h3 id="s-access">Modified lysines against the other lysines ${sinfo("access")}</h3>
     <p class="lead">How do the lysines that carry SUMO2/3 differ from the other lysines of the same proteins? Tinted rows: q &lt; 0.05.</p>
     ${accessTable("SUMO sites vs other lysines of the same proteins")}
@@ -1032,7 +1298,8 @@ function renderStats() {
     <p class="lead">Are lysines that carry another modification (UniProt) SUMO sites more often than the others?</p>
     <table class="stable"><tr><th>Modification</th><th class="num">Lysines</th><th class="num">of which SUMO sites</th><th>Share that are SUMO sites</th><th>Share among the other lysines</th>
       <th class="num">Odds ratio (95 %)</th><th class="num">q</th><th></th></tr>${com}</table>
-    ${fitSection()}`;
+    ${fitSection()}
+    ${freeSection()}`;
 }
 // A structure other than the reference: what it holds, what it adds, its partners, and (for an
 // assembly intermediate) the lysines that the mature ribosome encloses.
@@ -1100,6 +1367,28 @@ function fitSection() {
     ${taken ? `<p class="lead">Sites that have room only when something is taken away. <button class="linkbtn" data-show="taken">Show</button></p>
     <table class="stable"><tr><th>Site</th><th>Room taken by</th><th class="num">Placements that fit here</th><th class="num">without it</th><th class="num">MG132 log2 FC</th></tr>${taken}</table>` : ""}`;
 }
+// The free proteins (reference only): room on the AlphaFold model and the model's confidence,
+// SUMO sites against the other lysines of the same proteins.
+function freeSection() {
+  const f = stats.free; if (!f || !FREE) return "";
+  const tests = (f.tests || []).map(r => `<tr class="${r.p < 0.05 ? "sig" : ""}"><td>${esc(r.question)}</td><td>${r.x_a} of ${r.n_a} ${esc(r.group_a)}</td>
+      <td>${r.x_b} of ${r.n_b} ${esc(r.group_b)}</td><td class="num">${(+r.odds_ratio).toFixed(2)} (${ci(r.conf_low, r.conf_high)})</td><td class="num">${fmtP(r.p)}</td></tr>`).join("");
+  const groups = ["SUMO sites, MG132 q < 0.05", "SUMO sites, not significant", "Other lysines"], classes = ["room", "tight", "none"];
+  const n = (g, c) => ((f.stuck.find(r => r.group === g && r.room_free === c) || {}).n || 0);
+  const stuck = groups.map(g => { const t = classes.reduce((a, c) => a + n(g, c), 0); return t ? `<tr><td>${esc(g)}</td>${classes.map(c => `<td class="num">${n(g, c)} <span class="dim">(${pctS(n(g, c) / t)})</span></td>`).join("")}<td class="num">${t}</td></tr>` : ""; }).join("");
+  const where = { "tight at best": "tight at best", "no room in any structure": "none anywhere" };
+  const list = (f.stuck_sites || []).map(r => `<tr><td>${esc(r.label)}</td><td>${esc(where[r.where] || r.where)}, ${pct1(r.best)}</td>
+      <td>${esc(r.room_free)}, ${pct1(r.fit_free)}</td><td class="num">${fmt(r.plddt, 0)} <span class="dim">(${esc(plddtBand(r.plddt))})</span></td>
+      <td class="num">${fmt(r.lfc_mg132)}${r.sig_mg132 ? "" : ` <span class="dim">n.s.</span>`}</td>
+      <td><button data-show="free:${esc(r.label)}">Show</button></td></tr>`).join("");
+  return `<h3 id="s-free">On the free protein ${sinfo("free")}</h3>
+    <p class="lead">The same placements on the AlphaFold DB models of the proteins alone (${f.n_models} models). Median confidence of the model at the lysine (pLDDT): SUMO sites ${(+f.plddt_median.sites).toFixed(0)}, other lysines ${(+f.plddt_median.others).toFixed(0)} (Wilcoxon p = ${fmtP(f.plddt_median.p)}).</p>
+    <table class="stable"><tr><th>Question</th><th></th><th></th><th class="num">Odds ratio (95 %)</th><th class="num">p</th></tr>${tests}</table>
+    ${stuck ? `<p class="lead">Lysines with no room, or a tight fit at best, on every ribosome particle: their room on the free protein.</p>
+    <table class="stable"><tr><th></th><th class="num">room</th><th class="num">tight</th><th class="num">none</th><th class="num">all</th></tr>${stuck}</table>` : ""}
+    ${list ? `<p class="lead">The SUMO sites among them, the most room on any particle (with partners or subunits removed) against the room on the free protein. <i>Show</i> opens the model of the protein at the site.</p>
+    <table class="stable"><tr><th>Site</th><th>On the particles</th><th>On the free protein</th><th class="num">Confidence</th><th class="num">MG132 log2 FC</th><th></th></tr>${list}</table>` : ""}`;
+}
 function syncHash() {                                  // the address follows the open window
   if ($("help").open) return;                          // the help keeps its own address while it is open
   history.replaceState(null, "", $("stats").open ? "#stats" : location.pathname + location.search);
@@ -1116,6 +1405,11 @@ function showFromStats(what) {                       // a Show button: colouring
   if (kind === "opened") { siteMode = "environment"; $("fmore").value = "opened"; }
   if (kind === "gained") { siteMode = "environment"; $("fmore").value = "gained"; }
   if (kind === "taken") { siteMode = "room"; $("fmore").value = "taken"; }
+  if (kind === "free") {
+    const s = sites.find(x => x.label === value); $("stats").close(); syncHash();
+    if (s) { siteMode = "room_free"; renderTable(); select(s.i, false); revealRow(s.i); showFree(s.protein); }
+    return;
+  }
   $("stats").close(); syncHash(); renderTable();
   const h = kind === "hotspot" && (stats.hotspots || []).find(x => x.hotspot === value);
   applyScene(true, h ? cameraOn([h.x, h.y, h.z], 195) : null);
@@ -1228,6 +1522,7 @@ function fillHelpNumbers() {
   for (const el of help.querySelectorAll("[data-env]")) el.style.background = envCol[el.dataset.env];
   for (const el of help.querySelectorAll("[data-s]")) {
     const v = el.dataset.s === "partner_near" ? PARTNER_NEAR : el.dataset.s.startsWith("fit.") ? el.dataset.s.slice(4).split(".").reduce((o, k) => o == null ? o : o[k], FIT)
+            : el.dataset.s.startsWith("free.") ? el.dataset.s.slice(5).split(".").reduce((o, k) => o == null ? o : o[k], FREE)
             : el.dataset.s.split(".").reduce((o, k) => o == null ? o : o[k], refStats);
     el.textContent = typeof v === "number" && el.dataset.fmt === "n" ? v.toLocaleString("en") : typeof v === "number" && el.dataset.fmt === "pct" ? pctS(v)
                    : typeof v === "number" && el.dataset.fmt === "1" ? v.toFixed(1) : v ?? "";
@@ -1272,17 +1567,18 @@ function initHelp() {
 // env, filter, sig), the sorting (sort), the selected site (site, ribosome), a drawn SUMO (sumo) and the
 // camera (view = a standard view, cam = position, target and up). Defaults are left out. A table of
 // your own is not part of it: it never leaves your computer.
-const SORT_KEYS = ["label", "region", "environment", "lfc_mg132", "q_mg132", "z_hs"];
+const SORT_KEYS = ["label", "region", "environment", "lfc_mg132", "q_mg132", "z_mg132", "z_hs"];
 let urlReady = false, lastCam = null, syncTimer = null, camBusy = false;   // camBusy: a structure is loading, the camera is not its own yet
 function readUrlState() {
   const p = new URLSearchParams(location.search), cam = (p.get("cam") || "").split(",").map(Number);
-  const st = {}; for (const k of ["s", "colour", "partners", "q", "region", "env", "filter", "sig", "sort", "site", "ribosome", "sumo", "view"]) st[k] = p.get(k);
+  const st = {}; for (const k of ["s", "colour", "partners", "q", "region", "env", "filter", "sig", "sort", "site", "ribosome", "sumo", "view", "free", "plddt", "focus"]) st[k] = p.get(k);
   st.cam = cam.length === 9 && cam.every(Number.isFinite) ? cam : null;
   return st;
 }
 // The camera as a parameter: nothing for the first standard view, the name of another standard view, or
 // position, target and up. A pane that is not drawing (a hidden tab) has no camera to read: keep the last.
 function cameraParam() {
+  if (freeOf) return null;
   let c = null;
   try { c = document.hidden || camBusy ? null : viewer.plugin.canvas3d.camera.getSnapshot(); } catch (e) {}
   if (!c) return lastCam;
@@ -1307,8 +1603,9 @@ function stateQuery() {
   if ($("fsig").checked) put("sig", "1");
   if (SORT_KEYS.includes(sort.k) && (sort.k !== "lfc_mg132" || sort.dir !== -1)) put("sort", (sort.dir < 0 ? "-" : "") + sort.k);
   const sel = selected != null ? sites[selected] : null;
-  if (sel) { put("site", sel.label); if (multi()) put("ribosome", sel.particle); if (sumoAt === siteKey(sel)) put("sumo", "1"); }
-  const c = cameraParam(); if (c) put(c[0], c[1]);
+  if (sel) { put("site", sel.label); if (multi()) put("ribosome", sel.particle); if (sumoAt === siteKey(sel)) put("sumo", "1"); if (focusOn) put("focus", "1"); }
+  if (freeOf) { put("free", "1"); if (plddtOn) put("plddt", "1"); }
+  else { const c = cameraParam(); if (c) put(c[0], c[1]); }
   return out.length ? "?" + out.join("&") : "";
 }
 function syncUrl() {                                   // the open window (#help…, #stats) stays in the address
@@ -1343,7 +1640,8 @@ async function loadStructure_(id, opts = {}) {
   const got = await Promise.all(["meta.json", "sites.json", "scene_mg132.mvsj", "stats.json"].map(get));
   if (seq !== loadSeq) return;                         // another structure was chosen meanwhile
   [meta, sites, template, stats] = got;
-  sid = id; entry = structures.find(x => x.id === id); selected = null; sumoAt = null; lastCam = null; camBusy = true; unpin(false);
+  sid = id; entry = structures.find(x => x.id === id); selected = null; sumoAt = null; lastCam = null; camBusy = true; focusOn = false; unpin(false);
+  freeOf = null; $("freebar").hidden = true; $("views").classList.remove("off");
   sites.forEach((s, i) => s.i = i);
   if (st) {
     if (st.colour) siteMode = st.colour;
@@ -1380,6 +1678,12 @@ async function loadStructure_(id, opts = {}) {
   camBusy = false;
   if (t) { select(t.i, false); revealRow(t.i); }
   urlReady = true; syncSoon(300);
+  if (st && st.free === "1" && t && t.fit_free != null) {
+    plddtOn = st.plddt === "1"; if (st.sumo === "1") sumoAt = siteKey(t);   // showFree keeps it if the model has a placement
+    await showFree(t.protein);
+    if (sumoAt || selected != null) select(t.i, false);
+  }
+  if (st && st.focus === "1" && t) setTimeout(() => { if (seq === loadSeq) setFocus(true); }, 500);   // after the scene's own camera has settled
 }
 let DETAIL_HINT;
 async function main() {
@@ -1387,7 +1691,7 @@ async function main() {
   USER_HINT = $("userinfo").innerHTML; DETAIL_HINT = $("detail").innerHTML;
   const json = u => fetch(u).then(r => { if (!r.ok) throw new Error(`${u}: ${r.status}`); return r.json(); });
   const [index, rows] = await Promise.all([json("data/structures.json"), json("data/placement.json")]);
-  structures = index.structures; PARTNER_NEAR = index.partner_near; FIT = index.sumo_fit || null;
+  structures = index.structures; PARTNER_NEAR = index.partner_near; FIT = index.sumo_fit || null; FREE = index.free || null;
   placement = new Map(rows.map(r => [r.label, r]));
   refStats = await json(`data/${index.reference}/stats.json`);
   $("structure").innerHTML = Object.entries(STRUCT_GROUPS).map(([g, label]) => `<optgroup label="${esc(label)}">` +
@@ -1402,7 +1706,8 @@ async function main() {
                    setPartners: on => { showPartners = on; $("partners").checked = on; return applyScene(); },
                    setSiteMode: m => { siteMode = m; return applyScene(); }, setProteinMode: m => { protMode = m; return applyScene(); },
                    loadUserText: (name, text) => { userRaw = { name, text }; setUser(loadUserTable(name, text)); }, buildScene, setView, select,
-                   toggleSumo, get sumoAt() { return sumoAt; }, stateQuery, syncUrl, zoomTo, onStructureClick, get lastClick() { return lastClick; } };
+                   toggleSumo, get sumoAt() { return sumoAt; }, stateQuery, syncUrl, zoomTo, onStructureClick, get lastClick() { return lastClick; },
+                   showFree, get freeOf() { return freeOf; }, siteColour, setFocus, updatePeek, get focusOn() { return focusOn; } };
   initHelp();
   initStats();
   await initInteraction();
@@ -1431,7 +1736,9 @@ async function main() {
     sort = { k: th.dataset.k, dir: sort.k === th.dataset.k ? -sort.dir : (th.classList.contains("num") ? -1 : 1) }; renderTable();
   });
   $("rows").addEventListener("click", e => { const tr = e.target.closest("tr"); if (tr) select(+tr.dataset.i); });
-  $("detail").addEventListener("click", e => { if (e.target.id === "sumobtn") toggleSumo(); });
+  $("detail").addEventListener("click", e => { if (e.target.id === "sumobtn") toggleSumo(); if (e.target.id === "freebtn") showFree(freeOf === sites[selected].protein ? null : sites[selected].protein); });
+  $("freebar").addEventListener("click", e => { if (e.target.id === "backbtn") showFree(null); });
+  $("freebar").addEventListener("change", e => { if (e.target.id === "plddt") { plddtOn = e.target.checked; syncUrl(); applyScene(true); } });
 
   const readFile = f => f.text().then(t => { const u = loadUserTable(f.name, t); userRaw = { name: f.name, text: t }; setUser(u); }).catch(err => { $("userinfo").innerHTML = `Could not use <b>${esc(f.name)}</b>: ${esc(err.message)}. <a href="#" id="clear">Dismiss</a>`; });
   $("pick").addEventListener("click", () => $("file").click());

@@ -5,6 +5,30 @@ minor number for new features, the patch number for smaller changes and fixes. T
 say what changed for the person using the viewer. This file is the only place the history is
 written; the Changelog page of the in-page help renders it.
 
+## 0.8 — 2026-10-06
+The free protein. Beside the ribosome structures, every site now has the AlphaFold DB model of
+its protein alone: how much room a SUMO has there, and how confident the model is at the lysine.
+
+- *Show the free protein* in the detail card replaces the ribosome with that model, the sites in
+  the current colouring and, if asked for, a SUMO placed at the selected site; the protein can be
+  coloured by the confidence of the model; *Back to the ribosome* returns.
+- A click on the model names the residue with the confidence of the model there, and for a lysine
+  that is not a listed site also its room for SUMO.
+- New site colouring *Room on the free protein*, to compare with *Room for SUMO* on the particle.
+- The Statistics window of the mature 80S gains a section *On the free protein*, ending with the SUMO
+  sites that have no room on any particle and their room on the free protein; *Show* opens the model
+  at the site.
+- Links carry the free-protein view too.
+- The site table gains the column *Z MG132* next to *Z heat*.
+- *Focus* and *Overview*, two buttons at the bottom right of the structure. *Focus* is a close-up of
+  the marked residue with a peek hole: in a narrow cone around the line of sight, what lies in front
+  of the residue fades with its distance until it is not drawn; the hole follows the camera as you
+  turn. Nothing is cut, and what is level with the residue, beside the cone or behind stays solid. *Overview* brings the whole structure back. Choosing a site in
+  the table focuses on it; a double click still only zooms. The focus is in the link.
+- The rRNA, the 40S proteins and the 60S proteins are told apart more clearly: grey, tan and slate
+  instead of three shades of grey. The site colours are unchanged.
+- Help: *The free protein* under *Room for SUMO*; *Focus and overview* under *The structure view*.
+
 ## 0.7.1 — 2026-10-06
 Clicking in the structure. A click (or tap) marks the residue and pins its label at the top
 left of the structure, where it stays until the next click; a SUMO site is also selected in the

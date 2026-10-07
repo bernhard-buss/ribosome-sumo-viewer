@@ -1,9 +1,9 @@
 {
  "pdb_id": "9RPV",
  "base": {
-  "rRNA": "#E4E4E4",
-  "prot_40S": "#D8CFC0",
-  "prot_60S": "#C6D0DA"
+  "rRNA": "#E0E0E0",
+  "prot_40S": "#C8B49C",
+  "prot_60S": "#9DAFC2"
  },
  "radius": 262.20327541299093,
  "particles": [
@@ -85,9 +85,9 @@
   }
  },
  "base_other": {
-  "rRNA": "#F2F2F2",
-  "prot_40S": "#EDE7DC",
-  "prot_60S": "#E0E6EC"
+  "rRNA": "#F0F0F0",
+  "prot_40S": "#E3D9CC",
+  "prot_60S": "#D1DAE4"
  },
  "partners": [
   {
@@ -2135,6 +2135,28 @@
      "room": "room",
      "tight": "tight",
      "none": "none"
+    }
+   }
+  },
+  {
+   "id": "room_free",
+   "label": "Room on the free protein",
+   "group": "Position",
+   "legend": {
+    "kind": "key",
+    "title": "Room for a SUMO on the protein alone (AlphaFold DB model)",
+    "colours": {
+     "room": "#44AA99",
+     "tight": "#DDCC77",
+     "none": "#332288"
+    },
+    "labels": {
+     "room": "room",
+     "tight": "tight",
+     "none": "none"
+    },
+    "extra": {
+     "no model": "#7A7A7A"
     }
    }
   },

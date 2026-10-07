@@ -6,11 +6,14 @@ A single-page browser viewer for the SUMO2/3 acceptor sites of the cytosolic
 ribosomal proteins on structures of the human ribosome. Each modified lysine is
 shown on the structure and coloured by its response to proteasome inhibition
 (MG132) or heat shock, or by its environment in the particle (exposed, in
-contact with rRNA, buried). A table lists every site; selecting a row centres
+contact with rRNA, buried). A table lists every site; selecting a row focuses
 the structure on that lysine.
 
 In the structure, hovering identifies a residue, a click or tap marks it and
 pins its label, and a double click zooms to it without cutting anything away.
+*Focus* and *Overview* at the bottom right switch between a close-up of the
+marked residue — in which whatever lies in front of it fades with distance,
+a peek hole that follows the camera — and the whole structure.
 
 ## Structures
 
@@ -57,6 +60,16 @@ updated as you go; *Copy link* copies it. For example
 `?s=9RPV&colour=room&site=RACK1+K264&ribosome=stalled&sumo=1` opens the
 collided disome coloured by room for SUMO, with that site selected and a SUMO
 drawn at it. A table of your own is never part of a link.
+
+## The free protein
+
+Every site also has the AlphaFold DB model of its protein alone: how much
+room a SUMO has there and how confident the model is at the lysine (pLDDT).
+*Show the free protein* in the detail card replaces the ribosome with that
+model, with the sites in the current colouring and, if asked for, a SUMO
+placed at the selected site; the protein can be coloured by confidence. The
+colouring *Room on the free protein* compares with *Room for SUMO* on the
+particle.
 
 ## Help and versions
 
@@ -108,6 +121,7 @@ not stored, and it is gone when the page is closed.
 | `data/<PDB code>/annotations.json` | per-residue colours and tooltips for the structure view |
 | `data/<PDB code>/scene_*.mvsj` | one [MolViewSpec](https://molstar.org/mol-view-spec/) scene per colouring |
 | `data/<PDB code>/meta.json` | chains, colourings, legends, partners and the standard views |
+| `data/free/<accession>.json` | the AlphaFold DB model of one ribosomal protein: confidence per residue, its lysines with room for SUMO and a placement |
 
 Sources:
 
@@ -120,6 +134,9 @@ Sources:
   [8QOI](https://www.rcsb.org/structure/8QOI), human 80S ribosome at 1.9 Å
   (Holvec S et al., Nat Struct Mol Biol 31:1251, 2024). The publication of each
   entry is linked from its PDB page.
+- **Free proteins** — [AlphaFold DB](https://alphafold.ebi.ac.uk) models
+  (AlphaFold 2 monomer predictions, model version 6; CC-BY 4.0), fetched by
+  the browser from the AlphaFold DB when a free protein is shown.
 - **Other modifications** — the cross-link and modified-residue records of
   UniProt (CC BY 4.0) for the proteins of the structure.
 - **Structural annotation** — computed from each structure: a lysine is *rRNA

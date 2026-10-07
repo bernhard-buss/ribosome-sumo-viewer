@@ -27,6 +27,31 @@
   transform of the site in `sumoAt` (MVS wants the rotation column by column). The parameters
   are in `structures.json` → `sumo_fit` (`FIT` in the page); `stats.json` has a `room` section
   (`fit` in a state's `stats.json` is the superposition on the reference).
+- The free protein: `data/free/<accession>.json` (confidence per residue, lysines with `fit`,
+  `room`, coordinates and a `pose`; `url` of the model's bcif at the AlphaFold DB). `showFree(acc)`
+  swaps the scene for `buildFreeScene()` (the model, the protein's sites coloured by
+  `siteColour()` in the page, a SUMO at the selected site); `freeOf` is the accession shown or
+  null; a structure switch leaves the mode. `structures.json` → `free` holds the source, the number of
+  models and the pLDDT colours (`FREE`); each model's `version` is in its own file; the reference
+  `stats.json` has a `free` section. The model is drawn as a cartoon (the fold and the tails), the
+  sites as spheres; `freePose(site)` gives the SUMO placement on the model.
+- Focus / overview (`#focusctl`, bottom right of the stage): `setFocus(true)` = `zoomTo(point, 70 Å)`
+  on `markedPoint()` (the pinned click, else the selected site) — the clip radius is never narrowed —
+  and `setFocus(false)` = `requestCameraReset`. A table click focuses (`focusSite`), a double click
+  only calls `zoomTo`, a view button leaves the focus; URL `focus=1`. The peek (`updatePeek`) adds
+  `TransparencyStructureRepresentation3DFromBundle` layers (tag `rsv-peek`) to every representation:
+  one layer per step of `PEEK_STEPS` (Å in front of the residue along the line of sight → transparency,
+  the last step invisible), for atoms inside the cone `PEEK_CONE` (radius at the residue, growth per
+  Å towards the camera) around the line of sight and not beyond the camera; the marked residue is
+  excluded. `peekAtoms()` caches, once per focus target, every atom's coordinates, unit and index in
+  typed arrays (plus a mask of the marked residue), so an update is a plain loop of a few ms, not Mol*
+  queries; the loci are built directly (`StructureElement.Loci` with sorted `Int32Array` indices).
+  `peekWatch` (one rAF per frame while focused) keeps it following the camera, throttled to
+  `PEEK_EVERY` ms; an update is skipped when only the distance changed (`peekView` key = direction +
+  reach), and it waits while `camera.transition.inTransition` (a state commit would cut the camera
+  move short). The Mol* hover toast is moved up above the control.
+- Base colours (`meta.base`, from the private config `structures: style: base`): grey rRNA, tan 40S,
+  slate 60S — low saturation so that the Tol site colours stand out; the collided ribosome paler.
 - `stats.json` has `kind: "reference"` (five analyses, `renderStats`) or `kind: "state"`
   (overview, partner tests, precursor comparison, `renderStateStats`).
 - **Help is part of every feature.** A feature is done when (1) it has an entry in the help
@@ -59,7 +84,7 @@
 - Test hook: `window.__rsv` (`viewer`, `meta`, `sites`, `user`, `setSiteMode`,
   `setProteinMode`, `loadUserText(name, text)`, `buildScene`, `setView`, `select`, `stats`, `openStats`,
   `showFromStats("hotspot:H1")`, `structures`, `structure`, `setStructure(id, {site})`, `setPartners(bool)`,
-  `toggleSumo()` (at the selected site), `sumoAt`, `stateQuery()`, `syncUrl()`, `zoomTo(point)`, `onStructureClick(event)`, `lastClick`).
+  `toggleSumo()` (at the selected site), `sumoAt`, `stateQuery()`, `syncUrl()`, `zoomTo(point)`, `onStructureClick(event)`, `lastClick`, `showFree(accession | null)`, `freeOf`, `siteColour(site)`).
 - Check after changes: `node --check` on the extracted script; load the page from a static
   server; no console errors; a deep link such as `#help/env/classes` opens that entry;
   `?s=9RPV#stats` opens the statistics of the disome; switching structures keeps the
