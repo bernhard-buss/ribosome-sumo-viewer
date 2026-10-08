@@ -94,6 +94,9 @@
   #freebar[hidden] { display: none; }
   #freebar label { cursor: pointer; } #freebar .dim { color: var(--muted); }
   #views.off button, #views.off { opacity: .45; pointer-events: none; }
+  .wchips { display: flex; flex-wrap: wrap; gap: 4px 8px; margin: 4px 0 2px; }
+  .wchip { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); cursor: default; }
+  .wchip i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; border: 1px solid #c9ccd3; }
   #focusctl { position: absolute; right: 12px; bottom: 12px; z-index: 4; display: flex; align-items: center; gap: 3px; padding: 3px; flex-wrap: nowrap;
               background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 10px rgba(20,24,32,.12); }
   #focusctl button { padding: 3px 9px; }
@@ -381,6 +384,8 @@
             <p>Offered for every structure other than the mature 80S. Each site is painted with the environment that the same lysine has in the mature ribosome; a site that has no coordinates there, or whose protein is not part of it, is dark grey. Compare with <i>Lysine environment</i> to see which lysines change: see <a data-help="structures/compare" href="#help/structures/compare">Comparing with the mature 80S</a>.</p></article>
           <article data-entry="room"><h3>Room for SUMO</h3>
             <p>Colours each site by whether a SUMO fits at its lysine in the structure shown: room, tight or none; sites without a resolved side chain are dark grey. What the classes mean and how they are computed is under <a data-help="room/what" href="#help/room/what">Room for SUMO</a>.</p></article>
+          <article data-entry="window"><h3>When a SUMO fits</h3>
+            <p>Colours each site by the class of its window along the ribosome's life — free protein only, precursor only, free subunit only, translation state, mature only, throughout, none found, flexible segment; see <a data-help="window/classes" href="#help/window/classes">the classes</a>.</p></article>
           <article data-entry="room_free"><h3>Room on the free protein</h3>
             <p>Colours each site by whether a SUMO fits at its lysine on the AlphaFold DB model of the protein alone: room, tight or none; sites of proteins without a model are dark grey. Switching between this colouring and <i>Room for SUMO</i> shows which sites gain their room once the protein is out of the particle. See <a data-help="room/free" href="#help/room/free">The free protein</a>.</p></article>
           <article data-entry="partner"><h3>Near a partner</h3>
@@ -443,6 +448,37 @@
             <p>The structures are rigid here; parts that move in the cell can make room or take it. Segments without coordinates are not there to collide with, so room near a mobile tail is overestimated. One SUMO is placed; a chain of several needs more space, so <i>none</i> for one SUMO holds for a chain as well. Room for SUMO does not mean room for the enzymes that attach it.</p></article>
         </section>
 
+        <section data-topic="window" data-title="When a SUMO fits" hidden>
+          <article data-entry="what"><h3>The idea</h3>
+            <p>A SUMO can sit at a lysine only while there is room for it. The structures of this viewer are stages of the ribosome's life — the protein on its own, the assembly intermediates, the mature subunit alone, the mature ribosome, the translating ribosome — so for every site the <a data-help="room/what" href="#help/room/what">room for a SUMO</a> can be read off at each stage, and the pattern over the stages, the site's <i>window</i>, says when the modification is sterically possible. A site whose window closes with maturation can carry SUMO during assembly but not on the finished ribosome; a site with room only on the free protein can carry it before assembly or after release; a site with room at every stage says nothing about the stage. The window is a possibility, not an observation: it says when a SUMO <i>can</i> be there, not when it is.</p>
+            <p>The colouring <i>When a SUMO fits</i> paints the sites by their class; the detail card shows the class, one chip per stage with the room there (hover a chip for what takes or encloses the lysine), and the stage at which the protein is first seen in a structure. The filter menu offers the classes and the window of assembly.</p></article>
+          <article data-entry="stages"><h3>The stages</h3>
+            <table class="htable"><tr><th>Stage</th><th>Read from</th></tr>
+              <tr><td>free protein</td><td>the AlphaFold DB model of the protein alone (<a data-help="room/free" href="#help/room/free">The free protein</a>)</td></tr>
+              <tr><td>early precursor</td><td>the nucleolar pre-60S; there is no early structure of the small subunit in the set, so the stage is unknown for 40S proteins</td></tr>
+              <tr><td>late precursor</td><td>the nuclear pre-60S for 60S proteins, the late pre-40S for 40S proteins</td></tr>
+              <tr><td>mature subunit alone</td><td>the mature 80S with the other subunit taken away</td></tr>
+              <tr><td>mature ribosome</td><td>the vacant and the idle 80S</td></tr>
+              <tr><td>translating ribosome</td><td>the decoding 80S and the collided disome, with their tRNA, mRNA and factors</td></tr></table>
+            <p>At a stage with several structures the best share of placements counts. The room is read as room, tight or none; <i>taken</i> means room only once the partners of that structure (assembly factors, tRNA, mRNA, the collided ribosome) are taken away; <i>not modelled</i> that the lysine has no coordinates there; <i>absent</i> that the protein is not part of the structure — a protein that joins late is absent from the early precursor.</p></article>
+          <article data-entry="classes"><h3>The classes</h3>
+            <table class="htable"><tr><th>Class</th><th>Window</th><th>Reading</th></tr>
+              <tr><td>free protein only</td><td>room on the free protein, none on any particle</td><td>before assembly (the newly made protein, in the cytoplasm or the nucleus) or after release; also the unassembled surplus that the proteasome removes</td></tr>
+              <tr><td>precursor only</td><td>room on an assembly intermediate — as it is, or once an assembly factor is taken away — and none on the mature ribosome</td><td>during assembly; a SUMO there must leave before, or blocks, the step that closes the window</td></tr>
+              <tr><td>free subunit only</td><td>room on the mature subunit alone, taken by the other subunit in the 80S</td><td>before subunit joining, or after splitting</td></tr>
+              <tr><td>translation state</td><td>room on the vacant and the translating ribosome differs</td><td>a site that a tRNA, a factor or the collided ribosome covers, or that a translating conformation opens</td></tr>
+              <tr><td>mature only</td><td>room on the mature ribosome, none on the precursor the protein is part of</td><td>after assembly; an assembly factor or the immature particle takes the room before</td></tr>
+              <tr><td>throughout</td><td>room at every stage the protein is part of</td><td>no constraint from the structures</td></tr>
+              <tr><td>none found</td><td>no room at any stage, not even on the free protein</td><td>a conformation the structures and the model do not show</td></tr>
+              <tr><td>flexible segment</td><td>not modelled in any particle</td><td>a mobile segment, or a protein the structures do not resolve; reachable at any stage as far as they say</td></tr></table>
+            <p>The rules, in order: a lysine not modelled in any particle is a flexible segment; with room on the mature ribosome it is throughout, translation state (if a translating structure covers it) or mature only (if the precursor it is part of does not offer room); without room on the mature ribosome it is free subunit only, precursor only, translation state (room only while translating), free protein only, or none found. For a protein that only the decoding 80S resolves (the L1 stalk), that structure stands in for the mature ribosome.</p></article>
+          <article data-entry="reading"><h3>Reading the window</h3>
+            <p>The classes <i>free protein only</i>, <i>precursor only</i> and <i>free subunit only</i> together are the <i>window of assembly</i>: sites that can carry SUMO only before the ribosome is complete (or after it comes apart). They are the candidates for a role in ribosome biogenesis, and the Statistics window lists them with the stage that closes the window and what takes the room there — an assembly factor named in a chip's tooltip is a site whose SUMO and that factor cannot be there at the same time. The other classes are sites of the finished ribosome: constitutive (<i>throughout</i>), opened by maturation (<i>mature only</i>) or tied to translation (<i>translation state</i>).</p>
+            <p>Whether a site in the window of assembly is modified during assembly, or on the surplus protein that never assembles, the structures cannot tell; the MG132 response, which raises the unassembled pool, and the heat-shock response are tabulated by class for that reason.</p></article>
+          <article data-entry="limits"><h3>Limits</h3>
+            <p>Steric only, and rigid: the window says where a SUMO fits, not where SUMO is found. Three precursor structures stand for assembly, two of the large subunit and one late one of the small; the early assembly of the small subunit is not covered, so 40S sites without room on the late pre-40S and the mature ribosome fall to <i>free protein only</i> where an early pre-40S might offer room. Room near a segment that is not modelled is overestimated, and a site that is not modelled anywhere is called flexible without further knowledge.</p></article>
+        </section>
+
         <section data-topic="table" data-title="Site table and details" hidden>
           <article data-entry="columns"><h3>Columns</h3>
             <table class="htable"><tr><th>Column</th><th>Content</th></tr>
@@ -464,6 +500,7 @@
               <tr><td>Protein</td><td>gene symbol with a link to its UniProt entry, subunit, and the chain name in the PDB entry shown</td></tr>
               <tr><td>Environment</td><td>the class, and the accessible surface of NZ in the structure shown and in the free protein</td></tr>
               <tr><td>Room for SUMO</td><td>the class and the share of placements of a SUMO that fit at this lysine, also without the partners, on this ribosome alone and on the subunit alone where these differ; the button draws a SUMO at the site. See <a data-help="room/what" href="#help/room/what">Room for SUMO</a></td></tr>
+              <tr><td>When a SUMO fits</td><td>the class of the site's window, one chip per stage of the ribosome's life with the room there (hover for what takes or encloses the lysine), and the stage the protein is first seen in; see <a data-help="window/what" href="#help/window/what">When a SUMO fits</a></td></tr>
               <tr><td>Free protein</td><td>room for a SUMO on the AlphaFold DB model of the protein alone, with the confidence of the model at the lysine; the button shows that model in place of the ribosome. See <a data-help="room/free" href="#help/room/free">The free protein</a></td></tr>
               <tr><td>Nearest rRNA</td><td>distance from NZ to the closest rRNA atom, with rRNA, nucleotide and atom</td></tr>
               <tr><td>Partner</td><td>the nearest factor, tRNA, mRNA or other ribosome within <span data-s="partner_near"></span> Å, with the distance; see <a data-help="structures/partners" href="#help/structures/partners">partners</a></td></tr>
@@ -511,6 +548,8 @@
           <article data-entry="room"><h3>Room for SUMO</h3>
             <p>The first table counts the classes room, tight and none among the MG132-responsive sites, the other sites and the other lysines of the same proteins, for lysines with a resolved side chain in the structure shown. The second gives the classes of the sites by the environment of their lysine: an exposed lysine need not have room for a SUMO. For the mature 80S a third table tests the differences (Fisher's exact test). The last table lists the sites that have room only when the partners, the other ribosome or the other subunit are taken away, with the share of placements that fit with and without it; a click on a row selects the site.</p>
             <p>Definitions and the test of the model: <a data-help="room/method" href="#help/room/method">how it is computed</a>.</p></article>
+          <article data-entry="window"><h3>When a SUMO fits</h3>
+            <p>For the mature 80S the window adds the classes of <a data-help="window/what" href="#help/window/what">When a SUMO fits</a>: how the sites distribute over the classes against the other lysines of the same proteins (Fisher's test per class, q by Benjamini–Hochberg; a χ² test with simulated p over all classes), the MG132 and heat-shock response and ubiquitin at the same lysine by class among the sites, the window of assembly against the other sites, and the sites of the window of assembly with the room at every stage.</p></article>
           <article data-entry="free"><h3>On the free protein</h3>
             <p>For the mature 80S the window adds the same questions on the AlphaFold DB models of the proteins alone: whether SUMO sites have room on the free protein more often than the other lysines, whether the lysines that have no room on any particle do, and whether the models are less confident (pLDDT below 70, that is, flexible) at SUMO sites than at other lysines. The next table counts, for the lysines without room on any particle, their room on the free protein, and the last lists the SUMO sites among them, each with a <i>Show</i> button that opens the model of the protein at the site. See <a data-help="room/free" href="#help/room/free">The free protein</a>.</p></article>
           <article data-entry="limits"><h3>Limits</h3>
@@ -566,7 +605,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/molstar@5.12.0/build/viewer/molstar.js"></script>
 <script>
-const VERSION = "0.8";
+const VERSION = "0.9";
 const VIEW_LABELS = { "40S_solvent": "40S solvent side", "60S_solvent": "60S solvent side", "mRNA_entry": "mRNA entry side",
                       "mRNA_exit": "mRNA exit side", "top": "top", "bottom": "bottom",
                       "side_40S": "40S side", "side_60S": "60S side", "across_1": "edge-on, first side", "across_2": "edge-on, second side",
@@ -591,6 +630,7 @@ const refId = () => structures.find(x => x.reference).id;
 const modelledEnv = e => e != null && e !== "not modelled";
 let PARTNER_NEAR = "";   // distance (Å) that counts as near a partner; read from the data
 let FIT = null;           // parameters of the room-for-SUMO calculation (structures.json), null if the data has none
+let WINDOW = null;        // when a SUMO fits: the stages, the classes and their colours (structures.json)
 let FREE = null;          // the free proteins (AlphaFold DB models): source, version, number of models, pLDDT colours
 let freeOf = null;        // accession of the free protein shown instead of the ribosome, or null
 let plddtOn = false;      // the free protein coloured by the confidence of its model
@@ -599,7 +639,8 @@ const PLDDT_BANDS = [["very high", 90], ["confident", 70], ["low", 50], ["very l
 const plddtBand = v => v == null ? null : PLDDT_BANDS.find(([, lo]) => v >= lo)[0];
 let sumoAt = null;        // key (label|particle) of the site at which a SUMO is drawn, or null
 const sumoPose = s => s.room_taken_by && s.pose_without ? s.pose_without : s.pose;   // where it would sit without what is in its way, else a placement that fits
-const freePose = s => { const d = freeOf === s.protein && freeData.get(freeOf), l = d && d.lysines.find(l => l.position === s.position); return l ? l.pose : null; };
+const modelPos = s => s.free_position != null ? s.free_position : s.position;   // the site's residue in the AlphaFold model (the catalogue numbers RPL7L1 differently)
+const freePose = s => { const d = freeOf === s.protein && freeData.get(freeOf), l = d && d.lysines.find(l => l.position === modelPos(s)); return l ? l.pose : null; };
 const siteKey = s => s.label + "|" + (s.particle ?? "");
 const pct1 = v => v == null ? "–" : (100 * v).toFixed(v < 0.0995 ? 1 : 0) + " %";
 const TAKEN_SHORT = { "a partner": "its partners", "the other ribosome": "the other ribosome", "the other subunit": "the other subunit" };
@@ -653,6 +694,7 @@ function siteColour(s) {
   const m = meta.modes.find(x => x.id === siteMode); if (!m) return UNSET;
   const L = m.legend, key = { environment: "environment", environment_ref: "environment_ref", region: "region", partner: "near_partner", room: "room",
                               room_free: "room_free", hotspot: "hotspot", comod: "other_mod_class" }[siteMode];
+  if (siteMode === "window") { const c = WINDOW && WINDOW.classes.find(c => c.id === s.window); return (c && L.colours[c.label]) || UNSET; }
   if (siteMode === "mg132") return s.sig_mg132 && s.lfc_mg132 != null ? rampColour(s.lfc_mg132, L.ramp, L.limits) : UNSET;
   if (siteMode.startsWith("z_")) { const v = s[siteMode]; return v == null ? UNSET : rampColour(v, L.ramp, L.limits); }
   return (key && L.colours && L.colours[s[key]]) || UNSET;
@@ -668,12 +710,12 @@ function buildFreeScene(data, camera) {
   const protein = { kind: "component", params: { selector: "polymer" }, custom: { rsv: "free" }, children: [protRep] };
   if (!camera) protein.children.push({ kind: "focus", params: {} });
   const siteRep = { kind: "representation", params: { type: "spacefill", size_factor: 1.8 },
-                    children: [{ kind: "color", params: { color: UNSET } }, ...colourNodes(own.map(s => [el(s.position), siteColour(s)]))] };
+                    children: [{ kind: "color", params: { color: UNSET } }, ...colourNodes(own.map(s => [el(modelPos(s)), siteColour(s)]))] };
   const structure = { kind: "structure", params: { type: "model" }, children: [protein,
-    { kind: "component", params: { selector: own.map(s => el(s.position)) }, custom: { rsv: "sites" }, children: [siteRep] }] };
+    { kind: "component", params: { selector: own.map(s => el(modelPos(s))) }, custom: { rsv: "sites" }, children: [siteRep] }] };
   const root = { kind: "root", children: [{ kind: "canvas", params: { background_color: "white" } },
     { kind: "download", params: { url: data.url }, children: [{ kind: "parse", params: { format: "bcif" }, children: [structure] }] }] };
-  const sel = sumoAt != null && sites.find(x => siteKey(x) === sumoAt), lys = sel && sel.protein === data.accession && data.lysines.find(l => l.position === sel.position);
+  const sel = sumoAt != null && sites.find(x => siteKey(x) === sumoAt), lys = sel && sel.protein === data.accession && data.lysines.find(l => l.position === modelPos(sel));
   if (lys && lys.pose && meta.sumo) {
     const v = lys.pose.split(" ").map(Number), node = structuredClone(meta.sumo.node), tf = [...walk(node)].find(n => n.kind === "transform");
     tf.params.rotation = [v[0], v[3], v[6], v[1], v[4], v[7], v[2], v[5], v[8]]; tf.params.translation = [v[9], v[10], v[11]];
@@ -864,7 +906,7 @@ function markedPoint() {
     try { const b = structLib().StructureElement.Loci.getBoundary(lastClick.loci).sphere; return [b.center[0], b.center[1], b.center[2]]; } catch (e) {}
   }
   const s = selected != null ? sites[selected] : null; if (!s) return null;
-  if (freeOf) { const l = s.protein === freeOf && freeData.get(freeOf).lysines.find(x => x.position === s.position); return l && l.x != null ? [l.x, l.y, l.z] : null; }
+  if (freeOf) { const l = s.protein === freeOf && freeData.get(freeOf).lysines.find(x => x.position === modelPos(s)); return l && l.x != null ? [l.x, l.y, l.z] : null; }
   return s.x != null ? [s.x, s.y, s.z] : null;
 }
 function setFocus(on, ms = 350) {
@@ -902,7 +944,7 @@ function peekWatch() {                   // while the focus is on: one camera sn
 function markedResidue() {               // chain and residue of the marked residue, kept opaque
   if (lastClick && lastClick.loci && !$("pin").hidden) return residueOf(lastClick.loci);
   const s = selected != null ? sites[selected] : null; if (!s) return null;
-  return freeOf ? { asym: "A", seq: s.position } : { asym: s.label_asym, seq: s.label_seq };
+  return freeOf ? { asym: "A", seq: modelPos(s) } : { asym: s.label_asym, seq: s.label_seq };
 }
 const peekCells = ref => viewer.plugin.state.data.selectQ(q => (ref ? q.byRef(ref) : q.root).subtree().withTag(PEEK_TAG));
 async function clearPeek() {
@@ -1003,8 +1045,8 @@ function zoomTo(point, distance = 70, ms = 350) {
 function focusSite(s) {
   if (freeOf) {                                        // the free protein: its own coordinates, or the model of this site's protein
     if (s.protein !== freeOf) { showFree(s.protein); return; }
-    const l = freeData.get(freeOf).lysines.find(x => x.position === s.position);
-    viewer.structureInteractivity({ elements: { label_asym_id: "A", label_seq_id: s.position }, action: "select" });
+    const l = freeData.get(freeOf).lysines.find(x => x.position === modelPos(s));
+    viewer.structureInteractivity({ elements: { label_asym_id: "A", label_seq_id: modelPos(s) }, action: "select" });
     if (l && l.x != null) setFocus(true);
     return;
   }
@@ -1037,6 +1079,7 @@ function pinLabel(r, site) {
     html = `<b>${esc(site.label)}</b>${multi() ? ` <span class="dim">${esc(site.particle)} ribosome</span>` : ""} · ${esc(site.environment)}${site.region ? `, ${esc(site.region)}` : ""}` +
       ` · MG132 log2 FC ${fmt(site.lfc_mg132)} (q ${fmtQ(site.q_mg132)})` + (site.fit != null ? ` · room for SUMO: ${esc(site.room)}, ${pct1(site.fit)}` : "") +
       (free && site.fit_free != null ? ` · on the free protein: ${esc(site.room_free)}, ${pct1(site.fit_free)}` : "") +
+      (WINDOW && site.window ? ` · window: ${esc((WINDOW.classes.find(c => c.id === site.window) || {}).label || site.window)}` : "") +
       `<br><span class="dim">Details below the table.</span>`;
   } else if (free && r.entry === free.entry) {
     const l = free.lysines.find(x => x.position === r.seq), plddt = (free.residues.find(x => x[0] === r.seq) || [])[1];
@@ -1062,7 +1105,7 @@ function onStructureClick(e) {
   lastClick = { time: Date.now(), position: e.position ? [...e.position] : null, loci: res };
   try { viewer.plugin.managers.interactivity.lociSelects.selectOnly({ loci: res }); } catch (err) {}
   const r = residueOf(res), free = freeOf && freeData.get(freeOf);
-  const site = !r ? null : free && r.entry === free.entry ? sites.find(x => x.protein === freeOf && x.position === r.seq)
+  const site = !r ? null : free && r.entry === free.entry ? sites.find(x => x.protein === freeOf && modelPos(x) === r.seq)
              : r.entry === sid ? sites.find(x => x.label_asym === r.asym && x.label_seq === r.seq) : null;
   if (r) pinLabel(r, site);
   if (site) { select(site.i, false); revealRow(site.i); }
@@ -1093,7 +1136,9 @@ function visibleSites() {
                    : more.startsWith("particle:") ? s.particle === more.slice(9)
                    : more === "opened" ? opened(s) : more === "gained" ? gained(s)
                    : more.startsWith("room:") ? s.room === more.slice(5) : more === "taken" ? s.room_taken_by != null
-                   : more.startsWith("taken:") ? s.room_taken_by === more.slice(6) : true;
+                   : more.startsWith("taken:") ? s.room_taken_by === more.slice(6)
+                   : more === "window:assembly" ? ["free_only", "precursor_only", "subunit_only"].includes(s.window)
+                   : more.startsWith("window:") ? s.window === more.slice(7) : true;
   const rows = sites.filter(s => (!q || s.label.toUpperCase().includes(q)) && (!reg || s.subunit === reg || s.region === reg) &&
                                  (!env || s.environment === env) && (!sig || s.sig_mg132) && extra(s));
   const k = sort.k, uc = userCol();
@@ -1154,6 +1199,7 @@ function renderDetail(s) {
       ` <button class="linkbtn" id="freebtn">${here ? "Back to the ribosome" : "Show the free protein"}</button>` +
       (here && freePose(s) && meta.sumo ? ` <button class="linkbtn" id="sumobtn">${shown ? "Hide the SUMO" : "Show a SUMO here"}</button>` : "")]);
   }
+  if (WINDOW && s.window) rows.push([`When a SUMO fits <a class="hl" href="#help/window/what" data-help="window/what" title="Help: when a SUMO fits">ⓘ</a>`, windowHtml(s)]);
   if (s.other_mods) rows.push(["Also recorded", esc(s.other_mods) + " (UniProt)"]);
   const pl = placement.get(s.label);
   if (pl) rows.push([`Elsewhere <a class="hl" href="#help/structures/sites" data-help="structures/sites" title="Help: one site in several structures">ⓘ</a>`,
@@ -1165,6 +1211,25 @@ function renderDetail(s) {
     if (vals.length) rows.push(["Your data", vals.map(([k, v]) => `${esc(k)} ${esc(v)}`).join(" · ")]);
   }
   $("detail").innerHTML = `<div class="name">${esc(s.gene)} K${s.position}${multi() ? ` <span class="ptag">${esc(s.particle)} ribosome</span>` : ""} <a class="hl" href="#help/table/details" data-help="table/details" title="Help: the site details">ⓘ</a></div><dl>` + rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("") + `</dl>`;
+}
+
+// When a SUMO fits: the class of the site and one chip per stage of the ribosome's life, coloured by
+// the room there (a tooltip names what takes or encloses the lysine).
+const WIN_COLOUR = { room: "#44AA99", taken: "#999933", tight: "#DDCC77", none: "#332288", unresolved: "#DDDDDD", absent: "#FFFFFF", "n/a": "#F3F0EA" };
+const WIN_WORD = { room: "room", taken: "taken by a partner", tight: "tight", none: "no room", unresolved: "not modelled", absent: "protein absent", "n/a": "no structure of this stage" };
+function windowHtml(s) {
+  const c = WINDOW.classes.find(c => c.id === s.window) || { label: s.window, meaning: "" };
+  const chips = WINDOW.stages.map(st => {
+    const v = s["win_" + st.stage] || "n/a", by = s["win_by_" + st.stage];
+    const tip = `${st.label}: ${WIN_WORD[v] || v}${by ? (v === "taken" ? " (" + by + ")" : ", next to " + by) : ""}`;
+    return `<span class="wchip" title="${esc(tip)}"><i style="background:${WIN_COLOUR[v] || "#fff"}${v === "absent" || v === "n/a" ? ";border-style:dashed" : ""}"></i>${esc(st.short)}</span>`;
+  }).join("");
+  const parts = WINDOW.stages.map(st => [st, s["win_" + st.stage], s["win_by_" + st.stage]]).filter(([, v, b]) => b && (v === "taken" || v === "none" || v === "tight"))
+    .map(([st, v, b]) => [st.short, v === "taken" ? "taken by " + esc(b) : "next to " + esc(b)]);
+  const grouped = []; for (const [st, what] of parts) { const g = grouped[grouped.length - 1]; if (g && g[1] === what) g[0].push(st); else grouped.push([[st], what]); }
+  const by = grouped.map(([sts, what]) => `${sts.join(", ")}: ${what}`).join(" · ");
+  return `<b>${esc(c.label)}</b> <span class="dim">· ${esc(c.meaning)}</span><div class="wchips">${chips}</div>` +
+    (by ? `<div class="dim">${by}</div>` : "") + (s.joins ? `<div class="dim">Protein first seen in the ${esc((WINDOW.stages.find(x => x.stage === s.joins) || {}).label || s.joins)}.</div>` : "");
 }
 
 // Show the AlphaFold DB model of a protein in place of the ribosome, or come back to it. The sites
@@ -1201,7 +1266,7 @@ function revealRow(i) {                 // scroll the table, not the page, so th
 function select(i, focus = true) {
   const s = sites[i]; selected = i; renderDetail(s);
   if (focus) focusSite(s);
-  else if (freeOf) viewer.structureInteractivity({ elements: { label_asym_id: "A", label_seq_id: s.position }, action: "select" });
+  else if (freeOf) viewer.structureInteractivity({ elements: { label_asym_id: "A", label_seq_id: modelPos(s) }, action: "select" });
   else if (s.x != null) viewer.structureInteractivity({ elements: { label_asym_id: s.label_asym, label_seq_id: s.label_seq }, action: "select" });
   for (const tr of $("rows").children) tr.classList.toggle("sel", +tr.dataset.i === i);
   if (!focus) updateFocusCtl();
@@ -1231,6 +1296,8 @@ function fillFilterMenus() {
     (near.length ? `<option value="near">near a partner</option>` + near.map(k => `<option value="near:${esc(k)}">· near ${k === "factor" ? "a factor" : k === "other ribosome" ? "the other ribosome" : esc(k)}</option>`).join("") : "") +
     (multi() ? meta.particles.slice().reverse().map(q => `<option value="particle:${esc(q)}">on the ${esc(q)} ribosome</option>`).join("") : "") +
     (sites.some(s => s.room) ? `<option value="room:room">room for SUMO</option><option value="room:tight">· tight</option><option value="room:none">· no room</option>` : "") +
+    (WINDOW && sites.some(s => s.window) ? `<option value="window:assembly">window of assembly (free protein, precursor or subunit only)</option>` +
+      WINDOW.classes.filter(c => sites.some(s => s.window === c.id)).map(c => `<option value="window:${c.id}">· ${esc(c.label)}</option>`).join("") : "") +
     (sites.some(s => s.room_taken_by) ? `<option value="taken">room for SUMO taken by something</option>` +
       [...new Set(sites.map(s => s.room_taken_by).filter(Boolean))].sort().map(k => `<option value="taken:${esc(k)}">· by ${esc(TAKEN_SHORT[k] || k)}</option>`).join("") : "") +
     (notRef && sites.some(opened) ? `<option value="opened">exposed here, enclosed in the mature 80S</option>` : "") +
@@ -1275,7 +1342,7 @@ function renderStats() {
       <td><button data-show="comod:${esc(r.modifier)}">Show</button></td></tr>`).join("");
   const nHot = stats.hotspots.reduce((n, h) => n + h.n_sites, 0);
   $("scontent").innerHTML = `
-    <div class="stoc"><a href="#s-access">Modified lysines</a><a href="#s-regions">Subunits and regions</a><a href="#s-cluster">Clustering</a><a href="#s-hot">Hotspots</a><a href="#s-comod">Other modifications</a>${stats.room && FIT ? `<a href="#s-room">Room for SUMO</a>` : ""}${stats.free && FREE ? `<a href="#s-free">Free protein</a>` : ""}</div>
+    <div class="stoc"><a href="#s-access">Modified lysines</a><a href="#s-regions">Subunits and regions</a><a href="#s-cluster">Clustering</a><a href="#s-hot">Hotspots</a><a href="#s-comod">Other modifications</a>${stats.room && FIT ? `<a href="#s-room">Room for SUMO</a>` : ""}${stats.free && FREE ? `<a href="#s-free">Free protein</a>` : ""}${stats.window && WINDOW ? `<a href="#s-window">When a SUMO fits</a>` : ""}</div>
     <h3 id="s-access">Modified lysines against the other lysines ${sinfo("access")}</h3>
     <p class="lead">How do the lysines that carry SUMO2/3 differ from the other lysines of the same proteins? Tinted rows: q &lt; 0.05.</p>
     ${accessTable("SUMO sites vs other lysines of the same proteins")}
@@ -1299,7 +1366,8 @@ function renderStats() {
     <table class="stable"><tr><th>Modification</th><th class="num">Lysines</th><th class="num">of which SUMO sites</th><th>Share that are SUMO sites</th><th>Share among the other lysines</th>
       <th class="num">Odds ratio (95 %)</th><th class="num">q</th><th></th></tr>${com}</table>
     ${fitSection()}
-    ${freeSection()}`;
+    ${freeSection()}
+    ${windowSection()}`;
 }
 // A structure other than the reference: what it holds, what it adds, its partners, and (for an
 // assembly intermediate) the lysines that the mature ribosome encloses.
@@ -1389,6 +1457,33 @@ function freeSection() {
     ${list ? `<p class="lead">The SUMO sites among them, the most room on any particle (with partners or subunits removed) against the room on the free protein. <i>Show</i> opens the model of the protein at the site.</p>
     <table class="stable"><tr><th>Site</th><th>On the particles</th><th>On the free protein</th><th class="num">Confidence</th><th class="num">MG132 log2 FC</th><th></th></tr>${list}</table>` : ""}`;
 }
+// When a SUMO fits (reference only): the classes among the sites and the other lysines, the
+// response by class, the assembly window, and its sites.
+function windowSection() {
+  const w = stats.window; if (!w || !WINDOW) return "";
+  const lab = id => (WINDOW.classes.find(c => c.id === id) || {}).label || id, col = id => (WINDOW.style || {})[id] || "#999";
+  const n = (g, k) => ((w.counts.find(r => r.group === g && r.window === k) || {}).n || 0);
+  const groups = ["SUMO sites, MG132 q < 0.05", "SUMO sites, not significant", "Other lysines"], tot = {}; groups.forEach(g => tot[g] = WINDOW.classes.reduce((a, c) => a + n(g, c.id), 0));
+  const classes = WINDOW.classes.map(c => { const t = w.by_class.find(r => r.class === c.id) || {};
+    return `<tr class="${t.q < 0.05 ? "sig" : ""}"><td><span class="dot" style="background:${col(c.id)}"></span>${esc(c.label)}</td><td class="dim">${esc(c.meaning)}</td>` +
+      groups.map(g => `<td class="num">${n(g, c.id)} <span class="dim">(${pctS(n(g, c.id) / (tot[g] || 1))})</span></td>`).join("") +
+      `<td class="num">${t.odds_ratio != null ? (+t.odds_ratio).toFixed(2) : "–"}</td><td class="num">${fmtP(t.q)}</td><td><button data-show="window:${c.id}">Show</button></td></tr>`; }).join("");
+  const resp = what => WINDOW.classes.map(c => { const t = w.response.find(r => r.what === what && r.class === c.id); return t ? `<td class="num">${t.x_a}/${t.n_a} <span class="dim">(${pctS(t.x_a / t.n_a)})</span>${t.q < 0.05 ? " *" : ""}</td>` : `<td class="num">–</td>`; }).join("");
+  const asm = w.assembly.map(r => `<tr class="${r.p < 0.05 ? "sig" : ""}"><td>${esc(r.question)}</td><td>${r.x_a} of ${r.n_a} ${esc(r.group_a)}</td><td>${r.x_b} of ${r.n_b} ${esc(r.group_b)}</td><td class="num">${(+r.odds_ratio).toFixed(2)} (${ci(r.conf_low, r.conf_high)})</td><td class="num">${fmtP(r.p)}</td></tr>`).join("");
+  const cand = (w.candidates || []).map(r => `<tr><td>${esc(r.label)}</td><td><span class="dot" style="background:${col(r.window)}"></span>${esc(lab(r.window))}</td>` +
+    `<td>${WINDOW.stages.map(st => `<span class="wchip" title="${esc(st.label + ": " + (WIN_WORD[r["win_" + st.stage]] || r["win_" + st.stage] || "–"))}"><i style="background:${WIN_COLOUR[r["win_" + st.stage]] || "#fff"}"></i></span>`).join("")}</td>` +
+    `<td class="num">${fmt(r.lfc_mg132)}${r.sig_mg132 ? "" : ` <span class="dim">n.s.</span>`}</td><td>${r.other_mods ? esc(r.other_mods) : ""}</td><td><button data-show="site:${esc(r.label)}">Show</button></td></tr>`).join("");
+  return `<h3 id="s-window">When a SUMO fits ${sinfo("window")}</h3>
+    <p class="lead">For every lysine, the room for a SUMO at each stage of the ribosome's life — the free protein, the assembly intermediates, the mature subunit alone, the mature and the translating ribosome — and the class that its window gives (${w.n_sites} sites, ${w.n_others} other lysines of the same proteins; the classes differ between the two: χ² p = ${fmtP(w.chisq_p)}). Tinted rows: q &lt; 0.05 for the class among the sites against the other lysines.</p>
+    <table class="stable"><tr><th>Class</th><th>Reading</th><th class="num">Sites, MG132 q &lt; 0.05</th><th class="num">Sites, n.s.</th><th class="num">Other lysines</th><th class="num">Odds ratio, sites vs others</th><th class="num">q</th><th></th></tr>${classes}</table>
+    <p class="lead">The response by class, among the sites: responsive sites of the class (* q &lt; 0.05 against the other classes). The log2 fold change in MG132 differs between the classes (Kruskal–Wallis p = ${fmtP(w.kruskal_lfc_p)}).</p>
+    <table class="stable"><tr><th></th>${WINDOW.classes.map(c => `<th class="num">${esc(c.label)}</th>`).join("")}</tr>
+      <tr><td>MG132</td>${resp("MG132")}</tr><tr><td>heat shock</td>${resp("heat shock")}</tr><tr><td>ubiquitin at the lysine</td>${resp("ubiquitin")}</tr></table>
+    <p class="lead">The window of assembly — room only on the free protein, a precursor or the free subunit — against the rest.</p>
+    <table class="stable"><tr><th>Question</th><th></th><th></th><th class="num">Odds ratio (95 %)</th><th class="num">p</th></tr>${asm}</table>
+    ${cand ? `<p class="lead">The sites of the window of assembly. Chips: the room at each stage, in the order of the stages above (hover for the stage). <i>Show</i> selects the site.</p>
+    <table class="stable"><tr><th>Site</th><th>Class</th><th>Stages</th><th class="num">MG132 log2 FC</th><th>Also recorded</th><th></th></tr>${cand}</table>` : ""}`;
+}
 function syncHash() {                                  // the address follows the open window
   if ($("help").open) return;                          // the help keeps its own address while it is open
   history.replaceState(null, "", $("stats").open ? "#stats" : location.pathname + location.search);
@@ -1405,6 +1500,12 @@ function showFromStats(what) {                       // a Show button: colouring
   if (kind === "opened") { siteMode = "environment"; $("fmore").value = "opened"; }
   if (kind === "gained") { siteMode = "environment"; $("fmore").value = "gained"; }
   if (kind === "taken") { siteMode = "room"; $("fmore").value = "taken"; }
+  if (kind === "window") { siteMode = "window"; $("fmore").value = "window:" + value; }
+  if (kind === "site") {
+    const s = sites.find(x => x.label === value); $("stats").close(); syncHash();
+    if (s) { siteMode = "window"; renderTable(); applyScene(true).then(() => { select(s.i, true); revealRow(s.i); }); }
+    return;
+  }
   if (kind === "free") {
     const s = sites.find(x => x.label === value); $("stats").close(); syncHash();
     if (s) { siteMode = "room_free"; renderTable(); select(s.i, false); revealRow(s.i); showFree(s.protein); }
@@ -1691,7 +1792,7 @@ async function main() {
   USER_HINT = $("userinfo").innerHTML; DETAIL_HINT = $("detail").innerHTML;
   const json = u => fetch(u).then(r => { if (!r.ok) throw new Error(`${u}: ${r.status}`); return r.json(); });
   const [index, rows] = await Promise.all([json("data/structures.json"), json("data/placement.json")]);
-  structures = index.structures; PARTNER_NEAR = index.partner_near; FIT = index.sumo_fit || null; FREE = index.free || null;
+  structures = index.structures; PARTNER_NEAR = index.partner_near; FIT = index.sumo_fit || null; FREE = index.free || null; WINDOW = index.window || null;
   placement = new Map(rows.map(r => [r.label, r]));
   refStats = await json(`data/${index.reference}/stats.json`);
   $("structure").innerHTML = Object.entries(STRUCT_GROUPS).map(([g, label]) => `<optgroup label="${esc(label)}">` +

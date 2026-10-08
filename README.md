@@ -61,6 +61,18 @@ updated as you go; *Copy link* copies it. For example
 collided disome coloured by room for SUMO, with that site selected and a SUMO
 drawn at it. A table of your own is never part of a link.
 
+## When a SUMO fits
+
+A SUMO can sit at a lysine only while there is room for it, and the
+structures are stages of the ribosome's life. For every site the viewer
+reads off the room at each stage — free protein, early and late precursor,
+mature subunit alone, mature ribosome, translating ribosome — and classes the
+site by that window: *free protein only*, *precursor only* and *free subunit
+only* form the window of assembly (candidates for a role in ribosome
+biogenesis); *translation state*, *mature only* and *throughout* are windows
+of the finished ribosome. A colouring, a filter, chips in the detail card and
+a section of the Statistics window present it.
+
 ## The free protein
 
 Every site also has the AlphaFold DB model of its protein alone: how much

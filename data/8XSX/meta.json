@@ -1247,6 +1247,38 @@
    }
   },
   {
+   "id": "window",
+   "label": "When a SUMO fits",
+   "group": "Position",
+   "legend": {
+    "kind": "key",
+    "title": "When a SUMO fits: the window along the ribosome's life",
+    "colours": {
+     "free protein only": "#CC6677",
+     "precursor only": "#AA4499",
+     "free subunit only": "#DDCC77",
+     "translation state": "#999933",
+     "mature only": "#332288",
+     "throughout": "#44AA99",
+     "none found": "#882255",
+     "flexible segment": "#BBBBBB"
+    },
+    "labels": {
+     "free protein only": "free protein only",
+     "precursor only": "precursor only",
+     "free subunit only": "free subunit only",
+     "translation state": "translation state",
+     "mature only": "mature only",
+     "throughout": "throughout",
+     "none found": "none found",
+     "flexible segment": "flexible segment"
+    },
+    "extra": {
+     "no data": "#7A7A7A"
+    }
+   }
+  },
+  {
    "id": "hotspot",
    "label": "Hotspots",
    "group": "Position",

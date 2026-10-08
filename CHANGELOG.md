@@ -5,6 +5,23 @@ minor number for new features, the patch number for smaller changes and fixes. T
 say what changed for the person using the viewer. This file is the only place the history is
 written; the Changelog page of the in-page help renders it.
 
+## 0.9 — 2026-10-08
+When a SUMO fits. For every site the viewer now reads off at which stages of the ribosome's life
+there is room for a SUMO — on the free protein, on the assembly intermediates, on the mature subunit
+alone, on the mature ribosome, while translating — and classes the site by that window: free
+protein only, precursor only, free subunit only (together the window of assembly), translation
+state, mature only, throughout, none found, flexible segment.
+
+- New site colouring *When a SUMO fits*; the filter menu offers the classes and the window of
+  assembly.
+- The detail card shows the class with its reading, one chip per stage with the room there (hover
+  for what takes or encloses the lysine, an assembly factor by name), and the stage at which the
+  protein is first seen.
+- The Statistics window of the mature 80S gains a section *When a SUMO fits*: the classes among the
+  sites against the other lysines, the MG132 and heat-shock response by class, the window of
+  assembly, and its sites with *Show* buttons.
+- New help topic *When a SUMO fits* (the idea, the stages, the classes, how to read them, limits).
+
 ## 0.8 — 2026-10-06
 The free protein. Beside the ribosome structures, every site now has the AlphaFold DB model of
 its protein alone: how much room a SUMO has there, and how confident the model is at the lysine.

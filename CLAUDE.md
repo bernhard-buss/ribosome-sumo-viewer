@@ -50,6 +50,14 @@
   `PEEK_EVERY` ms; an update is skipped when only the distance changed (`peekView` key = direction +
   reach), and it waits while `camera.transition.inTransition` (a state commit would cut the camera
   move short). The Mol* hover toast is moved up above the control.
+- When a SUMO fits (v0.9): `structures.json` → `window` {stages [{stage,label,short}], classes
+  [{id,label,meaning}], style {id: colour}} (`WINDOW`); sites carry `window` (class id), `joins`
+  (first stage the protein is seen in), `win_<stage>` (room / taken / tight / none / unresolved /
+  absent / n/a) and `win_by_<stage>` (the partner that takes the room, or the nearest wall). Colouring
+  `window` (legend keyed by class label, `siteColour` maps id → label), filter `window:<id>` and
+  `window:assembly`, `windowHtml(site)` for the detail chips, `windowSection()` in the reference
+  stats (`stats.window`: by_class, response, assembly, counts, candidates), Show kinds `window:<id>`
+  and `site:<label>`. Help topic `window`.
 - Base colours (`meta.base`, from the private config `structures: style: base`): grey rRNA, tan 40S,
   slate 60S — low saturation so that the Tol site colours stand out; the collided ribosome paler.
 - `stats.json` has `kind: "reference"` (five analyses, `renderStats`) or `kind: "state"`
