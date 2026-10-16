@@ -208,7 +208,7 @@
     <div class="block" id="sumoblock" hidden>
       <h2>SUMO at the sites <a class="hl" href="#help/room/sumos" data-help="room/sumos" title="Help: SUMO at the sites">ⓘ</a></h2>
       <div class="seg" id="sumomodes"><button data-sumos="off">none</button><button data-sumos="selected">selected site</button><button data-sumos="strong">strong sites</button><button data-sumos="all">all with room</button></div>
-      <label id="sumothr" class="note" hidden><input type="range" id="sumothrin" min="0" max="100" step="5" value="50" aria-label="Threshold"> above <span id="sumothrv">50</span> % of the colour scale</label>
+      <label id="sumothr" class="note" hidden><input type="range" id="sumothrin" min="0" max="100" step="5" value="50" aria-label="Threshold"> above <span id="sumothrv">50</span> % <span id="sumothrscale">of the colour scale</span></label>
     </div>
     <div class="block" id="protblock" hidden>
       <h2>Colour the proteins by <a class="hl" href="#help/colour/proteins" data-help="colour/proteins" title="Help: protein colouring">ⓘ</a></h2>
@@ -452,7 +452,7 @@
             <p>The same placements are tested four times, each time with less of the structure: as it is; without the partners (factors, tRNA, mRNA); without the other ribosome of a disome; and on the lysine's own subunit alone. Each step can only add room, so the four shares in the detail card never decrease from one to the next; where a share does not change, the thing removed was not in the way, and the card leaves it out. When a site has no room in the structure as it is and gains room once something is taken away, that something is named: <i>room taken by its partners</i>, <i>by the other ribosome</i>, <i>by the other subunit</i>. If more than one is in the way, the first of these in that order whose removal gives room is named. A site that has no room even on its own subunit is enclosed by its own subunit, and nothing is named. The third menu above the table filters by it.</p>
             <p>A site whose room the other subunit takes can carry SUMO on a free subunit but not in the assembled ribosome: a SUMO there stands in the way of the subunits joining, or has to be removed first. The same holds for the factor or the neighbouring ribosome.</p></article>
           <article data-entry="sumos"><h3>SUMO at the sites</h3>
-            <p>The control <i>SUMO at the sites</i> under the colouring draws the SUMO2 core at many sites at once, each at a placement that fits (or, where the room is taken, where it would sit without what takes it); a site without any placement gets none, so what is drawn is what the structure can physically carry. <i>Selected site</i> is the default: a SUMO only where the detail card asked for one. <i>All with room</i> draws one at every site the table shows that has a placement, so the filters above the table restrict it. <i>Strong sites</i> keeps, for the fold-change and Z-score colourings, the sites above a threshold of the colour scale — the slider, 50 % by default: for MG132 and heat shock a log2 fold change of 4 among the significant sites, for a Z-score a value above 0 — as the sites most likely to carry the modification; for a class colouring there is no scale and it draws the same as <i>all with room</i>. At most <span data-s="sumo_max"></span> SUMOs are drawn, the strongest first. The legend entry counts them and, as every legend entry, hides and shows them. The link carries the mode (<code>sumos</code>).</p></article>
+            <p>The control <i>SUMO at the sites</i> under the colouring draws the SUMO2 core at many sites at once, each at a placement that fits (or, where the room is taken, where it would sit without what takes it); a site without any placement gets none, so what is drawn is what the structure can physically carry. <i>Selected site</i> is the default: a SUMO only where the detail card asked for one. <i>All with room</i> draws one at every site the table shows that has a placement, so the filters above the table restrict it. <i>Strong sites</i> keeps the sites above a threshold of a colour scale — the slider, 50 % by default — as the sites most likely to carry the modification. The scale is the colouring shown when it is a fold change or a Z-score (for MG132 and heat shock, 50 % is a log2 fold change of 4 among the significant sites; for a Z-score, a value above 0); with a class colouring, which has no scale, the MG132 fold change is used and the slider says so. At most <span data-s="sumo_max"></span> SUMOs are drawn, the strongest first. The legend entry counts them and, as every legend entry, hides and shows them. The link carries the mode (<code>sumos</code>).</p></article>
           <article data-entry="show"><h3>Showing a SUMO</h3>
             <p>In the detail card of a site with a possible placement, <i>Show a SUMO here</i> draws the core of SUMO2 in green at one of the placements that fit, one from the middle of the possible directions. It is an example, not a prediction: with <span data-n="sites"></span> sites and thousands of possible placements each, the picture shows where a SUMO can be, not where it is. The tether is not drawn, so the SUMO sits up to <span data-s="fit.tether.1"></span> Å from the lysine.</p>
             <p>For a site whose room is taken, the button draws the SUMO where it would sit without what is in its way; it then overlaps that partner, ribosome or subunit in the picture. One SUMO is drawn at a time; choosing another structure removes it.</p></article>
@@ -621,7 +621,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/molstar@5.12.0/build/viewer/molstar.js"></script>
 <script>
-const VERSION = "0.11";
+const VERSION = "0.11.1";
 const VIEW_LABELS = { "40S_solvent": "40S solvent side", "60S_solvent": "60S solvent side", "mRNA_entry": "mRNA entry side",
                       "mRNA_exit": "mRNA exit side", "top": "top", "bottom": "bottom",
                       "side_40S": "40S side", "side_60S": "60S side", "across_1": "edge-on, first side", "across_2": "edge-on, second side",
@@ -668,14 +668,21 @@ function sumoSites() {
   const picked = sumoAt != null ? sites.filter(x => siteKey(x) === sumoAt && pose(x)) : [];
   if (sumos === "selected") return picked;
   const L = currentLegend(); let pool = visibleSites().filter(s => pose(s) && !siteHidden(s, L));
-  if (sumos === "strong" && L && L.kind === "ramp") {
-    const [lo, hi] = L.limits, cut = lo + sumoThr * (hi - lo);
-    const v = s => siteMode === "mg132" ? (s.sig_mg132 ? s.lfc_mg132 : null) : siteMode === "hs" ? (s.sig_hs ? s.lfc_hs : null) : s[siteMode];
-    pool = pool.filter(s => v(s) != null && v(s) >= cut).sort((a, b) => v(b) - v(a));
+  if (sumos === "strong") {
+    const m = strongMeasure(); if (m) pool = pool.filter(s => m.value(s) != null && m.value(s) >= m.cut).sort((a, b) => m.value(b) - m.value(a));
   }
   const seen = new Set(picked.map(siteKey));
   for (const s of pool) if (!seen.has(siteKey(s))) { seen.add(siteKey(s)); picked.push(s); }
   return picked.slice(0, SUMO_MAX);
+}
+// The scale the "strong sites" threshold cuts on: the colouring shown when it is a fold change or a
+// Z-score, otherwise the MG132 fold change (the colouring the viewer opens with).
+function strongMeasure() {
+  const L = currentLegend(), id = L && L.kind === "ramp" && !siteMode.startsWith("user:") ? siteMode : "mg132";
+  const m = meta.modes.find(x => x.id === id); if (!m) return null;
+  const [lo, hi] = m.legend.limits, cut = lo + sumoThr * (hi - lo);
+  const value = s => id === "mg132" ? (s.sig_mg132 ? s.lfc_mg132 : null) : id === "hs" ? (s.sig_hs ? s.lfc_hs : null) : s[id];
+  return { id, label: m.label, cut, value, same: id === siteMode };
 }
 const sumoNode = pose => {               // the SUMO2 core at a stored placement (rotation stored row by row, wanted column by column)
   const v = pose.split(" ").map(Number), node = structuredClone(meta.sumo.node), tf = [...walk(node)].find(n => n.kind === "transform");
@@ -885,7 +892,9 @@ function renderControls() {
   $("legend").innerHTML = legendHtml(sl, true);
   $("sumoblock").hidden = !meta.sumo;
   for (const b of $("sumomodes").querySelectorAll("button")) b.setAttribute("aria-pressed", String(b.dataset.sumos === sumos));
-  $("sumothr").hidden = !(sumos === "strong" && sl && sl.kind === "ramp"); $("sumothrin").value = Math.round(100 * sumoThr); $("sumothrv").textContent = Math.round(100 * sumoThr);
+  const sm = meta.sumo && sumos === "strong" ? strongMeasure() : null;
+  $("sumothr").hidden = !sm; $("sumothrin").value = Math.round(100 * sumoThr); $("sumothrv").textContent = Math.round(100 * sumoThr);
+  if (sm) $("sumothrscale").textContent = `of the ${sm.same ? "" : sm.label + " "}scale${/fold change/.test(sm.label) ? ` (log2 FC ≥ ${sm.cut.toFixed(1)}, significant sites)` : ` (Z ≥ ${sm.cut.toFixed(2)})`}`;
   const st = siteMode.startsWith("user:") ? "colour/user" : siteMode.startsWith("z_") ? "colour/z" : "colour/" + siteMode;
   $("partnerswrap").hidden = !meta.partners.length;
   $("partnerslabel").textContent = "Show " + meta.partners.map(q => q.label).join(", ").replace(/, ([^,]*)$/, " and $1");
@@ -1933,7 +1942,7 @@ async function main() {
 
   // a camera move ends up in the address once it has come to rest
   $("sumomodes").addEventListener("click", e => { const b = e.target.closest("button[data-sumos]"); if (!b) return; sumos = b.dataset.sumos; renderControls(); syncUrl(); applyScene(true); });
-  $("sumothrin").addEventListener("input", e => { sumoThr = +e.target.value / 100; $("sumothrv").textContent = e.target.value; });
+  $("sumothrin").addEventListener("input", e => { sumoThr = +e.target.value / 100; $("sumothrv").textContent = e.target.value; const sm = strongMeasure(); if (sm) $("sumothrscale").textContent = `of the ${sm.same ? "" : sm.label + " "}scale${/fold change/.test(sm.label) ? ` (log2 FC ≥ ${sm.cut.toFixed(1)}, significant sites)` : ` (Z ≥ ${sm.cut.toFixed(2)})`}`; });
   $("sumothrin").addEventListener("change", () => { renderControls(); syncUrl(); applyScene(true); });
   $("legend").addEventListener("click", e => {          // a legend entry is a switch
     const el = e.target.closest("[data-key]"); if (!el) return;

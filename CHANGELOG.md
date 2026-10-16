@@ -5,6 +5,11 @@ minor number for new features, the patch number for smaller changes and fixes. T
 say what changed for the person using the viewer. This file is the only place the history is
 written; the Changelog page of the in-page help renders it.
 
+## 0.11.1 — 2026-10-16
+Fix: with a class colouring (room, window, hotspots, …) *strong sites* drew the same as *all with
+room* and showed no slider, because such a colouring has no scale. The threshold now falls back to
+the MG132 fold change there, and the slider always names the scale and the cut it makes.
+
 ## 0.11 — 2026-10-16
 SUMO at the sites. A control under the colouring draws the SUMO2 core at many sites at once —
 *selected site* (as before), *strong sites* (above a threshold of the colour scale, 50 % by
