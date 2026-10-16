@@ -763,7 +763,7 @@
   },
   {
    "id": "hs",
-   "label": "Heat shock fold change",
+   "label": "HS fold change",
    "group": "Response",
    "legend": {
     "kind": "ramp",
@@ -786,7 +786,7 @@
   },
   {
    "id": "z_mg132",
-   "label": "Z-score, MG132",
+   "label": "Z-score MG132",
    "group": "Response",
    "legend": {
     "kind": "ramp",
@@ -807,7 +807,7 @@
   },
   {
    "id": "z_ctrl",
-   "label": "Z-score, control",
+   "label": "Z-score control",
    "group": "Response",
    "legend": {
     "kind": "ramp",
@@ -828,7 +828,7 @@
   },
   {
    "id": "z_hs",
-   "label": "Z-score, heat shock",
+   "label": "Z-score HS",
    "group": "Response",
    "legend": {
     "kind": "ramp",
@@ -987,7 +987,7 @@
   },
   {
    "id": "hotspot",
-   "label": "Hotspots",
+   "label": "Hotspots MG132",
    "group": "Position",
    "legend": {
     "kind": "key",
@@ -1002,7 +1002,7 @@
   },
   {
    "id": "hotspot_hs",
-   "label": "Hotspots, heat shock",
+   "label": "Hotspots HS",
    "group": "Position",
    "legend": {
     "kind": "key",

@@ -63,6 +63,18 @@
   `both`; URL `sig=`, legacy `1` = mg132); reference stats carry `hotspots_hs`, `background.responsive_hs`,
   heat rows in `access` (comparison "heat-shock-responsive vs non-responsive SUMO sites"), `regions`
   (`responsive_hs`, `median_lfc_hs`), `clustering`, `room.tests`, `free.tests`; Show kind `hotspot_hs:<id>`.
+- Legend switches (v0.10): `hidden` (Set of `site:<mode>:<entry>` / `base:<entry>`, URL `hide=`);
+  `legendEntryOf(site, legend)` maps a site to its legend entry (ramp colourings: "ramp" or the extra),
+  `hiddenChains()` maps base entries to chains (rRNA, "<subunit> proteins", "<particle> ribosome
+  (paler)" — which also takes that particle's sites —, partner labels), `dropHidden(nodes)` filters
+  the component selectors of the MVS scene and drops empty components; `legendHtml` tags entries
+  with `data-key` and class `sw`/`hid`; the click handler on `#legend` toggles and calls applyScene.
+- Mol* render pitfalls (v0.10): with any translucent elements, `postprocessing.occlusion` (SSAO) and
+  `multiSample.mode: "temporal"` make the frame rate collapse (~1 fps when the camera barely moves);
+  `peekRender(on)` switches both off while the focus is on and restores them (`renderSaved`). A
+  MolViewSpec `camera` node makes Mol* set the clip radius to ~0.38 × the camera distance, and it
+  lands up to a second after `loadMvsData` resolves; `unclip()` on every `camera.stateChanged` keeps
+  the radius at the visible scene's radius, so nothing is ever cut.
 - Base colours (`meta.base`, from the private config `structures: style: base`): grey rRNA, tan 40S,
   slate 60S — low saturation so that the Tol site colours stand out; the collided ribosome paler.
 - `stats.json` has `kind: "reference"` (five analyses, `renderStats`) or `kind: "state"`

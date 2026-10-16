@@ -20,6 +20,18 @@ statistics looked at MG132 alone. Now:
 - The Statistics window of the mature 80S compares the heat-shock-responsive sites with the
   others wherever it did so for MG132: modified lysines, subunits and regions (two new columns),
   clustering, room for SUMO, the free protein.
+- The legend is a set of switches: a click on an entry hides what it stands for — the sites of
+  one class (or the coloured and the grey sites of a fold-change or Z-score colouring), the rRNA,
+  the proteins of one subunit, the second ribosome of the disome, the factors, tRNA or mRNA, the
+  SUMO, the free protein — and a second click shows it again; hidden entries are struck through
+  and travel in the link.
+- Shorter colouring buttons: *HS fold change*, *Z-score MG132 / control / HS*, *Hotspots MG132*,
+  *Hotspots HS*.
+- Fix: a site link or a *Show* button opened the structure cut to a sphere around its target
+  (Mol* narrows the clipping when it applies a scene's camera); nothing is cut away now.
+- The focus is fast again: with translucent spheres on screen, Mol*'s ambient occlusion and its
+  temporal anti-aliasing fell to about one frame a second; both are off while the focus is on and
+  back in the overview. The peek hole also updates less often while the camera turns.
 
 ## 0.9 — 2026-10-08
 When a SUMO fits. For every site the viewer now reads off at which stages of the ribosome's life

@@ -36,6 +36,8 @@
   .legend .bar { height: 12px; border: 1px solid #9aa3af; border-radius: 2px; }
   .legend .ticks { display: flex; justify-content: space-between; margin-top: 2px; font-variant-numeric: tabular-nums; }
   .legend .keys { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; }
+  .legend .sw { cursor: pointer; } .legend .sw:hover { color: var(--ink); }
+  .legend .hid { opacity: .45; text-decoration: line-through; } .legend .bar.hid { opacity: .3; }
   .block[hidden] { display: none; }
   .user { display: flex; gap: 10px; align-items: flex-start; font-size: 12.5px; color: var(--muted); }
   .user button { font: inherit; font-size: 12.5px; padding: 4px 9px; border: 1px solid var(--line); background: #fff; border-radius: 5px; cursor: pointer; white-space: nowrap; color: var(--ink); }
@@ -303,6 +305,7 @@
               <tr><td>sorting of the table</td><td><code>sort</code>, with a minus sign for descending</td></tr>
               <tr><td>selected site, and a SUMO drawn at it</td><td><code>site</code> (and <code>ribosome</code> in the disome), <code>sumo</code></td></tr>
               <tr><td>the free protein of the selected site shown, coloured by confidence</td><td><code>free</code>, <code>plddt</code></td></tr>
+              <tr><td>legend entries switched off</td><td><code>hide</code></td></tr>
               <tr><td>the view: a standard view, or the camera exactly as you turned and zoomed it; the focus on the selected site</td><td><code>view</code>, or <code>cam</code> (position, target and up direction); <code>focus</code></td></tr>
               <tr><td>an open Help entry or the Statistics window</td><td>the part after <code>#</code></td></tr></table>
             <p>What is at its default is left out, so the link of the opening view is the bare address. A camera move is written a moment after it has come to rest.</p>
@@ -347,6 +350,8 @@
           <article data-entry="focus"><h3>Focus and overview</h3>
             <p>The two buttons at the bottom right of the structure switch between a close-up and the whole. <i>Focus</i> moves the camera onto the marked residue — the one last clicked, or else the site selected in the table — to about 70 Å, and opens a peek hole: within a narrow cone around the line of sight, what lies in front of the residue fades — atoms just in front of it are translucent, atoms farther in front more so, and from about 13 Å in front they are not drawn at all. Nothing is cut: the residue, what is level with it, what is beside the cone and everything behind it stay solid, so the surroundings of the lysine are seen as they are. The fade follows the camera as you turn and zoom. <i>Overview</i> brings the whole structure back, seen from the same direction. The buttons are available as soon as a residue is marked.</p>
             <p>Choosing a site in the table focuses on it at once. A double click in the structure only moves the camera closer, without the fade, and a view button returns to the overview. In the focus, rotating and zooming work as usual, and a click on another residue moves the focus there.</p></article>
+          <article data-entry="legend"><h3>The legend as switches</h3>
+            <p>Every entry of the colour legend under the colouring buttons is a switch: click it to hide what it stands for in the structure — the sites of one class (or, for a fold change or Z-score, the coloured sites or the grey ones), the rRNA, the proteins of one subunit, the paler second ribosome, the factors, tRNA or mRNA, the SUMO placed at a site, the free protein — and click it again to show them. A hidden entry is struck through. The site table is not affected; the link carries the hidden entries (<code>hide</code>).</p></article>
           <article data-entry="views"><h3>The standard views</h3>
             <p>The view buttons turn the ribosome to fixed orientations, derived from the structure itself so that they mean the same for every colouring and, through superposition, for every structure:</p>
             <table class="htable"><tr><th>View</th><th>You look at</th></tr>
@@ -691,11 +696,49 @@ function camFactor() {
 }
 // The colour of a site under the current colouring, computed in the page (the ribosome scene takes
 // its colours from annotations.json; the free protein has no such file).
+const SITE_KEY = { environment: "environment", environment_ref: "environment_ref", region: "region", partner: "near_partner", room: "room",
+                   room_free: "room_free", hotspot: "hotspot", hotspot_hs: "hotspot_hs", comod: "other_mod_class" };
+// ---- the legend as switches: an entry switched off hides what it stands for ----------------
+// `hidden` holds "site:<colouring>:<entry>" for the entries of a site colouring (the ramp of a
+// fold-change or Z-score colouring counts as the entry "ramp") and "base:<entry>" for what the
+// particle is drawn in (rRNA, the proteins of a subunit, the paler ribosome, the partners, the
+// SUMO, the free protein). Hidden sites stay in the table; only the scene leaves them out.
+let hidden = new Set();
+const currentLegend = () => siteMode.startsWith("user:") ? user.scales.site[siteMode.slice(5)].legend : (meta.modes.find(m => m.id === siteMode) || {}).legend;
+function legendEntryOf(s, L) {           // the legend entry a site falls under in the current colouring (null: none)
+  if (!L || siteMode.startsWith("user:")) return null;
+  const rest = Object.keys(L.extra || {})[0] || null;
+  if (L.kind === "ramp") {
+    const v = siteMode === "mg132" ? (s.sig_mg132 && s.lfc_mg132 != null ? 1 : null) : siteMode === "hs" ? (s.sig_hs && s.lfc_hs != null ? 1 : null) : s[siteMode];
+    return v == null ? rest : "ramp";
+  }
+  const key = SITE_KEY[siteMode];
+  const v = siteMode === "window" ? ((WINDOW && WINDOW.classes.find(c => c.id === s.window)) || {}).label : key ? s[key] : null;
+  return v != null && L.colours && L.colours[v] != null ? v : rest;
+}
+const siteHidden = (s, L) => { const k = legendEntryOf(s, L); return k != null && hidden.has(`site:${siteMode}:${k}`); };
+function hiddenChains() {                // label_asym ids of the chains that switched-off base entries stand for
+  const out = new Set(), H = k => hidden.has("base:" + k), paler = meta.base_other ? meta.particles[0] : null;
+  for (const c of meta.chains) {
+    if ((c.role === "rRNA" && H("rRNA")) || (c.role === "rp" && c.subunit && H(c.subunit + " proteins")) ||
+        (paler && c.particle === paler && H(`${paler} ribosome (paler)`))) out.add(c.label_asym);
+    const q = meta.partners.find(p => p.role === c.role); if (q && H(q.label)) out.add(c.label_asym);
+  }
+  return out;
+}
+function dropHidden(nodes) {             // take the hidden chains and sites out of every component; drop components left empty
+  const hc = hiddenChains(), L = currentLegend(), bySite = new Map(sites.map(s => [s.label_asym + ":" + s.label_seq, s]));
+  const paler = meta.base_other ? meta.particles[0] : null, gone = paler && hidden.has(`base:${paler} ribosome (paler)`) ? paler : null;   // a hidden ribosome takes its sites along
+  const siteOff = s => siteHidden(s, L) || (gone && s.particle === gone);
+  for (const n of nodes) if (n.kind === "component" && n.custom && Array.isArray(n.params.selector))
+    n.params.selector = n.params.selector.filter(e => e.label_seq_id == null ? !hc.has(e.label_asym_id)
+      : !(bySite.has(e.label_asym_id + ":" + e.label_seq_id) && siteOff(bySite.get(e.label_asym_id + ":" + e.label_seq_id))));
+  for (const n of nodes) if (n.children) n.children = n.children.filter(c => !(c.kind === "component" && Array.isArray(c.params.selector) && !c.params.selector.length));
+}
 function siteColour(s) {
   if (siteMode.startsWith("user:")) { const col = siteMode.slice(5), row = user && user.site.get(s.label_asym + ":" + s.label_seq); return row && row[col] != null ? user.scales.site[col].colourOf(row[col]) : UNSET; }
   const m = meta.modes.find(x => x.id === siteMode); if (!m) return UNSET;
-  const L = m.legend, key = { environment: "environment", environment_ref: "environment_ref", region: "region", partner: "near_partner", room: "room",
-                              room_free: "room_free", hotspot: "hotspot", hotspot_hs: "hotspot_hs", comod: "other_mod_class" }[siteMode];
+  const L = m.legend, key = SITE_KEY[siteMode];
   if (siteMode === "window") { const c = WINDOW && WINDOW.classes.find(c => c.id === s.window); return (c && L.colours[c.label]) || UNSET; }
   if (siteMode === "mg132") return s.sig_mg132 && s.lfc_mg132 != null ? rampColour(s.lfc_mg132, L.ramp, L.limits) : UNSET;
   if (siteMode === "hs") return s.sig_hs && s.lfc_hs != null ? rampColour(s.lfc_hs, L.ramp, L.limits) : UNSET;
@@ -706,19 +749,21 @@ function siteColour(s) {
 // with the protein's sites in the current colouring and, if asked for, a SUMO at the selected site.
 function buildFreeScene(data, camera) {
   const asym = "A", tint = (meta.chains.find(c => c.protein === data.accession) || {}).subunit === "40S" ? meta.base.prot_40S : meta.base.prot_60S;
-  const seen = new Set(), own = sites.filter(s => s.protein === data.accession && !seen.has(s.position) && seen.add(s.position));
+  const L = currentLegend(), seen = new Set();
+  const own = sites.filter(s => s.protein === data.accession && !seen.has(s.position) && seen.add(s.position) && !siteHidden(s, L));
   const el = pos => ({ label_asym_id: asym, label_seq_id: pos });
   const protRep = { kind: "representation", params: { type: "cartoon" }, children: [{ kind: "color", params: { color: tint } }] };
   if (plddtOn) protRep.children.push(...colourNodes(data.residues.map(([seq, v]) => [el(seq), FREE.style[plddtBand(v)]])));
   const protein = { kind: "component", params: { selector: "polymer" }, custom: { rsv: "free" }, children: [protRep] };
-  if (!camera) protein.children.push({ kind: "focus", params: {} });
   const siteRep = { kind: "representation", params: { type: "spacefill", size_factor: 1.8 },
                     children: [{ kind: "color", params: { color: UNSET } }, ...colourNodes(own.map(s => [el(modelPos(s)), siteColour(s)]))] };
-  const structure = { kind: "structure", params: { type: "model" }, children: [protein,
-    { kind: "component", params: { selector: own.map(s => el(modelPos(s))) }, custom: { rsv: "sites" }, children: [siteRep] }] };
+  const sitesComp = { kind: "component", params: { selector: own.map(s => el(modelPos(s))) }, custom: { rsv: "sites" }, children: [siteRep] };
+  const showProtein = !hidden.has("base:free protein (AlphaFold model)");
+  if (!camera) (showProtein ? protein : sitesComp).children.push({ kind: "focus", params: {} });
+  const structure = { kind: "structure", params: { type: "model" }, children: [showProtein && protein, own.length && sitesComp].filter(Boolean) };
   const root = { kind: "root", children: [{ kind: "canvas", params: { background_color: "white" } },
     { kind: "download", params: { url: data.url }, children: [{ kind: "parse", params: { format: "bcif" }, children: [structure] }] }] };
-  const sel = sumoAt != null && sites.find(x => siteKey(x) === sumoAt), lys = sel && sel.protein === data.accession && data.lysines.find(l => l.position === modelPos(sel));
+  const sel = sumoAt != null && !hidden.has("base:SUMO placed at the selected site") && sites.find(x => siteKey(x) === sumoAt), lys = sel && sel.protein === data.accession && data.lysines.find(l => l.position === modelPos(sel));
   if (lys && lys.pose && meta.sumo) {
     const v = lys.pose.split(" ").map(Number), node = structuredClone(meta.sumo.node), tf = [...walk(node)].find(n => n.kind === "transform");
     tf.params.rotation = [v[0], v[3], v[6], v[1], v[4], v[7], v[2], v[5], v[8]]; tf.params.translation = [v[9], v[10], v[11]];
@@ -740,13 +785,14 @@ function buildScene(camera) {
   const rep = c => c && c.children.find(n => n.kind === "representation");
   const protRep = rep(part("proteins")), siteRep = rep(part("sites")), partnerRep = showPartners ? rep(part("partners")) : null;
   if (!showPartners) for (const n of nodes) if (n.children) n.children = n.children.filter(c => !(c.custom && c.custom.rsv === "partners"));
+  if (hidden.size) dropHidden(nodes);
   const fromUri = siteRep.children.find(n => n.kind === "color_from_uri");
   if (siteMode.startsWith("user:")) {
     const col = siteMode.slice(5), sc2 = user.scales.site[col];
     siteRep.children = siteRep.children.filter(n => n !== fromUri).concat(colourNodes(
       [...user.site].map(([k, row]) => [{ label_asym_id: k.split(":")[0], label_seq_id: +k.split(":")[1] }, sc2.colourOf(row[col])])));
   } else fromUri.params.field_name = "color_" + siteMode;
-  const ss = sumoAt != null && meta.sumo && sites.find(x => siteKey(x) === sumoAt);
+  const ss = sumoAt != null && meta.sumo && !hidden.has("base:SUMO placed at the selected site") && sites.find(x => siteKey(x) === sumoAt);
   if (ss && sumoPose(ss)) {                              // a SUMO at the chosen site: the stored placement as a transform
     const v = sumoPose(ss).split(" ").map(Number), node = structuredClone(meta.sumo.node);
     const tf = [...walk(node)].find(n => n.kind === "transform");
@@ -775,7 +821,7 @@ function applyScene(keepCamera = true, camera = null) {
       await viewer.loadMvsData(JSON.stringify(buildScene(camera)), "mvsj", { replaceExisting: true, keepCamera: keepCamera && !camera });
     } catch (e) { $("busy").textContent = "The structure could not be drawn (its coordinates come from the PDB): " + e.message; console.error(e); return; }
     if (seq === sceneSeq) $("busy").hidden = true;
-    renderControls(); syncSoon(300); if (focusOn) { peekView = ""; peekSoon(300); }
+    renderControls(); syncSoon(300); if (focusOn) { peekView = null; peekSoon(300); }
   });
   sceneQueue = job.catch(() => {});
   return job;
@@ -784,9 +830,11 @@ function applyScene(keepCamera = true, camera = null) {
 function legendHtml(L, withBase) {
   let h = `<div>${esc(L.title)}</div>`;
   const keys = Object.entries(Object.assign({}, L.kind === "key" ? L.colours : {}, L.extra || {})).filter(([, c]) => c);
+  const sitePrefix = withBase && !siteMode.startsWith("user:") ? `site:${siteMode}` : null;
+  const sw = key => key ? ` data-key="${esc(key)}" class="sw${hidden.has(key) ? " hid" : ""}" title="Click to hide or show"` : "";
   if (L.kind === "ramp") {
-    const [lo, hi] = L.limits, mid = +((lo + hi) / 2).toPrecision(3);
-    h += `<div class="bar" style="background:linear-gradient(to right, ${L.ramp.join(", ")})"></div>
+    const [lo, hi] = L.limits, mid = +((lo + hi) / 2).toPrecision(3), key = sitePrefix ? sitePrefix + ":ramp" : null;
+    h += `<div${sw(key).replace('class="sw', 'class="bar sw') || ' class="bar"'} style="background:linear-gradient(to right, ${L.ramp.join(", ")})"></div>
           <div class="ticks"><span>${lo}</span><span>${mid}</span><span>${hi}</span></div>`;
   }
   const has = sub => meta.chains.some(c => c.role === "rp" && c.subunit === sub), bySub = protMode === "subunit";
@@ -794,13 +842,13 @@ function legendHtml(L, withBase) {
     .concat(withBase && bySub && meta.base_other ? [[`${meta.particles[0]} ribosome (paler)`, meta.base_other.prot_60S]] : [])
     .concat(withBase && showPartners ? meta.partners.map(q => [q.label, q.colour]) : [])
     .concat(withBase && sumoAt != null && meta.sumo ? [["SUMO placed at the selected site", meta.sumo.colour]] : []);
-  const row = list => list.length ? `<div class="keys">` + list.map(([k, c]) => `<span><span class="dot" style="background:${c}"></span>${esc((L.labels || {})[k] || k)}</span>`).join("") + `</div>` : "";
+  const row = (list, prefix) => list.length ? `<div class="keys">` + list.map(([k, c]) => `<span${sw(prefix ? `${prefix}:${k}` : null)}><span class="dot" style="background:${c}"></span>${esc((L.labels || {})[k] || k)}</span>`).join("") + `</div>` : "";
   if (freeOf && withBase) {                             // the free protein: its tint or its confidence bands
     const tint = (meta.chains.find(c => c.protein === freeOf) || {}).subunit === "40S" ? meta.base.prot_40S : meta.base.prot_60S;
     const pl = plddtOn ? PLDDT_BANDS.map(([b, lo], i) => [`pLDDT ${b}${i === 0 ? " (≥ 90)" : i === 3 ? " (< 50)" : ` (${lo}–${PLDDT_BANDS[i - 1][1]})`}`, FREE.style[b]]) : [["free protein (AlphaFold model)", tint]];
-    return h + row(keys) + row(pl.concat(sumoAt != null && meta.sumo ? [["SUMO placed at the selected site", meta.sumo.colour]] : []));
+    return h + row(keys, sitePrefix) + row(pl, plddtOn ? null : "base") + row(sumoAt != null && meta.sumo ? [["SUMO placed at the selected site", meta.sumo.colour]] : [], "base");
   }
-  return h + row(keys) + row(base);       // the site colours, then what the particle itself is drawn in
+  return h + row(keys, sitePrefix) + row(base, withBase ? "base" : null);       // the site colours, then what the particle itself is drawn in
 }
 function renderControls() {
   const siteCols = user ? user.cols.filter(c => c.site) : [], protCols = user ? user.cols.filter(c => c.protein) : [];
@@ -927,7 +975,7 @@ function setFocus(on, ms = 350) {
 // stay opaque. The layers follow the camera as it turns (an update takes a few milliseconds).
 const PEEK_STEPS = [[2, 0.7], [5, 0.85], [9, 0.95], [13, 1]];   // [Å in front of the residue, transparency] (last: invisible)
 const PEEK_CONE = [7, 0.4];              // radius of the cone (Å) at the residue, and its growth per Å towards the camera
-const PEEK_TAG = "rsv-peek", PEEK_EVERY = 100;  // ms between updates while the camera turns
+const PEEK_TAG = "rsv-peek", PEEK_EVERY = 150, PEEK_TURN = 0.035;   // ms between updates while the camera turns; the turn (rad) that asks for one
 let peekTimer = null, peekBusy = false, peekAgain = false, peekLast = 0;
 function peekSoon(ms = 400) { clearTimeout(peekTimer); peekTimer = setTimeout(updatePeek, ms); }
 function peekFollow() {                  // on a camera change: at once if the last update is old enough, and once more when it rests
@@ -951,7 +999,7 @@ function markedResidue() {               // chain and residue of the marked resi
 }
 const peekCells = ref => viewer.plugin.state.data.selectQ(q => (ref ? q.byRef(ref) : q.root).subtree().withTag(PEEK_TAG));
 async function clearPeek() {
-  clearTimeout(peekTimer); peekView = "";
+  clearTimeout(peekTimer); peekView = null;
   const cells = peekCells(); if (!cells.length) return;
   const b = viewer.plugin.build(); for (const c of cells) b.delete(c.transform.ref);
   try { await b.commit(); } catch (e) {}
@@ -988,7 +1036,7 @@ function peekAtoms(p) {
   peekCache = { key, items };
   return items;
 }
-let peekView = "";       // direction and reach of the last update: a zoom alone changes neither
+let peekView = null;     // direction, reach and target of the last update: a zoom alone changes none of them
 async function updatePeek(force = false) {
   const plugin = viewer.plugin, p = focusOn && markedPoint();
   if (!p) return clearPeek();
@@ -997,8 +1045,9 @@ async function updatePeek(force = false) {
   const c = plugin.canvas3d.camera.getSnapshot();
   const d = [0, 1, 2].map(i => c.position[i] - p[i]), dist = Math.hypot(...d) || 1, dir = d.map(v => v / dist);
   const far = Math.max(FOCUS_DISTANCE, Math.ceil(dist / 20) * 20) + 10;
-  const view = dir.map(v => v.toFixed(2)).join(",") + "/" + far + "/" + p.join(",");
-  if (!force && view === peekView && peekCells().length) return;        // only the distance changed: the cone is the same
+  const view = { dir, far, p: p.join(",") };
+  const same = peekView && peekView.p === view.p && peekView.far === far && Math.acos(Math.min(1, dir[0] * peekView.dir[0] + dir[1] * peekView.dir[1] + dir[2] * peekView.dir[2])) < PEEK_TURN;
+  if (!force && same && peekCells().length) return;                    // a zoom, or a turn too small to show: the cone is the same
   peekBusy = true; peekLast = performance.now();
   try {
     const S = structLib(), T = molstar.lib.plugin.StateTransforms, b = plugin.build(), s0 = PEEK_STEPS[0][0];
@@ -1032,11 +1081,30 @@ async function updatePeek(force = false) {
   peekBusy = false;
   if (peekAgain) { peekAgain = false; peekSoon(50); }
 }
+let renderSaved = null;
+function peekRender(on) {                // with translucent spheres Mol*'s ambient occlusion and its temporal multisampling (which accumulates while the camera barely moves) drop to ~1 frame/s: both off while the focus is on
+  try {
+    const c3 = viewer.plugin.canvas3d;
+    if (on && !renderSaved) { renderSaved = { occlusion: c3.props.postprocessing.occlusion, multiSample: c3.props.multiSample }; c3.setProps({ postprocessing: { occlusion: { name: "off", params: {} } }, multiSample: { mode: "off" } }); }
+    else if (!on && renderSaved) { c3.setProps({ postprocessing: { occlusion: renderSaved.occlusion }, multiSample: renderSaved.multiSample }); renderSaved = null; }
+  } catch (e) {}
+}
 function updateFocusCtl() {
+  peekRender(focusOn);
   $("focusctl").classList.toggle("off", !focusOn && !markedPoint());
   $("focusbtn").setAttribute("aria-pressed", String(focusOn)); $("overviewbtn").setAttribute("aria-pressed", String(!focusOn));
 }
 
+// Nothing is ever cut away: the camera's clip radius is kept at the whole visible scene. A
+// MolViewSpec camera (the opening view of a site link, a Show button) makes Mol* clip to a sphere
+// around its target once it lands, up to a second after the load; the guard on every camera
+// change opens it up again. Called from the camera watcher.
+function unclip() {
+  try {
+    const c3 = viewer.plugin.canvas3d, r = (c3.boundingSphereVisible || c3.boundingSphere).radius, c = c3.camera.getSnapshot();
+    if (r > 0 && c.radius < r - 0.5 && !c3.camera.transition.inTransition) c3.camera.setState({ radius: r }, 0);
+  } catch (e) {}
+}
 // Move the camera towards a point along the current line of sight; the clipping radius stays
 // as it is, so that nothing in front of or behind the point is cut away.
 function zoomTo(point, distance = 70, ms = 350) {
@@ -1688,7 +1756,7 @@ const SORT_KEYS = ["label", "region", "environment", "lfc_mg132", "q_mg132", "z_
 let urlReady = false, lastCam = null, syncTimer = null, camBusy = false;   // camBusy: a structure is loading, the camera is not its own yet
 function readUrlState() {
   const p = new URLSearchParams(location.search), cam = (p.get("cam") || "").split(",").map(Number);
-  const st = {}; for (const k of ["s", "colour", "partners", "q", "region", "env", "filter", "sig", "sort", "site", "ribosome", "sumo", "view", "free", "plddt", "focus"]) st[k] = p.get(k);
+  const st = {}; for (const k of ["s", "colour", "partners", "q", "region", "env", "filter", "sig", "sort", "site", "ribosome", "sumo", "view", "free", "plddt", "focus", "hide"]) st[k] = p.get(k);
   st.cam = cam.length === 9 && cam.every(Number.isFinite) ? cam : null;
   return st;
 }
@@ -1723,6 +1791,7 @@ function stateQuery() {
   if (sel) { put("site", sel.label); if (multi()) put("ribosome", sel.particle); if (sumoAt === siteKey(sel)) put("sumo", "1"); if (focusOn) put("focus", "1"); }
   if (freeOf) { put("free", "1"); if (plddtOn) put("plddt", "1"); }
   else { const c = cameraParam(); if (c) put(c[0], c[1]); }
+  if (hidden.size) put("hide", [...hidden].join(","));
   return out.length ? "?" + out.join("&") : "";
 }
 function syncUrl() {                                   // the open window (#help…, #stats) stays in the address
@@ -1762,6 +1831,7 @@ async function loadStructure_(id, opts = {}) {
   sites.forEach((s, i) => s.i = i);
   if (st) {
     if (st.colour) siteMode = st.colour;
+    hidden = new Set((st.hide || "").split(",").filter(Boolean));
     showPartners = st.partners !== "off"; $("partners").checked = showPartners;
     const m = /^(-?)(\w+)$/.exec(st.sort || ""); if (m && SORT_KEYS.includes(m[2])) sort = { k: m[2], dir: m[1] ? -1 : 1 };
   }
@@ -1832,8 +1902,13 @@ async function main() {
   await loadStructure(st.s || refId(), { state: st, onData: () => { if (deep.startsWith("#help")) openHelp(deep.slice(6)); else if (deep === "#stats") openStats(); } });
 
   // a camera move ends up in the address once it has come to rest
+  $("legend").addEventListener("click", e => {          // a legend entry is a switch
+    const el = e.target.closest("[data-key]"); if (!el) return;
+    const k = el.dataset.key; if (hidden.has(k)) hidden.delete(k); else hidden.add(k);
+    applyScene(true); syncUrl();
+  });
   for (const ev of ["pointerup", "wheel", "touchend", "keyup"]) $("viewer").addEventListener(ev, () => syncSoon(600), { passive: true });
-  try { viewer.plugin.canvas3d.camera.stateChanged.subscribe(() => syncSoon(600)); } catch (e) {}
+  try { viewer.plugin.canvas3d.camera.stateChanged.subscribe(() => { syncSoon(600); unclip(); }); } catch (e) {}
   $("linkbtn").addEventListener("click", async () => {
     syncUrl();
     const b = $("linkbtn"), say = t => { b.textContent = t; setTimeout(() => { b.textContent = "Copy link"; }, 1600); };
