@@ -80,6 +80,28 @@
   (`sumoPose`, in free mode `freePose`), strong = above `sumoThr` of the ramp legend's limits
   (significant sites for mg132/hs), capped at `SUMO_MAX`; `sumoNode(pose)` builds one MVS node per
   SUMO; legend key `base:SUMO` (label with the count); URL `sumos=`; control `#sumoblock`.
+- Any protein from the AlphaFold DB (v0.12): `#protform` → `loadProtein(query)`: UniProt REST resolves a
+  gene name to the reviewed human accession (an accession is taken as given), the AlphaFold API
+  (`/api/prediction/<acc>`) gives the model (`bcifUrl`, `uniprotSequence`, `latestVersion`), the catalogue
+  `data/catalogue.json` (column-wise: protein, gene, position, ctx = 15-residue context, Z-scores, fold
+  changes, q-values; `structures.json` → `catalogue` = `CAT`) gives the sites, `placeCatalogue()` places them
+  as the pipeline does (same context at the position → `placed: "accession"`; unique context elsewhere →
+  `"sequence context"` + `free_position`; one substitution → `"variant"`; else `unplaced: true`, kept in
+  the table). The protein then stands in for a structure: `shownProtein`, synthetic `meta` (`proteinMeta()`:
+  the reference's modes mg132/hs/z_*/room_free, base, SUMO node; `refMeta` = the reference's meta.json,
+  loaded in main), `sites`, `entry`, `stats = {kind: "protein"}`, `sid = "p:<acc>"`, `freeOf = acc` so the
+  scene is `buildFreeScene`. After `applyScene`, `modelAtoms()` reads the atoms off Mol* (coordinates,
+  residue, lysine side chains, B factor = pLDDT) and `fitProtein()` runs the room-for-SUMO fit in worker
+  threads: the worker is the `<script type="text/plain" id="fitworker">` block, a port of
+  `python/sumostruct/fit.py` for one atom group, fed with `data/fit.json` (`structures.json` → `sampler`:
+  the SUMO core atoms, the 96 rotations of the pipeline's generator, directions, lengths, parameters) so
+  that the shares equal the pipeline's. `fitState` (running / done / failed) disables the `room_free`
+  button and `#sumoblock` (`renderControls`), `#fitbar` shows the progress; URL `p=`. `leaveProtein()` on
+  a structure load, `lastSid` for *Back to the ribosome*. No statistics are computed in the page: the fit
+  is a per-lysine geometric calculation, not a statistic, and it uses public data only.
+- The in-house-data check `grep -rl 'ko1\|KO1\|ZNF451\|ML792' data/` flags `data/catalogue.json`: that is
+  the public catalogue's own entries for the gene ZNF451 (Hendriks et al.), not in-house data. Check with
+  `grep -rl 'ko1\|KO1\|ML792' data/` plus `grep -l ZNF451 data/*/ data/free/` instead.
 - Base colours (`meta.base`, from the private config `structures: style: base`): grey rRNA, tan 40S,
   slate 60S — low saturation so that the Tol site colours stand out; the collided ribosome paler.
 - `stats.json` has `kind: "reference"` (five analyses, `renderStats`) or `kind: "state"`

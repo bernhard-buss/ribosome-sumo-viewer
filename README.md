@@ -59,11 +59,22 @@ every shown site that has a placement, or only at the strong sites — those
 above a threshold of the colour scale — so that the sites most likely to carry
 the modification are seen with it, where the structure can physically hold it.
 
+## Any protein from the AlphaFold DB
+
+The box under the *Structure* menu takes any human protein, as a gene name or
+a UniProt accession, and shows its predicted model from the AlphaFold DB with
+its SUMO2/3 sites from the Hendriks catalogue (14,868 sites on 3,981 proteins,
+shipped as `data/catalogue.json`), placed by sequence context. The room for a
+SUMO at every lysine of the model is computed in the browser, with the same
+placement set as the analysis (`data/fit.json`), in worker threads; the
+controls that need it wait for it. `?p=P46060` opens RanGAP1.
+
 ## Sharing a view
 
-The address of the page holds what is shown: structure, colouring, hidden
-partners, filters, sorting, the selected site, a SUMO drawn at it, and the
-view (a standard view, or the camera as it was turned and zoomed). It is
+The address of the page holds what is shown: structure (or a protein from the
+AlphaFold DB), colouring, hidden partners, filters, sorting, the selected site,
+a SUMO drawn at it, and the view (a standard view, or the camera as it was
+turned and zoomed). It is
 updated as you go; *Copy link* copies it. For example
 `?s=9RPV&colour=room&site=RACK1+K264&ribosome=stalled&sumo=1` opens the
 collided disome coloured by room for SUMO, with that site selected and a SUMO

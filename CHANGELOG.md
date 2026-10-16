@@ -5,6 +5,16 @@ minor number for new features, the patch number for smaller changes and fixes. T
 say what changed for the person using the viewer. This file is the only place the history is
 written; the Changelog page of the in-page help renders it.
 
+## 0.12 — 2026-10-17
+Any protein from the AlphaFold DB. A box under the *Structure* menu takes a gene name or a
+UniProt accession and shows the predicted model of that human protein alone, with its SUMO2/3
+sites from the same catalogue as the ribosome's (Hendriks et al. 2018, 14,868 sites on 3,981
+proteins), placed on the model by their sequence context. The room for a SUMO at every lysine of
+the model is then computed in your browser — the same placements as in the analysis, in worker
+threads, with a progress bar at the top left; the room colouring and *SUMO at the sites* wait for
+it. The table shows the room beside each site, the detail card says how a site was placed, and
+*Back to the ribosome* returns. The link carries the protein (`p=` and the accession).
+
 ## 0.11.1 — 2026-10-16
 Fix: with a class colouring (room, window, hotspots, …) *strong sites* drew the same as *all with
 room* and showed no slider, because such a colouring has no scale. The threshold now falls back to
