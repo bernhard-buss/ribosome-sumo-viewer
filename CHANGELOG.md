@@ -5,6 +5,15 @@ minor number for new features, the patch number for smaller changes and fixes. T
 say what changed for the person using the viewer. This file is the only place the history is
 written; the Changelog page of the in-page help renders it.
 
+## 0.11 — 2026-10-16
+SUMO at the sites. A control under the colouring draws the SUMO2 core at many sites at once —
+*selected site* (as before), *strong sites* (above a threshold of the colour scale, 50 % by
+default, for the fold-change and Z-score colourings) or *all with room* — each at a placement
+that fits, or where it would sit without what takes the room; sites without a placement get
+none, so what is drawn is what the structure can physically carry. The filters above the table
+restrict the set, the legend entry counts the SUMOs and switches them off and on, the link
+carries the mode (`sumos`). At most 250 are drawn.
+
 ## 0.10 — 2026-10-16
 Heat shock on equal footing. The heat-shock response was in the data from the start (Z-score
 colouring, table column, detail card), but the colourings, the filter, the hotspots and the

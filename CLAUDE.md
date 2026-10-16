@@ -75,6 +75,11 @@
   MolViewSpec `camera` node makes Mol* set the clip radius to ~0.38 × the camera distance, and it
   lands up to a second after `loadMvsData` resolves; `unclip()` on every `camera.stateChanged` keeps
   the radius at the visible scene's radius, so nothing is ever cut.
+- SUMO at the sites (v0.11): `sumos` ("off" / "selected" / "strong" / "all") and `sumoThr`;
+  `sumoSites()` = the selected site plus, in strong/all, the table's visible sites with a placement
+  (`sumoPose`, in free mode `freePose`), strong = above `sumoThr` of the ramp legend's limits
+  (significant sites for mg132/hs), capped at `SUMO_MAX`; `sumoNode(pose)` builds one MVS node per
+  SUMO; legend key `base:SUMO` (label with the count); URL `sumos=`; control `#sumoblock`.
 - Base colours (`meta.base`, from the private config `structures: style: base`): grey rRNA, tan 40S,
   slate 60S — low saturation so that the Tol site colours stand out; the collided ribosome paler.
 - `stats.json` has `kind: "reference"` (five analyses, `renderStats`) or `kind: "state"`

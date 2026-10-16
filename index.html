@@ -37,6 +37,7 @@
   .legend .ticks { display: flex; justify-content: space-between; margin-top: 2px; font-variant-numeric: tabular-nums; }
   .legend .keys { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; }
   .legend .sw { cursor: pointer; } .legend .sw:hover { color: var(--ink); }
+  #sumothr { display: flex; align-items: center; gap: 6px; margin-top: 6px; } #sumothr[hidden] { display: none; } #sumothr input { flex: 1; min-width: 0; }
   .legend .hid { opacity: .45; text-decoration: line-through; } .legend .bar.hid { opacity: .3; }
   .block[hidden] { display: none; }
   .user { display: flex; gap: 10px; align-items: flex-start; font-size: 12.5px; color: var(--muted); }
@@ -204,6 +205,11 @@
       <div class="seg" id="modes"></div>
       <div id="legend" class="legend"></div>
     </div>
+    <div class="block" id="sumoblock" hidden>
+      <h2>SUMO at the sites <a class="hl" href="#help/room/sumos" data-help="room/sumos" title="Help: SUMO at the sites">ⓘ</a></h2>
+      <div class="seg" id="sumomodes"><button data-sumos="off">none</button><button data-sumos="selected">selected site</button><button data-sumos="strong">strong sites</button><button data-sumos="all">all with room</button></div>
+      <label id="sumothr" class="note" hidden><input type="range" id="sumothrin" min="0" max="100" step="5" value="50" aria-label="Threshold"> above <span id="sumothrv">50</span> % of the colour scale</label>
+    </div>
     <div class="block" id="protblock" hidden>
       <h2>Colour the proteins by <a class="hl" href="#help/colour/proteins" data-help="colour/proteins" title="Help: protein colouring">ⓘ</a></h2>
       <select id="pmodes" aria-label="Colour the proteins by"></select>
@@ -306,6 +312,7 @@
               <tr><td>selected site, and a SUMO drawn at it</td><td><code>site</code> (and <code>ribosome</code> in the disome), <code>sumo</code></td></tr>
               <tr><td>the free protein of the selected site shown, coloured by confidence</td><td><code>free</code>, <code>plddt</code></td></tr>
               <tr><td>legend entries switched off</td><td><code>hide</code></td></tr>
+              <tr><td>SUMO at the sites: mode and threshold</td><td><code>sumos</code> (<code>off</code>, <code>strong:50</code>, <code>all</code>)</td></tr>
               <tr><td>the view: a standard view, or the camera exactly as you turned and zoomed it; the focus on the selected site</td><td><code>view</code>, or <code>cam</code> (position, target and up direction); <code>focus</code></td></tr>
               <tr><td>an open Help entry or the Statistics window</td><td>the part after <code>#</code></td></tr></table>
             <p>What is at its default is left out, so the link of the opening view is the bare address. A camera move is written a moment after it has come to rest.</p>
@@ -444,6 +451,8 @@
           <article data-entry="taken"><h3>What takes the room away</h3>
             <p>The same placements are tested four times, each time with less of the structure: as it is; without the partners (factors, tRNA, mRNA); without the other ribosome of a disome; and on the lysine's own subunit alone. Each step can only add room, so the four shares in the detail card never decrease from one to the next; where a share does not change, the thing removed was not in the way, and the card leaves it out. When a site has no room in the structure as it is and gains room once something is taken away, that something is named: <i>room taken by its partners</i>, <i>by the other ribosome</i>, <i>by the other subunit</i>. If more than one is in the way, the first of these in that order whose removal gives room is named. A site that has no room even on its own subunit is enclosed by its own subunit, and nothing is named. The third menu above the table filters by it.</p>
             <p>A site whose room the other subunit takes can carry SUMO on a free subunit but not in the assembled ribosome: a SUMO there stands in the way of the subunits joining, or has to be removed first. The same holds for the factor or the neighbouring ribosome.</p></article>
+          <article data-entry="sumos"><h3>SUMO at the sites</h3>
+            <p>The control <i>SUMO at the sites</i> under the colouring draws the SUMO2 core at many sites at once, each at a placement that fits (or, where the room is taken, where it would sit without what takes it); a site without any placement gets none, so what is drawn is what the structure can physically carry. <i>Selected site</i> is the default: a SUMO only where the detail card asked for one. <i>All with room</i> draws one at every site the table shows that has a placement, so the filters above the table restrict it. <i>Strong sites</i> keeps, for the fold-change and Z-score colourings, the sites above a threshold of the colour scale — the slider, 50 % by default: for MG132 and heat shock a log2 fold change of 4 among the significant sites, for a Z-score a value above 0 — as the sites most likely to carry the modification; for a class colouring there is no scale and it draws the same as <i>all with room</i>. At most <span data-s="sumo_max"></span> SUMOs are drawn, the strongest first. The legend entry counts them and, as every legend entry, hides and shows them. The link carries the mode (<code>sumos</code>).</p></article>
           <article data-entry="show"><h3>Showing a SUMO</h3>
             <p>In the detail card of a site with a possible placement, <i>Show a SUMO here</i> draws the core of SUMO2 in green at one of the placements that fit, one from the middle of the possible directions. It is an example, not a prediction: with <span data-n="sites"></span> sites and thousands of possible placements each, the picture shows where a SUMO can be, not where it is. The tether is not drawn, so the SUMO sits up to <span data-s="fit.tether.1"></span> Å from the lysine.</p>
             <p>For a site whose room is taken, the button draws the SUMO where it would sit without what is in its way; it then overlaps that partner, ribosome or subunit in the picture. One SUMO is drawn at a time; choosing another structure removes it.</p></article>
@@ -612,7 +621,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/molstar@5.12.0/build/viewer/molstar.js"></script>
 <script>
-const VERSION = "0.10";
+const VERSION = "0.11";
 const VIEW_LABELS = { "40S_solvent": "40S solvent side", "60S_solvent": "60S solvent side", "mRNA_entry": "mRNA entry side",
                       "mRNA_exit": "mRNA exit side", "top": "top", "bottom": "bottom",
                       "side_40S": "40S side", "side_60S": "60S side", "across_1": "edge-on, first side", "across_2": "edge-on, second side",
@@ -645,8 +654,34 @@ const freeData = new Map();   // accession -> data/free/<accession>.json
 const PLDDT_BANDS = [["very high", 90], ["confident", 70], ["low", 50], ["very low", -1]];
 const plddtBand = v => v == null ? null : PLDDT_BANDS.find(([, lo]) => v >= lo)[0];
 let sumoAt = null;        // key (label|particle) of the site at which a SUMO is drawn, or null
+let sumos = "selected", sumoThr = 0.5;   // SUMO at the sites: off / selected / strong (above sumoThr of the colour scale) / all with a placement
+const SUMO_MAX = 250;     // SUMOs drawn at most
 const sumoPose = s => s.room_taken_by && s.pose_without ? s.pose_without : s.pose;   // where it would sit without what is in its way, else a placement that fits
 const modelPos = s => s.free_position != null ? s.free_position : s.position;   // the site's residue in the AlphaFold model (the catalogue numbers RPL7L1 differently)
+// The sites a SUMO is drawn at: the selected site, and in the modes "strong" and "all" the
+// sites the table shows that have a placement — for a fold-change or Z-score colouring "strong"
+// keeps those above the threshold of the colour scale (MG132 / heat shock: significant and above
+// it); a class colouring has no scale, so the filter menu does the restricting.
+function sumoSites() {
+  if (!meta || !meta.sumo || sumos === "off") return [];
+  const pose = freeOf ? freePose : sumoPose;
+  const picked = sumoAt != null ? sites.filter(x => siteKey(x) === sumoAt && pose(x)) : [];
+  if (sumos === "selected") return picked;
+  const L = currentLegend(); let pool = visibleSites().filter(s => pose(s) && !siteHidden(s, L));
+  if (sumos === "strong" && L && L.kind === "ramp") {
+    const [lo, hi] = L.limits, cut = lo + sumoThr * (hi - lo);
+    const v = s => siteMode === "mg132" ? (s.sig_mg132 ? s.lfc_mg132 : null) : siteMode === "hs" ? (s.sig_hs ? s.lfc_hs : null) : s[siteMode];
+    pool = pool.filter(s => v(s) != null && v(s) >= cut).sort((a, b) => v(b) - v(a));
+  }
+  const seen = new Set(picked.map(siteKey));
+  for (const s of pool) if (!seen.has(siteKey(s))) { seen.add(siteKey(s)); picked.push(s); }
+  return picked.slice(0, SUMO_MAX);
+}
+const sumoNode = pose => {               // the SUMO2 core at a stored placement (rotation stored row by row, wanted column by column)
+  const v = pose.split(" ").map(Number), node = structuredClone(meta.sumo.node), tf = [...walk(node)].find(n => n.kind === "transform");
+  tf.params.rotation = [v[0], v[3], v[6], v[1], v[4], v[7], v[2], v[5], v[8]]; tf.params.translation = [v[9], v[10], v[11]];
+  return node;
+};
 const freePose = s => { const d = freeOf === s.protein && freeData.get(freeOf), l = d && d.lysines.find(l => l.position === modelPos(s)); return l ? l.pose : null; };
 const siteKey = s => s.label + "|" + (s.particle ?? "");
 const pct1 = v => v == null ? "–" : (100 * v).toFixed(v < 0.0995 ? 1 : 0) + " %";
@@ -763,12 +798,7 @@ function buildFreeScene(data, camera) {
   const structure = { kind: "structure", params: { type: "model" }, children: [showProtein && protein, own.length && sitesComp].filter(Boolean) };
   const root = { kind: "root", children: [{ kind: "canvas", params: { background_color: "white" } },
     { kind: "download", params: { url: data.url }, children: [{ kind: "parse", params: { format: "bcif" }, children: [structure] }] }] };
-  const sel = sumoAt != null && !hidden.has("base:SUMO placed at the selected site") && sites.find(x => siteKey(x) === sumoAt), lys = sel && sel.protein === data.accession && data.lysines.find(l => l.position === modelPos(sel));
-  if (lys && lys.pose && meta.sumo) {
-    const v = lys.pose.split(" ").map(Number), node = structuredClone(meta.sumo.node), tf = [...walk(node)].find(n => n.kind === "transform");
-    tf.params.rotation = [v[0], v[3], v[6], v[1], v[4], v[7], v[2], v[5], v[8]]; tf.params.translation = [v[9], v[10], v[11]];
-    root.children.push(node);
-  }
+  if (!hidden.has("base:SUMO")) for (const s of sumoSites()) root.children.push(sumoNode(freePose(s)));
   if (camera) { const f = camFactor(), t = camera.target; root.children.push({ kind: "camera", params: { target: t, up: camera.up, position: camera.position.map((v, i) => t[i] + (v - t[i]) / f) } }); }
   return { kind: "single", root, metadata: { version: template.metadata ? template.metadata.version : "1", title: `Free ${data.gene || data.accession} (AlphaFold DB model)` } };
 }
@@ -792,14 +822,7 @@ function buildScene(camera) {
     siteRep.children = siteRep.children.filter(n => n !== fromUri).concat(colourNodes(
       [...user.site].map(([k, row]) => [{ label_asym_id: k.split(":")[0], label_seq_id: +k.split(":")[1] }, sc2.colourOf(row[col])])));
   } else fromUri.params.field_name = "color_" + siteMode;
-  const ss = sumoAt != null && meta.sumo && !hidden.has("base:SUMO placed at the selected site") && sites.find(x => siteKey(x) === sumoAt);
-  if (ss && sumoPose(ss)) {                              // a SUMO at the chosen site: the stored placement as a transform
-    const v = sumoPose(ss).split(" ").map(Number), node = structuredClone(meta.sumo.node);
-    const tf = [...walk(node)].find(n => n.kind === "transform");
-    tf.params.rotation = [v[0], v[3], v[6], v[1], v[4], v[7], v[2], v[5], v[8]];     // stored row by row, wanted column by column
-    tf.params.translation = [v[9], v[10], v[11]];
-    sc.root.children.push(node);
-  }
+  if (!hidden.has("base:SUMO")) for (const s of sumoSites()) sc.root.children.push(sumoNode(sumoPose(s)));   // a SUMO at each chosen site
   if (protMode.startsWith("user:")) {
     const col = protMode.slice(5), sc2 = user.scales.protein[col];
     const own = new Set(meta.chains.filter(c => c.role === "rp").map(c => c.label_asym));
@@ -831,6 +854,7 @@ function legendHtml(L, withBase) {
   let h = `<div>${esc(L.title)}</div>`;
   const keys = Object.entries(Object.assign({}, L.kind === "key" ? L.colours : {}, L.extra || {})).filter(([, c]) => c);
   const sitePrefix = withBase && !siteMode.startsWith("user:") ? `site:${siteMode}` : null;
+  const nSumo = withBase && meta.sumo ? sumoSites().length : 0, sumoLabel = { SUMO: `SUMO placed at ${nSumo === 1 ? "the selected site" : nSumo + " sites"}${nSumo >= SUMO_MAX ? " (the first " + SUMO_MAX + ")" : ""}` };
   const sw = key => key ? ` data-key="${esc(key)}" class="sw${hidden.has(key) ? " hid" : ""}" title="Click to hide or show"` : "";
   if (L.kind === "ramp") {
     const [lo, hi] = L.limits, mid = +((lo + hi) / 2).toPrecision(3), key = sitePrefix ? sitePrefix + ":ramp" : null;
@@ -841,12 +865,12 @@ function legendHtml(L, withBase) {
   const base = (withBase ? [["rRNA", meta.base.rRNA], bySub && has("40S") && ["40S proteins", meta.base.prot_40S], bySub && has("60S") && ["60S proteins", meta.base.prot_60S]].filter(Boolean) : [])
     .concat(withBase && bySub && meta.base_other ? [[`${meta.particles[0]} ribosome (paler)`, meta.base_other.prot_60S]] : [])
     .concat(withBase && showPartners ? meta.partners.map(q => [q.label, q.colour]) : [])
-    .concat(withBase && sumoAt != null && meta.sumo ? [["SUMO placed at the selected site", meta.sumo.colour]] : []);
-  const row = (list, prefix) => list.length ? `<div class="keys">` + list.map(([k, c]) => `<span${sw(prefix ? `${prefix}:${k}` : null)}><span class="dot" style="background:${c}"></span>${esc((L.labels || {})[k] || k)}</span>`).join("") + `</div>` : "";
+    .concat(nSumo ? [["SUMO", meta.sumo.colour]] : []);
+  const row = (list, prefix, labels = Object.assign({}, L.labels || {}, sumoLabel)) => list.length ? `<div class="keys">` + list.map(([k, c]) => `<span${sw(prefix ? `${prefix}:${k}` : null)}><span class="dot" style="background:${c}"></span>${esc(labels[k] || k)}</span>`).join("") + `</div>` : "";
   if (freeOf && withBase) {                             // the free protein: its tint or its confidence bands
     const tint = (meta.chains.find(c => c.protein === freeOf) || {}).subunit === "40S" ? meta.base.prot_40S : meta.base.prot_60S;
     const pl = plddtOn ? PLDDT_BANDS.map(([b, lo], i) => [`pLDDT ${b}${i === 0 ? " (≥ 90)" : i === 3 ? " (< 50)" : ` (${lo}–${PLDDT_BANDS[i - 1][1]})`}`, FREE.style[b]]) : [["free protein (AlphaFold model)", tint]];
-    return h + row(keys, sitePrefix) + row(pl, plddtOn ? null : "base") + row(sumoAt != null && meta.sumo ? [["SUMO placed at the selected site", meta.sumo.colour]] : [], "base");
+    return h + row(keys, sitePrefix) + row(pl, plddtOn ? null : "base") + row(nSumo ? [["SUMO", meta.sumo.colour]] : [], "base");
   }
   return h + row(keys, sitePrefix) + row(base, withBase ? "base" : null);       // the site colours, then what the particle itself is drawn in
 }
@@ -859,6 +883,9 @@ function renderControls() {
     (siteCols.length ? `<span class="grp">Your data</span>` + siteCols.map(c => btn(["user:" + c.name, c.name])).join("") : "");
   const sl = siteMode.startsWith("user:") ? user.scales.site[siteMode.slice(5)].legend : meta.modes.find(m => m.id === siteMode).legend;
   $("legend").innerHTML = legendHtml(sl, true);
+  $("sumoblock").hidden = !meta.sumo;
+  for (const b of $("sumomodes").querySelectorAll("button")) b.setAttribute("aria-pressed", String(b.dataset.sumos === sumos));
+  $("sumothr").hidden = !(sumos === "strong" && sl && sl.kind === "ramp"); $("sumothrin").value = Math.round(100 * sumoThr); $("sumothrv").textContent = Math.round(100 * sumoThr);
   const st = siteMode.startsWith("user:") ? "colour/user" : siteMode.startsWith("z_") ? "colour/z" : "colour/" + siteMode;
   $("partnerswrap").hidden = !meta.partners.length;
   $("partnerslabel").textContent = "Show " + meta.partners.map(q => q.label).join(", ").replace(/, ([^,]*)$/, " and $1");
@@ -1329,7 +1356,7 @@ async function showFree(acc) {
 }
 function toggleSumo() {                                // draw (or remove) a SUMO at the selected site
   const s = sites[selected]; if (!s) return;
-  sumoAt = sumoAt === siteKey(s) ? null : siteKey(s);
+  sumoAt = sumoAt === siteKey(s) ? null : siteKey(s); if (sumoAt && sumos === "off") sumos = "selected";
   renderDetail(s); syncUrl(); applyScene(true);
 }
 function revealRow(i) {                 // scroll the table, not the page, so that the structure stays where it is on a narrow screen
@@ -1707,6 +1734,7 @@ function fillHelpNumbers() {
   for (const el of help.querySelectorAll("[data-env]")) el.style.background = envCol[el.dataset.env];
   for (const el of help.querySelectorAll("[data-s]")) {
     const v = el.dataset.s === "partner_near" ? PARTNER_NEAR : el.dataset.s.startsWith("fit.") ? el.dataset.s.slice(4).split(".").reduce((o, k) => o == null ? o : o[k], FIT)
+            : el.dataset.s === "sumo_max" ? SUMO_MAX
             : el.dataset.s.startsWith("free.") ? el.dataset.s.slice(5).split(".").reduce((o, k) => o == null ? o : o[k], FREE)
             : el.dataset.s.split(".").reduce((o, k) => o == null ? o : o[k], refStats);
     el.textContent = typeof v === "number" && el.dataset.fmt === "n" ? v.toLocaleString("en") : typeof v === "number" && el.dataset.fmt === "pct" ? pctS(v)
@@ -1756,7 +1784,7 @@ const SORT_KEYS = ["label", "region", "environment", "lfc_mg132", "q_mg132", "z_
 let urlReady = false, lastCam = null, syncTimer = null, camBusy = false;   // camBusy: a structure is loading, the camera is not its own yet
 function readUrlState() {
   const p = new URLSearchParams(location.search), cam = (p.get("cam") || "").split(",").map(Number);
-  const st = {}; for (const k of ["s", "colour", "partners", "q", "region", "env", "filter", "sig", "sort", "site", "ribosome", "sumo", "view", "free", "plddt", "focus", "hide"]) st[k] = p.get(k);
+  const st = {}; for (const k of ["s", "colour", "partners", "q", "region", "env", "filter", "sig", "sort", "site", "ribosome", "sumo", "view", "free", "plddt", "focus", "hide", "sumos"]) st[k] = p.get(k);
   st.cam = cam.length === 9 && cam.every(Number.isFinite) ? cam : null;
   return st;
 }
@@ -1792,6 +1820,7 @@ function stateQuery() {
   if (freeOf) { put("free", "1"); if (plddtOn) put("plddt", "1"); }
   else { const c = cameraParam(); if (c) put(c[0], c[1]); }
   if (hidden.size) put("hide", [...hidden].join(","));
+  if (sumos !== "selected") put("sumos", sumos === "strong" ? `strong:${Math.round(100 * sumoThr)}` : sumos);
   return out.length ? "?" + out.join("&") : "";
 }
 function syncUrl() {                                   // the open window (#help…, #stats) stays in the address
@@ -1832,6 +1861,7 @@ async function loadStructure_(id, opts = {}) {
   if (st) {
     if (st.colour) siteMode = st.colour;
     hidden = new Set((st.hide || "").split(",").filter(Boolean));
+    if (st.sumos) { const [m, t] = st.sumos.split(":"); if (["off", "selected", "strong", "all"].includes(m)) sumos = m; if (t && isFinite(+t)) sumoThr = Math.min(1, Math.max(0, +t / 100)); }
     showPartners = st.partners !== "off"; $("partners").checked = showPartners;
     const m = /^(-?)(\w+)$/.exec(st.sort || ""); if (m && SORT_KEYS.includes(m[2])) sort = { k: m[2], dir: m[1] ? -1 : 1 };
   }
@@ -1902,6 +1932,9 @@ async function main() {
   await loadStructure(st.s || refId(), { state: st, onData: () => { if (deep.startsWith("#help")) openHelp(deep.slice(6)); else if (deep === "#stats") openStats(); } });
 
   // a camera move ends up in the address once it has come to rest
+  $("sumomodes").addEventListener("click", e => { const b = e.target.closest("button[data-sumos]"); if (!b) return; sumos = b.dataset.sumos; renderControls(); syncUrl(); applyScene(true); });
+  $("sumothrin").addEventListener("input", e => { sumoThr = +e.target.value / 100; $("sumothrv").textContent = e.target.value; });
+  $("sumothrin").addEventListener("change", () => { renderControls(); syncUrl(); applyScene(true); });
   $("legend").addEventListener("click", e => {          // a legend entry is a switch
     const el = e.target.closest("[data-key]"); if (!el) return;
     const k = el.dataset.key; if (hidden.has(k)) hidden.delete(k); else hidden.add(k);

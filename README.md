@@ -52,6 +52,13 @@ at one of the placements that fit. The model is checked on a crystal structure
 of a SUMO2 conjugate ([3UIO](https://www.rcsb.org/structure/3UIO)); the help
 topic *Room for SUMO* has the method and its limits.
 
+## SUMO at the sites
+
+Besides a SUMO at the selected site, the viewer can draw the SUMO2 core at
+every shown site that has a placement, or only at the strong sites — those
+above a threshold of the colour scale — so that the sites most likely to carry
+the modification are seen with it, where the structure can physically hold it.
+
 ## Sharing a view
 
 The address of the page holds what is shown: structure, colouring, hidden
