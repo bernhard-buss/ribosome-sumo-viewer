@@ -981,6 +981,29 @@
    }
   },
   {
+   "id": "hs",
+   "label": "Heat shock fold change",
+   "group": "Response",
+   "legend": {
+    "kind": "ramp",
+    "title": "log2 fold change, heat shock vs control (sites with q < 0.05)",
+    "ramp": [
+     "#F3E6B3",
+     "#DDCC77",
+     "#CC6677",
+     "#AA4499",
+     "#332288"
+    ],
+    "limits": [
+     0,
+     8
+    ],
+    "extra": {
+     "not significant": "#7A7A7A"
+    }
+   }
+  },
+  {
    "id": "z_mg132",
    "label": "Z-score, MG132",
    "group": "Response",
@@ -1161,6 +1184,23 @@
      "H6": "#117733",
      "H7": "#88CCEE",
      "H8": "#999933"
+    },
+    "extra": {
+     "not in a hotspot": "#7A7A7A"
+    }
+   }
+  },
+  {
+   "id": "hotspot_hs",
+   "label": "Hotspots, heat shock",
+   "group": "Position",
+   "legend": {
+    "kind": "key",
+    "title": "Hotspots of heat-shock-responsive sites (defined on the mature 80S)",
+    "colours": {
+     "HS1": "#CC6677",
+     "HS2": "#332288",
+     "HS3": "#44AA99"
     },
     "extra": {
      "not in a hotspot": "#7A7A7A"

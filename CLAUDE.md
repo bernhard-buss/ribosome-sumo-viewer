@@ -58,6 +58,11 @@
   `window:assembly`, `windowHtml(site)` for the detail chips, `windowSection()` in the reference
   stats (`stats.window`: by_class, response, assembly, counts, candidates), Show kinds `window:<id>`
   and `site:<label>`. Help topic `window`.
+- Heat shock (v0.10): sites carry `lfc_hs`, `q_hs`, `sig_hs`, `z_hs`, `hotspot_hs`; modes `hs` (ramp, like
+  `mg132`) and `hotspot_hs`; the significance filter `#fsig` is a select (`""`, `mg132`, `hs`, `either`,
+  `both`; URL `sig=`, legacy `1` = mg132); reference stats carry `hotspots_hs`, `background.responsive_hs`,
+  heat rows in `access` (comparison "heat-shock-responsive vs non-responsive SUMO sites"), `regions`
+  (`responsive_hs`, `median_lfc_hs`), `clustering`, `room.tests`, `free.tests`; Show kind `hotspot_hs:<id>`.
 - Base colours (`meta.base`, from the private config `structures: style: base`): grey rRNA, tan 40S,
   slate 60S — low saturation so that the Tol site colours stand out; the collided ribosome paler.
 - `stats.json` has `kind: "reference"` (five analyses, `renderStats`) or `kind: "state"`

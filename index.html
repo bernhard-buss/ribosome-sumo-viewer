@@ -226,7 +226,7 @@
         <select id="fregion" aria-label="Region"></select>
         <select id="fenv" aria-label="Environment"><option value="">any environment</option><option>exposed</option><option>rRNA contact</option><option>buried</option><option>not modelled</option></select>
         <select id="fmore" aria-label="Further filter"></select>
-        <label><input type="checkbox" id="fsig"> MG132 q &lt; 0.05</label>
+        <select id="fsig" aria-label="Significance"><option value="">any significance</option><option value="mg132">MG132 q &lt; 0.05</option><option value="hs">heat shock q &lt; 0.05</option><option value="either">either q &lt; 0.05</option><option value="both">both q &lt; 0.05</option></select>
         <span id="count"></span><a class="hl" href="#help/table/filters" data-help="table/filters" title="Help: filtering and sorting the site table">ⓘ</a>
       </div>
     </div>
@@ -299,7 +299,7 @@
             <table class="htable"><tr><th>In the link</th><th>Parameter</th></tr>
               <tr><td>structure</td><td><code>s</code>, the PDB code</td></tr>
               <tr><td>colouring of the sites; partners hidden</td><td><code>colour</code>, <code>partners=off</code></td></tr>
-              <tr><td>search text, region, environment, third menu, MG132 checkbox</td><td><code>q</code>, <code>region</code>, <code>env</code>, <code>filter</code>, <code>sig</code></td></tr>
+              <tr><td>search text, region, environment, third menu, significance switch</td><td><code>q</code>, <code>region</code>, <code>env</code>, <code>filter</code>, <code>sig</code> (<code>mg132</code>, <code>hs</code>, <code>either</code>, <code>both</code>)</td></tr>
               <tr><td>sorting of the table</td><td><code>sort</code>, with a minus sign for descending</td></tr>
               <tr><td>selected site, and a SUMO drawn at it</td><td><code>site</code> (and <code>ribosome</code> in the disome), <code>sumo</code></td></tr>
               <tr><td>the free protein of the selected site shown, coloured by confidence</td><td><code>free</code>, <code>plddt</code></td></tr>
@@ -374,6 +374,8 @@
           <article data-entry="mg132"><h3>MG132 fold change</h3>
             <p>The change of SUMO2/3 modification of the site after proteasome inhibition with MG132, as log2 fold change against control (HEK293 cells; Hendriks et al. 2018). A value of 3 is an 8-fold increase.</p>
             <p>Only sites with q &lt; 0.05 are coloured, from pale sand (small change) through rose to dark indigo (large change). The scale runs from 0 to 8; larger values are shown in the colour for 8. Sites that do not change significantly are dark grey. <span data-n="sig"></span> of the <span data-n="sites"></span> sites change significantly, and every one of them increases.</p></article>
+          <article data-entry="hs"><h3>Heat shock fold change</h3>
+            <p>The same as the MG132 colouring for heat shock: the log2 fold change of the site's SUMO2/3 modification after heat shock against control (Hendriks et al. 2018), on the same scale from 0 to 8, for sites with q &lt; 0.05 only; sites that do not change significantly are dark grey. <span data-n="sig_hs"></span> of the <span data-n="sites"></span> sites change significantly under heat shock. A few significant sites decrease under heat shock; they take the colour of the low end of the scale, and the detail card gives their value.</p></article>
           <article data-entry="z"><h3>Z-score in control, MG132 or heat shock</h3>
             <p>The Z-score places a site's SUMOylation in one condition relative to the same site in the other conditions: 0 is the site's mean across control, MG132 and heat shock, positive values (rose) are above it, negative values (indigo) below, in units of the site's standard deviation. Values are those of the published data set; the scale runs from −1.5 to 1.5.</p>
             <p>Switching between the three Z-score colourings shows the same sites under each condition: nearly all are low in control and rise with MG132; a subset rises with heat shock. A Z-score compares conditions within one site. It does not compare one site with another; the fold change does.</p>
@@ -393,7 +395,7 @@
           <article data-entry="region"><h3>Region</h3>
             <p>Colours each site by the part of the ribosome it lies in: 40S head, 40S body, the central protuberance of the 60S, or the 60S body. How the regions are drawn is described under <a data-help="stats/regions" href="#help/stats/regions">Regions</a>.</p></article>
           <article data-entry="hotspot"><h3>Hotspots</h3>
-            <p>Shows the groups of MG132-responsive sites that lie close together, each group in its own colour; all other sites are dark grey. A hotspot is a description of where the modification is dense, not a tested unit: see <a data-help="stats/hotspots" href="#help/stats/hotspots">Hotspots</a>. The hotspots are defined on the mature 80S and keep their number and colour in every structure.</p></article>
+            <p>Shows the groups of MG132-responsive sites that lie close together, each group in its own colour; all other sites are dark grey. <i>Hotspots, heat shock</i> does the same for the heat-shock-responsive sites (groups HS1, HS2, …), with the same rule and the same colours by rank. A hotspot is a description of where the modification is dense, not a tested unit: see <a data-help="stats/hotspots" href="#help/stats/hotspots">Hotspots</a>. The hotspots are defined on the mature 80S and keep their number and colour in every structure.</p></article>
           <article data-entry="comod"><h3>Other modifications</h3>
             <p>Marks the sites whose lysine UniProt also records as carrying another modification: ubiquitin, an acetyl or a succinyl group. A site with several is shown in the colour of the first of these that applies; the detail card lists all of them. Sites without such a record are dark grey. See <a data-help="stats/comod" href="#help/stats/comod">Other modifications</a>.</p></article>
           <article data-entry="significance"><h3>q-values and significance</h3>
@@ -490,7 +492,7 @@
               <tr><td>Z MG132, Z heat</td><td>Z-scores of the modification in MG132 and in heat shock (the Z-score in control is in the details)</td></tr>
               <tr><td><i>your column</i></td><td>after a table is loaded: the value of the column that is shown in the structure, for the site or, failing that, for its protein</td></tr></table></article>
           <article data-entry="filters"><h3>Filtering and sorting</h3>
-            <p>The search box keeps the sites whose name contains the text (<code>RPS3</code>, <code>RACK1 K2</code>). The first menu restricts to a subunit or one of its regions, the second to one environment, the third to sites in a hotspot (any, or one in particular), at the subunit interface, near a partner, on one ribosome of the disome, by room for SUMO or by what takes that room, changed against the mature 80S, or with another modification recorded; it offers what applies to the structure shown. The checkbox keeps the sites that change significantly with MG132. The counter shows how many sites remain.</p>
+            <p>The search box keeps the sites whose name contains the text (<code>RPS3</code>, <code>RACK1 K2</code>). The first menu restricts to a subunit or one of its regions, the second to one environment, the third to sites in an MG132 or a heat-shock hotspot (any, or one in particular), at the subunit interface, near a partner, on one ribosome of the disome, by room for SUMO or by what takes that room, changed against the mature 80S, or with another modification recorded; it offers what applies to the structure shown. The significance switch keeps the sites that change significantly (q &lt; 0.05) with MG132, with heat shock, with either, or with both. The counter shows how many sites remain.</p>
             <p>The <i>Show</i> buttons of the Statistics window set these filters and the matching colouring for you.</p>
             <p>Click a column header to sort by it; click again to reverse. Number columns start with the largest value.</p></article>
           <article data-entry="select"><h3>Selecting a site</h3>
@@ -605,7 +607,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/molstar@5.12.0/build/viewer/molstar.js"></script>
 <script>
-const VERSION = "0.9";
+const VERSION = "0.10";
 const VIEW_LABELS = { "40S_solvent": "40S solvent side", "60S_solvent": "60S solvent side", "mRNA_entry": "mRNA entry side",
                       "mRNA_exit": "mRNA exit side", "top": "top", "bottom": "bottom",
                       "side_40S": "40S side", "side_60S": "60S side", "across_1": "edge-on, first side", "across_2": "edge-on, second side",
@@ -693,9 +695,10 @@ function siteColour(s) {
   if (siteMode.startsWith("user:")) { const col = siteMode.slice(5), row = user && user.site.get(s.label_asym + ":" + s.label_seq); return row && row[col] != null ? user.scales.site[col].colourOf(row[col]) : UNSET; }
   const m = meta.modes.find(x => x.id === siteMode); if (!m) return UNSET;
   const L = m.legend, key = { environment: "environment", environment_ref: "environment_ref", region: "region", partner: "near_partner", room: "room",
-                              room_free: "room_free", hotspot: "hotspot", comod: "other_mod_class" }[siteMode];
+                              room_free: "room_free", hotspot: "hotspot", hotspot_hs: "hotspot_hs", comod: "other_mod_class" }[siteMode];
   if (siteMode === "window") { const c = WINDOW && WINDOW.classes.find(c => c.id === s.window); return (c && L.colours[c.label]) || UNSET; }
   if (siteMode === "mg132") return s.sig_mg132 && s.lfc_mg132 != null ? rampColour(s.lfc_mg132, L.ramp, L.limits) : UNSET;
+  if (siteMode === "hs") return s.sig_hs && s.lfc_hs != null ? rampColour(s.lfc_hs, L.ramp, L.limits) : UNSET;
   if (siteMode.startsWith("z_")) { const v = s[siteMode]; return v == null ? UNSET : rampColour(v, L.ramp, L.limits); }
   return (key && L.colours && L.colours[s[key]]) || UNSET;
 }
@@ -1128,8 +1131,10 @@ async function initInteraction() {
 }
 
 function visibleSites() {
-  const q = $("q").value.trim().toUpperCase(), reg = $("fregion").value, env = $("fenv").value, sig = $("fsig").checked, more = $("fmore").value;
+  const q = $("q").value.trim().toUpperCase(), reg = $("fregion").value, env = $("fenv").value, sig = $("fsig").value, more = $("fmore").value;
+  const sigOk = s => !sig || (sig === "mg132" ? s.sig_mg132 : sig === "hs" ? s.sig_hs : sig === "either" ? (s.sig_mg132 || s.sig_hs) : (s.sig_mg132 && s.sig_hs));
   const extra = s => !more ? true : more === "hotspot" ? s.hotspot != null : more.startsWith("hotspot:") ? s.hotspot === more.slice(8)
+                   : more === "hotspot_hs" ? s.hotspot_hs != null : more.startsWith("hotspot_hs:") ? s.hotspot_hs === more.slice(11)
                    : more === "interface" ? s.interface === true : more === "comod" ? s.other_mods != null
                    : more.startsWith("comod:") ? (s.other_mods || "").split(", ").includes(more.slice(6))
                    : more === "near" ? s.near_partner != null : more.startsWith("near:") ? s.near_partner === more.slice(5)
@@ -1140,7 +1145,7 @@ function visibleSites() {
                    : more === "window:assembly" ? ["free_only", "precursor_only", "subunit_only"].includes(s.window)
                    : more.startsWith("window:") ? s.window === more.slice(7) : true;
   const rows = sites.filter(s => (!q || s.label.toUpperCase().includes(q)) && (!reg || s.subunit === reg || s.region === reg) &&
-                                 (!env || s.environment === env) && (!sig || s.sig_mg132) && extra(s));
+                                 (!env || s.environment === env) && sigOk(s) && extra(s));
   const k = sort.k, uc = userCol();
   rows.sort((a, b) => {
     let x = k === "user" ? userValue(a, uc) : a[k], y = k === "user" ? userValue(b, uc) : b[k];
@@ -1175,7 +1180,8 @@ function renderDetail(s) {
     ["Environment", esc(s.environment) + (s.sasa_nz_complex != null ? ` · NZ surface ${fmt(s.sasa_nz_complex)} Å² in this structure, ${fmt(s.sasa_nz_free)} Å² in the free protein` : "")],
     ["Nearest rRNA", s.dist_rna != null ? `${fmt(s.dist_rna)} Å (${esc(s.nearest_rna)})` : "–"],
     ["Region", esc(s.region) + (s.dist_other_subunit != null ? ` · ${fmt(s.dist_other_subunit)} Å from the other subunit${s.interface ? " (subunit interface)" : ""}` : "") +
-               (s.hotspot ? ` · hotspot ${esc(s.hotspot)}${hotspotName(s.hotspot)}` : "")],
+               (s.hotspot ? ` · MG132 hotspot ${esc(s.hotspot)}${hotspotName(s.hotspot)}` : "") +
+               (s.hotspot_hs ? ` · heat-shock hotspot ${esc(s.hotspot_hs)}${hotspotName(s.hotspot_hs, "hotspots_hs")}` : "")],
     ["MG132", `log2 FC ${fmt(s.lfc_mg132)}, q ${fmtQ(s.q_mg132)}${s.sig_mg132 ? "" : " (not significant)"}`],
     ["Heat shock", `log2 FC ${fmt(s.lfc_hs)}, q ${fmtQ(s.q_hs)}${s.sig_hs ? "" : " (not significant)"}`],
     ["Z-scores", `control ${fmt(s.z_ctrl, 2)} · MG132 ${fmt(s.z_mg132, 2)} · heat ${fmt(s.z_hs, 2)}` + (s.quadrant ? ` · ${esc(s.quadrant)}` : "")],
@@ -1274,7 +1280,7 @@ function select(i, focus = true) {
 }
 
 // ---- statistics window: stored results of the analysis (data/stats.json) -----
-const hotspotName = id => { const h = refStats && refStats.hotspots.find(x => x.hotspot === id); return h ? ` (${esc(h.name)})` : ""; };
+const hotspotName = (id, which = "hotspots") => { const h = refStats && (refStats[which] || []).find(x => x.hotspot === id); return h ? ` (${esc(h.name)})` : ""; };
 const pctS = v => v == null ? "–" : (100 * v).toFixed(v < 0.0995 ? 1 : 0) + " %";
 const fmtP = p => p == null ? "–" : p < 0.001 ? p.toExponential(0).replace("e-", "e-").replace(/e-0?/, "e-") : p.toFixed(3);
 const ci = (a, b, d = 2) => `${(+a).toFixed(d)}–${(+b).toFixed(d)}`;
@@ -1288,10 +1294,12 @@ function fillFilterMenus() {
     REGION_ORDER.filter(r => r.startsWith(sub)).filter(present("region")).map(r => `<option value="${r}">· ${r}</option>`).join("")).join("");
   const mods = [...new Set(sites.flatMap(s => (s.other_mods || "").split(", ").filter(Boolean)))].sort();
   const hot = refStats.hotspots.filter(h => sites.some(s => s.hotspot === h.hotspot));
+  const hotHs = (refStats.hotspots_hs || []).filter(h => sites.some(s => s.hotspot_hs === h.hotspot));
   const near = [...new Set(sites.map(s => s.near_partner).filter(Boolean))].sort();
   const notRef = !entry.reference;
   $("fmore").innerHTML = `<option value="">any site</option>` +
-    (hot.length ? `<option value="hotspot">in a hotspot</option>` + hot.map(h => `<option value="hotspot:${h.hotspot}">· ${h.hotspot} ${esc(h.name)}</option>`).join("") : "") +
+    (hot.length ? `<option value="hotspot">in a hotspot (MG132)</option>` + hot.map(h => `<option value="hotspot:${h.hotspot}">· ${h.hotspot} ${esc(h.name)}</option>`).join("") : "") +
+    (hotHs.length ? `<option value="hotspot_hs">in a hotspot (heat shock)</option>` + hotHs.map(h => `<option value="hotspot_hs:${h.hotspot}">· ${h.hotspot} ${esc(h.name)}</option>`).join("") : "") +
     (sites.some(s => s.interface === true) ? `<option value="interface">at the subunit interface</option>` : "") +
     (near.length ? `<option value="near">near a partner</option>` + near.map(k => `<option value="near:${esc(k)}">· near ${k === "factor" ? "a factor" : k === "other ribosome" ? "the other ribosome" : esc(k)}</option>`).join("") : "") +
     (multi() ? meta.particles.slice().reverse().map(q => `<option value="particle:${esc(q)}">on the ${esc(q)} ribosome</option>`).join("") : "") +
@@ -1327,14 +1335,17 @@ function renderStats() {
       <td><span class="mbar"><i style="width:${Math.min(100, 300 * r.share)}%"></i></span>${pctS(r.share)} <span class="dim">(${pctS(r.lo)}–${pctS(r.hi)})</span></td>
       <td class="num">${(+r.odds_ratio).toFixed(2)} (${ci(r.conf_low, r.conf_high)})</td><td class="num">${fmtP(r.q)}</td>
       <td class="num">${r.responsive}</td><td class="num">${r.median_lfc == null ? "–" : (+r.median_lfc).toFixed(1)}</td>
+      <td class="num">${r.responsive_hs == null ? "–" : r.responsive_hs}</td><td class="num">${r.median_lfc_hs == null ? "–" : (+r.median_lfc_hs).toFixed(1)}</td>
       <td>${r.kind === "region" ? `<button data-show="region:${esc(r.region)}">Show</button>` : r.region === "subunit interface" ? `<button data-show="interface">Show</button>` : ""}</td></tr>`;
   const clu = stats.clustering.map(r => `<tr class="${r.p < 0.05 ? "sig" : ""}"><td>${esc(r.set)}</td><td>${esc(r.null)}</td><td>${esc(r.statistic.replace(" A", " Å").replace("(A)", "(Å)"))}</td>
       <td class="num">${(+r.observed).toFixed(r.statistic.startsWith("mean") ? 1 : 0)}</td>
       <td class="num">${(+r.expected).toFixed(1)} <span class="dim">(${(+r.null_lo).toFixed(r.statistic.startsWith("mean") ? 1 : 0)}–${(+r.null_hi).toFixed(r.statistic.startsWith("mean") ? 1 : 0)})</span></td>
       <td class="num">${fmtP(r.p)}</td></tr>`).join("");
-  const hot = stats.hotspots.map(h => `<tr><td><span class="dot" style="background:${h.colour}"></span>${h.hotspot}</td><td>${esc(h.proteins)}</td><td>${esc(h.region)}</td>
+  const hotRows = (list, kind) => list.map(h => `<tr><td><span class="dot" style="background:${h.colour}"></span>${h.hotspot}</td><td>${esc(h.proteins)}</td><td>${esc(h.region)}</td>
       <td class="num">${h.n_sites}</td><td class="num">${h.exposed}</td><td class="num">${(+h.median_lfc).toFixed(1)}</td><td class="num">${(+h.max_lfc).toFixed(1)}</td>
-      <td><button data-show="hotspot:${h.hotspot}">Show</button></td></tr>`).join("");
+      <td><button data-show="${kind}:${h.hotspot}">Show</button></td></tr>`).join("");
+  const hot = hotRows(stats.hotspots, "hotspot"), hotHs = hotRows(stats.hotspots_hs || [], "hotspot_hs");
+  const nHotHs = (stats.hotspots_hs || []).reduce((n, h) => n + h.n_sites, 0);
   const com = stats.comodification.filter(r => r.lysines >= 5).map(r => `<tr class="${r.q < 0.05 ? "sig" : ""}"><td>${esc(r.modifier)}</td><td class="num">${r.lysines}</td><td class="num">${r.sumo_sites}</td>
       <td><span class="mbar"><i style="width:${100 * r.share_of_modifier}%"></i></span>${pctS(r.share_of_modifier)}</td>
       <td><span class="mbar other"><i style="width:${100 * r.share_of_other_lysines}%"></i></span>${pctS(r.share_of_other_lysines)}</td>
@@ -1348,19 +1359,23 @@ function renderStats() {
     ${accessTable("SUMO sites vs other lysines of the same proteins")}
     <details class="smore"><summary>The same questions for the MG132-responsive sites against the sites that do not respond</summary>
     ${accessTable("MG132-responsive vs non-responsive SUMO sites")}</details>
+    ${stats.access.some(r => r.comparison === "heat-shock-responsive vs non-responsive SUMO sites") ? `<details class="smore"><summary>… and for the heat-shock-responsive sites against the sites that do not respond</summary>
+    ${accessTable("heat-shock-responsive vs non-responsive SUMO sites")}</details>` : ""}
     <h3 id="s-regions">Subunits and regions ${sinfo("regions")}</h3>
-    <p class="lead">Where on the ribosome are lysines modified, and where is the MG132 response largest? Tinted rows: q &lt; 0.05.</p>
+    <p class="lead">Where on the ribosome are lysines modified, and where is the response largest? Tinted rows: q &lt; 0.05.</p>
     <table class="stable"><tr><th>Quantity</th><th class="num">40S</th><th class="num">60S</th><th>Test</th><th class="num">p</th></tr>${sub}</table>
     <table class="stable"><tr><th>Region</th><th class="num">Sites / lysines</th><th>Lysines that are sites (95 % interval)</th><th class="num">Odds ratio vs the rest</th><th class="num">q</th>
-      <th class="num">Responsive sites</th><th class="num">Median log2 FC</th><th></th></tr>
+      <th class="num">MG132-responsive</th><th class="num">Median log2 FC</th><th class="num">Heat-responsive</th><th class="num">Median log2 FC</th><th></th></tr>
       ${stats.regions.map(regRow).join("")}</table>
     <p>${stats.region_tests.map(t => `${esc(t.question)}: ${esc(t.test)} p = ${fmtP(t.p)} (n = ${t.n})`).join(" · ")}</p>
     <h3 id="s-cluster">Spatial clustering ${sinfo("clustering")}</h3>
     <p class="lead">Are the sites closer to one another than randomly drawn lysines? ${P.permutations.toLocaleString("en")} draws per line; pairs count NZ atoms within ${P.cluster_dist} Å. Tinted rows: p &lt; 0.05.</p>
     <table class="stable"><tr><th>Sites</th><th>Drawn from (null model)</th><th>Statistic</th><th class="num">Observed</th><th class="num">Expected (95 % of draws)</th><th class="num">p</th></tr>${clu}</table>
     <h3 id="s-hot">Hotspots ${sinfo("hotspots")}</h3>
-    <p class="lead">${stats.hotspots.length} groups of at least ${P.hotspot_min_sites} MG132-responsive sites linked within ${P.cluster_dist} Å, holding ${nHot} of the responsive sites.</p>
+    <p class="lead">${stats.hotspots.length} groups of at least ${P.hotspot_min_sites} MG132-responsive sites linked within ${P.cluster_dist} Å, holding ${nHot} of the ${stats.background.responsive} responsive sites.</p>
     <table class="stable"><tr><th>Hotspot</th><th>Proteins (sites)</th><th>Region</th><th class="num">Sites</th><th class="num">Exposed</th><th class="num">Median log2 FC</th><th class="num">Max log2 FC</th><th></th></tr>${hot}</table>
+    ${hotHs ? `<p class="lead">The same for heat shock: ${stats.hotspots_hs.length} groups of heat-shock-responsive sites, holding ${nHotHs} of the ${stats.background.responsive_hs} responsive sites. Fold changes are heat shock against control.</p>
+    <table class="stable"><tr><th>Hotspot</th><th>Proteins (sites)</th><th>Region</th><th class="num">Sites</th><th class="num">Exposed</th><th class="num">Median log2 FC</th><th class="num">Max log2 FC</th><th></th></tr>${hotHs}</table>` : ""}
     <h3 id="s-comod">Other modifications at the same lysines ${sinfo("comod")}</h3>
     <p class="lead">Are lysines that carry another modification (UniProt) SUMO sites more often than the others?</p>
     <table class="stable"><tr><th>Modification</th><th class="num">Lysines</th><th class="num">of which SUMO sites</th><th>Share that are SUMO sites</th><th>Share among the other lysines</th>
@@ -1491,10 +1506,11 @@ function syncHash() {                                  // the address follows th
 function openStats() { const d = $("stats"); if (!d.open) d.showModal(); $("scontent").scrollTop = 0; history.replaceState(null, "", "#stats"); }
 function showFromStats(what) {                       // a Show button: colouring + filter (+ view) for that row
   const [kind, value] = [what.split(":")[0], what.split(":").slice(1).join(":")];
-  $("q").value = ""; $("fenv").value = ""; $("fsig").checked = false; $("fregion").value = ""; $("fmore").value = "";
+  $("q").value = ""; $("fenv").value = ""; $("fsig").value = ""; $("fregion").value = ""; $("fmore").value = "";
   if (kind === "region") { siteMode = "region"; $("fregion").value = value; }
   if (kind === "interface") { siteMode = "region"; $("fmore").value = "interface"; }
   if (kind === "hotspot") { siteMode = "hotspot"; $("fmore").value = "hotspot:" + value; }
+  if (kind === "hotspot_hs") { siteMode = "hotspot_hs"; $("fmore").value = "hotspot_hs:" + value; }
   if (kind === "comod") { siteMode = "comod"; $("fmore").value = "comod:" + value; }
   if (kind === "near") { siteMode = "partner"; $("fmore").value = "near:" + value.split("|")[0]; }
   if (kind === "opened") { siteMode = "environment"; $("fmore").value = "opened"; }
@@ -1512,7 +1528,7 @@ function showFromStats(what) {                       // a Show button: colouring
     return;
   }
   $("stats").close(); syncHash(); renderTable();
-  const h = kind === "hotspot" && (stats.hotspots || []).find(x => x.hotspot === value);
+  const h = kind === "hotspot" ? (stats.hotspots || []).find(x => x.hotspot === value) : kind === "hotspot_hs" ? (stats.hotspots_hs || []).find(x => x.hotspot === value) : null;
   applyScene(true, h ? cameraOn([h.x, h.y, h.z], 195) : null);
 }
 // A camera that looks at a point from outside the particle, along the line from its centre.
@@ -1533,7 +1549,7 @@ function initStats() {
     const g = e.target.closest("[data-goto]"); if (g) { d.close(); syncHash(); return loadStructure(g.dataset.goto).then(openStats); }
     const tr = e.target.closest("tr[data-site]");
     if (tr) { const [label, particle] = tr.dataset.site.split("|"), t = sites.find(x => x.label === label && (!particle || x.particle === particle));
-      d.close(); syncHash(); $("q").value = ""; $("fmore").value = ""; $("fregion").value = ""; $("fenv").value = ""; $("fsig").checked = false; renderTable();
+      d.close(); syncHash(); $("q").value = ""; $("fmore").value = ""; $("fregion").value = ""; $("fenv").value = ""; $("fsig").value = ""; renderTable();
       if (t) { select(t.i); revealRow(t.i); } return; }
     const a = e.target.closest('.stoc a'); if (a) { e.preventDefault(); document.getElementById(a.getAttribute("href").slice(1)).scrollIntoView({ block: "start" }); }
   });
@@ -1615,7 +1631,7 @@ function loadChangelog() {
     .catch(() => { changelogLoaded = false; $("changelog").innerHTML = `<p class="dim">The changelog could not be loaded. It is the file CHANGELOG.md next to this page.</p>`; });
 }
 function fillHelpNumbers() {
-  const n = { sites: sites.length, proteins: new Set(sites.map(s => s.gene)).size, modelled: sites.filter(s => s.x != null).length, sig: sites.filter(s => s.sig_mg132).length };
+  const n = { sites: sites.length, proteins: new Set(sites.map(s => s.gene)).size, modelled: sites.filter(s => s.x != null).length, sig: sites.filter(s => s.sig_mg132).length, sig_hs: sites.filter(s => s.sig_hs).length };
   const envCol = meta.modes.find(m => m.id === "environment").legend.colours;
   for (const el of help.querySelectorAll("[data-n]")) {
     const k = el.dataset.n; el.textContent = k.startsWith("env:") ? sites.filter(s => s.environment === k.slice(4)).length : n[k];
@@ -1701,7 +1717,7 @@ function stateQuery() {
   if ($("fregion").value) put("region", $("fregion").value);
   if ($("fenv").value) put("env", $("fenv").value);
   if ($("fmore").value) put("filter", $("fmore").value);
-  if ($("fsig").checked) put("sig", "1");
+  if ($("fsig").value) put("sig", $("fsig").value);
   if (SORT_KEYS.includes(sort.k) && (sort.k !== "lfc_mg132" || sort.dir !== -1)) put("sort", (sort.dir < 0 ? "-" : "") + sort.k);
   const sel = selected != null ? sites[selected] : null;
   if (sel) { put("site", sel.label); if (multi()) put("ribosome", sel.particle); if (sumoAt === siteKey(sel)) put("sumo", "1"); if (focusOn) put("focus", "1"); }
@@ -1757,7 +1773,7 @@ async function loadStructure_(id, opts = {}) {
   fillFilterMenus(); fillHelpNumbers(); renderStats();
   if (st) {                                            // filters of the address, where this structure offers them
     const choose = (el, v) => { $(el).value = v && [...$(el).options].some(o => o.value === v) ? v : ""; };
-    $("q").value = st.q || ""; choose("fregion", st.region); choose("fenv", st.env); choose("fmore", st.filter); $("fsig").checked = st.sig === "1";
+    $("q").value = st.q || ""; choose("fregion", st.region); choose("fenv", st.env); choose("fmore", st.filter); choose("fsig", st.sig === "1" ? "mg132" : st.sig);   // "1": links of 0.7–0.9
   }
   if (opts.onData) opts.onData();
   $("views").innerHTML = meta.views.map(v => `<button data-id="${v.id}">${esc(VIEW_LABELS[v.id] || v.id)}</button>`).join("");
@@ -1766,7 +1782,7 @@ async function loadStructure_(id, opts = {}) {
   $("detail").innerHTML = DETAIL_HINT;
   const t = keep && sites.find(x => x.label === keep.label && x.x != null && (!keep.particle || !multi() || x.particle === keep.particle)) ||
             keep && sites.find(x => x.label === keep.label);
-  if (!st && t && !visibleSites().includes(t)) { $("q").value = ""; $("fenv").value = ""; $("fsig").checked = false; $("fregion").value = ""; $("fmore").value = ""; }   // the filters would hide the site that was followed here
+  if (!st && t && !visibleSites().includes(t)) { $("q").value = ""; $("fenv").value = ""; $("fsig").value = ""; $("fregion").value = ""; $("fmore").value = ""; }   // the filters would hide the site that was followed here
   if (st && st.sumo === "1" && t && sumoPose(t)) sumoAt = siteKey(t);
   renderTable(); renderControls();                    // the controls of the new structure, before its scene has loaded
   // the camera: the one of the address, else on the site that was followed here, else the first standard view

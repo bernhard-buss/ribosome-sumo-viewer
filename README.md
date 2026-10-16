@@ -5,8 +5,9 @@
 A single-page browser viewer for the SUMO2/3 acceptor sites of the cytosolic
 ribosomal proteins on structures of the human ribosome. Each modified lysine is
 shown on the structure and coloured by its response to proteasome inhibition
-(MG132) or heat shock, or by its environment in the particle (exposed, in
-contact with rRNA, buried). A table lists every site; selecting a row focuses
+(MG132) or heat shock — fold change or Z-score — or by its environment in the
+particle (exposed, in contact with rRNA, buried); hotspots, filters and the
+statistics are given for both stresses. A table lists every site; selecting a row focuses
 the structure on that lysine.
 
 In the structure, hovering identifies a residue, a click or tap marks it and

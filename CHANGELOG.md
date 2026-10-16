@@ -5,6 +5,22 @@ minor number for new features, the patch number for smaller changes and fixes. T
 say what changed for the person using the viewer. This file is the only place the history is
 written; the Changelog page of the in-page help renders it.
 
+## 0.10 — 2026-10-16
+Heat shock on equal footing. The heat-shock response was in the data from the start (Z-score
+colouring, table column, detail card), but the colourings, the filter, the hotspots and the
+statistics looked at MG132 alone. Now:
+
+- New site colouring *Heat shock fold change*, the counterpart of the MG132 one: the same scale,
+  coloured for sites with q < 0.05 in heat shock.
+- The *MG132 q < 0.05* checkbox is a significance switch: MG132, heat shock, either or both
+  (`sig=` in the link; old links with `sig=1` still mean MG132).
+- Hotspots of heat-shock-responsive sites (HS1, HS2, …) beside the MG132 ones: a colouring
+  *Hotspots, heat shock*, filter entries, a second table in the Statistics window with *Show*
+  buttons, and the hotspot named in the detail card.
+- The Statistics window of the mature 80S compares the heat-shock-responsive sites with the
+  others wherever it did so for MG132: modified lysines, subunits and regions (two new columns),
+  clustering, room for SUMO, the free protein.
+
 ## 0.9 — 2026-10-08
 When a SUMO fits. For every site the viewer now reads off at which stages of the ribosome's life
 there is room for a SUMO — on the free protein, on the assembly intermediates, on the mature subunit
