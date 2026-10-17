@@ -69,6 +69,16 @@ SUMO at every lysine of the model is computed in the browser, with the same
 placement set as the analysis (`data/fit.json`), in worker threads; the
 controls that need it wait for it. `?p=P46060` opens RanGAP1.
 
+## Any entry of the PDB
+
+A PDB code in the same box, or a code from the list of a protein's
+experimental structures (from UniProt), opens that entry with the catalogue's
+sites placed on every chain that maps to a human protein. The room for SUMO is
+computed in the browser with the chains kept apart, in the entry as it is and
+on each lysine's own chain alone, so that sites whose room the other chains
+take are named. `?e=3UIO` opens SUMO2 conjugated to RanGAP1 with UBC9 and
+RanBP2.
+
 ## Sharing a view
 
 The address of the page holds what is shown: structure (or a protein from the

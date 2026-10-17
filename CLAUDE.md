@@ -99,6 +99,26 @@
   button and `#sumoblock` (`renderControls`), `#fitbar` shows the progress; URL `p=`. `leaveProtein()` on
   a structure load, `lastSid` for *Back to the ribosome*. No statistics are computed in the page: the fit
   is a per-lysine geometric calculation, not a statistic, and it uses public data only.
+- Any entry of the PDB (v0.13): `loadEntry(id)`: PDBe `pdb/entry/molecules`, `summary`, `experiment` and
+  `mappings/uniprot_segments` (SIFTS) give the polymer chains (`e.chains`: label_asym, auth chain, entity,
+  kind, UniProt accession, gene, entity sequence, tint per entity) and the UniProt segments;
+  `placeEntrySites()` places the catalogue's sites on every mapped chain (offset = unp_start − start
+  residue_number, then the same context rules), one row per chain copy (`particle` = label_asym, `region`
+  = chainName). `shownEntry`, synthetic `meta` (`entryMeta()`: modes mg132/hs/z_*/room/room_free, the
+  latter relabelled "Room on the chain alone"), `sid` = the PDB code (so `onStructureClick` matches the
+  model's entryId), `buildEntryScene()` (one cartoon component per chain, hidden entities via
+  `hiddenChains()` with keys `base:ent:<entity>`, sites as spheres). `modelAtoms()` now keeps polymer heavy
+  atoms of one alternative only and returns the chain index per atom (`asym`), the lysines as
+  `{asym, seq, k, g}`, auth numbers and the bounding sphere (sets `meta.views[0].target` / `meta.radius` so
+  the camera goes into the link). The worker takes `nGroups` and a group per atom: ≤ 8 chains → one grid
+  with a bit per chain; more (or a box too large) → a grid around each lysine with two bits (own chain /
+  rest); every lysine gets `fit` (all bits) and `fit_alone` (own bit), `pose` and `pose_without` (the
+  placements that open up without the other chains, kept when ≥ 0.5 % as fit.py's LOST_SHARE).
+  `fitEntry()` applies the pipeline's rule: `room_taken_by = "a partner"` when the entry gives no room and
+  the chain alone does. `runFit()`/`fitInBrowser()` are shared with the protein mode (`fitProtein()`).
+  Large entries: only the sites' lysines when the entry has > 400 lysines. URL `e=`. The protein mode's
+  note lists the protein's PDB structures (UniProt `xref_pdb`, sorted by resolution; `a[data-entry]`
+  opens one) and the Complex Portal count (`complex-ws/search/<acc>`).
 - The in-house-data check `grep -rl 'ko1\|KO1\|ZNF451\|ML792' data/` flags `data/catalogue.json`: that is
   the public catalogue's own entries for the gene ZNF451 (Hendriks et al.), not in-house data. Check with
   `grep -rl 'ko1\|KO1\|ML792' data/` plus `grep -l ZNF451 data/*/ data/free/` instead.

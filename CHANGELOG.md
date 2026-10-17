@@ -5,6 +5,17 @@ minor number for new features, the patch number for smaller changes and fixes. T
 say what changed for the person using the viewer. This file is the only place the history is
 written; the Changelog page of the in-page help renders it.
 
+## 0.13 — 2026-10-17
+Any entry of the PDB. A PDB code in the box under the *Structure* menu, or a code from the new list
+of a protein's experimental structures (from UniProt, with method, resolution and the chain covered),
+opens that entry: a protein in its complexes. The catalogue's sites are placed on every chain that
+maps to a human protein, so a complex shows the sites of all its members, chain by chain. The room
+for SUMO is computed in your browser with the chains kept apart — in the entry as it is and on each
+lysine's own chain alone — so a site whose room the other chains take is named as such and a SUMO can
+be drawn where it would sit without them. Two colourings (*Room for SUMO*, *Room on the chain alone*),
+the molecules of the entry as legend switches, the chain as a filter, `e=` in the link. Under a protein
+the note also names the curated complexes it belongs to in the Complex Portal.
+
 ## 0.12.1 — 2026-10-17
 The threshold of *strong sites* (SUMO at the sites) starts at 70 % of the colour scale instead of
 50 %: a log2 fold change of 5.6 among the significant sites for MG132 and heat shock, a Z-score

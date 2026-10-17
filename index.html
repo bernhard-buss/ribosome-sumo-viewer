@@ -110,6 +110,9 @@
   .seg button:disabled, #sumomodes button:disabled { opacity: .45; cursor: default; } .seg button:disabled:hover { border-color: var(--line); }
   #sumothr input:disabled { opacity: .45; }
   table.protein th:nth-child(2), table.protein td:nth-child(2) { display: none; }
+  #protinfo details { margin-top: 3px; } #protinfo summary { cursor: pointer; }
+  .pdbl { max-height: 132px; overflow: auto; margin-top: 2px; padding-left: 10px; font-variant-numeric: tabular-nums; }
+  .pdbl div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .pdbl a { font-weight: 600; margin-right: 4px; }
   #views.off button, #views.off { opacity: .45; pointer-events: none; }
   .wchips { display: flex; flex-wrap: wrap; gap: 4px 8px; margin: 4px 0 2px; }
   .wchip { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); cursor: default; }
@@ -211,7 +214,7 @@
       <h2>Structure <a class="hl" href="#help/structures/choose" data-help="structures/choose" title="Help: the structures">ⓘ</a></h2>
       <select id="structure" aria-label="Structure"></select>
       <div class="note" id="structinfo"></div>
-      <form id="protform" autocomplete="off"><input type="search" id="protq" placeholder="Any human protein: gene or UniProt accession" aria-label="Any protein, from the AlphaFold DB"><button type="submit">Show</button><a class="hl" href="#help/structures/protein" data-help="structures/protein" title="Help: any protein from the AlphaFold DB">ⓘ</a></form>
+      <form id="protform" autocomplete="off"><input type="search" id="protq" placeholder="Any human protein (gene, UniProt accession) or PDB entry" aria-label="Any protein, from the AlphaFold DB, or any PDB entry"><button type="submit">Show</button><a class="hl" href="#help/structures/protein" data-help="structures/protein" title="Help: any protein from the AlphaFold DB">ⓘ</a></form>
       <div class="note" id="protinfo" hidden></div>
       <label id="partnerswrap" hidden><input type="checkbox" id="partners" checked> <span id="partnerslabel">Show factors, tRNA and mRNA</span>
         <a class="hl" href="#help/structures/partners" data-help="structures/partners" title="Help: partners of the ribosome">ⓘ</a></label>
@@ -322,7 +325,7 @@
             <p>The address of the page holds what is shown. Whatever you choose is written into it as you go, so copying the address, or pressing <i>Copy link</i> at the top, gives a link that opens the viewer in the same state on another computer.</p>
             <table class="htable"><tr><th>In the link</th><th>Parameter</th></tr>
               <tr><td>structure</td><td><code>s</code>, the PDB code</td></tr>
-              <tr><td>a protein from the AlphaFold DB in place of a structure</td><td><code>p</code>, the UniProt accession</td></tr>
+              <tr><td>a protein from the AlphaFold DB, or an entry of the PDB, in place of a structure</td><td><code>p</code>, the UniProt accession; <code>e</code>, the PDB code</td></tr>
               <tr><td>colouring of the sites; partners hidden</td><td><code>colour</code>, <code>partners=off</code></td></tr>
               <tr><td>search text, region, environment, third menu, significance switch</td><td><code>q</code>, <code>region</code>, <code>env</code>, <code>filter</code>, <code>sig</code> (<code>mg132</code>, <code>hs</code>, <code>either</code>, <code>both</code>)</td></tr>
               <tr><td>sorting of the table</td><td><code>sort</code>, with a minus sign for descending</td></tr>
@@ -344,15 +347,20 @@
             <div id="hstructs"></div>
             <p>Choosing a structure replaces the picture, the site table and the Statistics window. The colouring, the selected site and a table of your own carry over. The address then holds <code>s=</code> and the PDB code (for example <code>?s=8G60</code>), beside everything else that is chosen, and can be shared (<a data-help="start/share" href="#help/start/share">Sharing a view</a>); without it the page opens on the mature 80S.</p>
             <p>The <b>mature 80S</b> is the reference: it has the highest resolution, and the statistics on regions, clustering and hotspots are computed on it. The <b>decoding 80S</b> adds mRNA, two tRNAs and eEF1A, and resolves the L1 stalk (RPL10A), RPL10 and part of the P stalk base (RPL12), which the mature structure does not. The <b>idle 80S</b> carries eEF2 and SERBP1, the state of ribosomes that are not translating. The <b>collided disome</b> is a stalled ribosome with the next ribosome run into it, bound by the kinase ZAK and by EDF1. The <b>pre-60S</b> and <b>pre-40S</b> particles are subunits in the making, with assembly factors in place of what is still to come.</p>
-            <p>Any other human protein can be shown as well, as its predicted model from the AlphaFold DB with its sites from the same catalogue: see <a data-help="structures/protein" href="#help/structures/protein">Any protein from the AlphaFold DB</a>.</p></article>
+            <p>Any other human protein can be shown as well, as its predicted model from the AlphaFold DB with its sites from the same catalogue (<a data-help="structures/protein" href="#help/structures/protein">Any protein from the AlphaFold DB</a>), and so can any entry of the PDB, with the sites of all the proteins in it (<a data-help="structures/entry" href="#help/structures/entry">Any entry of the PDB</a>).</p></article>
           <article data-entry="sites"><h3>One site in several structures</h3>
             <p>Each structure lists the sites of the ribosomal proteins it contains. The numbers differ because the structures differ: a precursor of the large subunit has no 40S proteins, the decoding ribosome has stalk proteins that the mature structure lacks, and the disome holds every protein twice, so each of its sites appears once for the stalled and once for the collided ribosome.</p>
             <p>The detail card of a selected site has a line <i>Elsewhere</i>: the environment of the same lysine in each of the other structures, or <i>not modelled</i> where the residue has no coordinates there, or <i>protein absent</i>. A name in that line opens that structure with the same site selected and in view. For the disome the line gives the better-resolved of the two copies.</p>
             <p>The filter <i>resolved here, not in the mature 80S</i> lists what a structure adds to the reference.</p></article>
           <article data-entry="protein"><h3>Any protein from the AlphaFold DB</h3>
             <p>The box under the <i>Structure</i> menu takes any human protein — a gene name such as <code>RANGAP1</code>, or a UniProt accession such as <code>P46060</code> — and shows the predicted model of that protein alone from the AlphaFold DB, with its SUMO2/3 sites from the same catalogue as the ribosome's (Hendriks et al. 2018: <span data-s="catalogue.sites" data-fmt="n"></span> sites on <span data-s="catalogue.proteins" data-fmt="n"></span> human proteins). The name is looked up at UniProt (the reviewed human entry of that gene; other matches are offered under the box), the model is fetched from the AlphaFold DB, and the sites are placed on it as they are placed on the ribosome: a site goes to the lysine that carries its sequence context — at the catalogue's position where the model has it there, elsewhere when the model numbers the protein differently (the detail card says so), and not at all when the model has no lysine in that context (<i>not placed</i> in the table). Then the viewer computes the room for a SUMO at every lysine of the model, in your browser: see <a data-help="room/browser" href="#help/room/browser">Room for SUMO computed in your browser</a>.</p>
+            <p>Under the box, the note lists the experimental structures of the protein in the PDB (from UniProt: method, resolution, the chain and the residues it covers), sorted by resolution; a code opens that entry with the sites of all its proteins (<a data-help="structures/entry" href="#help/structures/entry">Any entry of the PDB</a>). A last line names the curated complexes the protein belongs to in the Complex Portal, which records composition, mostly without coordinates.</p>
             <p>A protein offers the colourings by response (the fold changes and the Z-scores) and <i>Room for SUMO</i> on the model, the control <i>SUMO at the sites</i>, the focus, the legend switches, the confidence colouring in the banner, a table of your own, and the link (<code>p=</code> and the accession). What belongs to the ribosome structures is not there: the environment, region, hotspot and window colourings, the partners, the standard views and the Statistics window. For a ribosomal protein the detail card keeps the line <i>On the ribosome</i>, which opens each ribosome structure at the site; <i>Back to the ribosome</i> in the banner returns to the structure shown before.</p>
             <p>A model is a prediction of the protein alone, over its whole sequence, with the tails that no structure resolves; <a data-help="room/free" href="#help/room/free">The free protein</a> says how to read room on it. The AlphaFold DB has models for proteins of up to about 2,700 residues; a longer protein, or one the database has no model of, cannot be shown. Nothing is uploaded: the lookups go to UniProt and the AlphaFold DB, and the calculation runs in your browser.</p></article>
+          <article data-entry="entry"><h3>Any entry of the PDB</h3>
+            <p>A PDB code in the box under the <i>Structure</i> menu (<code>3UIO</code>, say), or a code from a protein's list of structures, opens that entry: a protein in its experimental complexes, the counterpart of the predicted protein alone. The coordinates come from the PDB as for the ribosome structures; the molecules of the entry and the UniProt protein each chain is a piece of come from PDBe (SIFTS); the sites come from the catalogue and are placed on <b>every chain that maps to a human protein</b>, so a complex shows the SUMO2/3 sites of all its members, each copy of a protein separately (the chain is tagged in the table and the card). A site goes to the residue that carries its sequence context in the chain's sequence — at the mapped position where the context agrees, elsewhere when the construct is numbered differently, with one substitution accepted; the card says how. A site whose residue has no coordinates in the entry is listed as <i>not modelled</i>.</p>
+            <p>Then the room for a SUMO is computed in your browser (<a data-help="room/browser" href="#help/room/browser">Room for SUMO computed in your browser</a>), with the chains kept apart: for every lysine the share of placements that fit <b>in the entry as it is</b> and <b>on the lysine's own chain alone</b>, the other chains taken away. A site with no room in the entry and room on its chain alone has its <b>room taken by the other chains</b>: a SUMO there stands in the way of the complex, or has to be removed first — the same reading as <a data-help="room/taken" href="#help/room/taken">What takes the room away</a> on the ribosome. The colouring <i>Room for SUMO</i> paints the room in the entry, <i>Room on the chain alone</i> the other; the card gives both shares, and <i>Show where a SUMO would sit without the other chains</i> draws the placement that becomes possible. The legend lists the molecules of the entry as switches; the <i>Region</i> menu filters by chain. In an entry with more than about 400 lysines only the sites' lysines are computed.</p>
+            <p>Not available for an entry: the environment, region, hotspot and window colourings, the partners checkbox, the standard views and the Statistics window; for a ribosomal protein the card keeps <i>On the ribosome</i>. Chains without a UniProt mapping (peptides, non-human proteins) are drawn but carry no sites. The link holds the entry as <code>e=</code> and the code.</p></article>
           <article data-entry="partners"><h3>Factors, tRNA and mRNA</h3>
             <p>Everything in a structure that is not ribosomal protein or rRNA is a partner: translation and assembly factors (olive), tRNA (teal), mRNA (black). The checkbox under the <i>Structure</i> menu takes them out of the picture, which uncovers the sites beneath them; in the nucleolar pre-60S, factors cover much of the surface.</p>
             <p>In the disome the collided ribosome is drawn in paler tones than the stalled one, so that the two can be told apart.</p>
@@ -483,8 +491,8 @@
             <p><i>Show the free protein</i> in the detail card replaces the ribosome with the model of that protein, with the same colouring of its sites; the banner at the top offers to colour the protein by confidence instead of its subunit tint, and <i>Back to the ribosome</i> returns. On the model, too, a SUMO can be drawn at the selected site, at a placement that fits there; the tether and the core are the same as on the ribosome. The standard views do not apply to a model, which has its own frame of reference. The colouring <i>Room on the free protein</i> paints every site of the ribosome with its class on the free protein, so that the two can be compared on the particle itself.</p>
             <p>The models are predictions of the protein alone, made for the whole sequence, with the tails that no structure resolves. They say where a SUMO fits on the isolated protein, not whether the protein is modified there; and a protein that is never free in the cell, because it is folded into the ribosome as it is made, is a case the model does not know about.</p></article>
           <article data-entry="browser"><h3>Room for SUMO computed in your browser</h3>
-            <p>For a protein from the AlphaFold DB (<a data-help="structures/protein" href="#help/structures/protein">Any protein from the AlphaFold DB</a>) no analysis has run beforehand, so the viewer computes the room for SUMO itself, in the browser, as soon as the model is on the screen. It is the same calculation as for the ribosome structures (<a data-help="room/method" href="#help/room/method">How it is computed</a>) with the same set of placements — the core of SUMO2 from PDB <span data-s="fit.sumo"></span>, <span data-s="fit.directions"></span> tether directions × <span data-s="fit.lengths"></span> lengths × <span data-s="fit.rotations"></span> orientations, <span data-s="fit.placements" data-fmt="n"></span> placements at every lysine — taken over from the analysis, so that the shares compare with those on the ribosome and on the free ribosomal proteins; on the ribosomal proteins the two agree to the last digit.</p>
-            <p>The calculation runs in worker threads, so the picture stays responsive. A bar at the top left counts the lysines done; until it is finished the colouring <i>Room for SUMO</i> and the control <i>SUMO at the sites</i> are disabled, and the table and the detail card say <i>computing</i>. A protein of a few hundred residues takes under a second, a large one a few seconds. The result is the share of placements that fit and the class (room, tight, none) for every lysine of the model — in the table, in the detail card of a site and in the tooltip of any lysine in the structure — and, where placements fit, a placement to draw a SUMO at.</p>
+            <p>For a protein from the AlphaFold DB (<a data-help="structures/protein" href="#help/structures/protein">Any protein from the AlphaFold DB</a>) or an entry of the PDB (<a data-help="structures/entry" href="#help/structures/entry">Any entry of the PDB</a>) no analysis has run beforehand, so the viewer computes the room for SUMO itself, in the browser, as soon as the structure is on the screen. It is the same calculation as for the ribosome structures (<a data-help="room/method" href="#help/room/method">How it is computed</a>) with the same set of placements — the core of SUMO2 from PDB <span data-s="fit.sumo"></span>, <span data-s="fit.directions"></span> tether directions × <span data-s="fit.lengths"></span> lengths × <span data-s="fit.rotations"></span> orientations, <span data-s="fit.placements" data-fmt="n"></span> placements at every lysine — taken over from the analysis, so that the shares compare with those on the ribosome and on the free ribosomal proteins; on the ribosomal proteins the two agree to the last digit.</p>
+            <p>The calculation runs in worker threads, so the picture stays responsive. A bar at the top left counts the lysines done; until it is finished the colouring <i>Room for SUMO</i> and the control <i>SUMO at the sites</i> are disabled, and the table and the detail card say <i>computing</i>. A protein of a few hundred residues takes under a second, a large one a few seconds. The result is the share of placements that fit and the class (room, tight, none) for every lysine of the model — in the table, in the detail card of a site and in the tooltip of any lysine in the structure — and, where placements fit, a placement to draw a SUMO at. In a PDB entry the chains are kept apart, as the pipeline keeps the ribosome's partners and subunits apart: each lysine gets the share in the entry as it is and the share on its own chain alone.</p>
             <p>The model is the current version in the AlphaFold DB, named in the banner. The coordinates come from the AlphaFold DB to your browser and the calculation never leaves it; nothing is uploaded.</p></article>
           <article data-entry="limits"><h3>Limits</h3>
             <p>The structures are rigid here; parts that move in the cell can make room or take it. Segments without coordinates are not there to collide with, so room near a mobile tail is overestimated. One SUMO is placed; a chain of several needs more space, so <i>none</i> for one SUMO holds for a chain as well. Room for SUMO does not mean room for the enzymes that attach it.</p></article>
@@ -647,14 +655,20 @@
 
 <script src="https://cdn.jsdelivr.net/npm/molstar@5.12.0/build/viewer/molstar.js"></script>
 <script type="text/plain" id="fitworker">
-// Room for SUMO at the lysines of a protein model, computed in a worker thread of the browser: a port of
-// the pipeline's python/sumostruct/fit.py for a single group of atoms (the protein alone). The placement
-// set (the SUMO core, its orientations, the tether directions and lengths, the parameters) arrives from
-// data/fit.json, so that the browser samples exactly what the pipeline samples.
-//   in:  { type: "setup", sampler }                                  the placement set
-//        { type: "fit", atoms: { n, X, seq, side }, lys: [[seq, atomIndex], ...] }   the model and the lysines to do
-//   out: { type: "progress", done, total } after every lysine; { type: "done", results: [{ seq, fit, pose }], ms }
+// Room for SUMO at the lysines of a structure, computed in a worker thread of the browser: a port of the
+// pipeline's python/sumostruct/fit.py. The placement set (the SUMO core, its orientations, the tether
+// directions and lengths, the parameters) arrives from data/fit.json, so that the browser samples exactly
+// what the pipeline samples. The atoms are kept apart by group (one group per chain, as bits of one
+// occupancy grid, like fit.py's particles and subunits), so that one sampling per lysine answers two
+// questions: the room in the structure as it is, and the room on the lysine's own chain alone.
+//   in:  { type: "setup", sampler }
+//        { type: "fit", atoms: { n, X, seq, side, asym }, lys: [{ id, seq, k, g }], nGroups }
+//             X: coordinates (3n), seq: residue number, side: 1 for a lysine side-chain atom, asym: group (chain) index
+//             per atom; a lysine: its id, residue, NZ atom index k and group g
+//   out: { type: "progress", done, total } after every lysine
+//        { type: "done", results: [{ id, fit, fit_alone, pose, pose_without }], ms }
 let S = null;
+const LOST_SHARE = 0.005;    // a placement "without the other chains" is kept when taking them away opens at least this share
 function setup(d) {
   const p = d.params, R = d.rotations.length, body = d.sumo.body, M = body.length, anchor = d.sumo.anchor;
   const rel = body.map(a => [a[0] - anchor[0], a[1] - anchor[1], a[2] - anchor[2]]);
@@ -675,9 +689,10 @@ function setup(d) {
   let reach = 0; for (const v of rel) reach = Math.max(reach, Math.hypot(v[0], v[1], v[2]));
   S = { p, R, M, clouds, centre, rot, anchor, D, unit, len, steps, reach, total: D * R };
 }
-// Which voxels lie within the clash distance of an atom (fit.py's Grid): a voxel is marked when its centre
-// is within `clash` of the atom. idx = the atoms to put in.
-function makeGrid(X, idx, clash, voxel, limit) {
+// Which voxels lie within the clash distance of an atom, one bit per group of atoms (fit.py's Grid): a
+// voxel takes an atom's bit when its centre is within `clash` of the atom. idx = the atoms to put in,
+// bitOf = the bit of each atom.
+function makeGrid(X, idx, bitOf, clash, voxel, limit) {
   const pad = clash + 2 * voxel, mn = [Infinity, Infinity, Infinity], mx = [-Infinity, -Infinity, -Infinity];
   for (let t = 0; t < idx.length; t++) { const i = idx[t]; for (let c = 0; c < 3; c++) { const v = X[3 * i + c]; if (v < mn[c]) mn[c] = v; if (v > mx[c]) mx[c] = v; } }
   const org = mn.map(v => v - pad), shape = [0, 1, 2].map(c => Math.ceil((mx[c] + pad - org[c]) / voxel) + 1);
@@ -687,58 +702,62 @@ function makeGrid(X, idx, clash, voxel, limit) {
   const offs = [], f = v => Math.max(Math.abs(v) - 0.5, 0) ** 2;
   for (let a = -k; a <= k; a++) for (let b = -k; b <= k; b++) for (let c = -k; c <= k; c++) if (f(a) + f(b) + f(c) <= reach2) offs.push([a, b, c]);
   for (let t = 0; t < idx.length; t++) {
-    const i = idx[t], rx = (X[3 * i] - org[0]) / voxel, ry = (X[3 * i + 1] - org[1]) / voxel, rz = (X[3 * i + 2] - org[2]) / voxel;
+    const i = idx[t], bit = bitOf[i], rx = (X[3 * i] - org[0]) / voxel, ry = (X[3 * i + 1] - org[1]) / voxel, rz = (X[3 * i + 2] - org[2]) / voxel;
     const bx = Math.floor(rx), by = Math.floor(ry), bz = Math.floor(rz), fx = rx - bx, fy = ry - by, fz = rz - bz;
-    for (const [a, b, c] of offs) { const dx = a + 0.5 - fx, dy = b + 0.5 - fy, dz = c + 0.5 - fz; if (dx * dx + dy * dy + dz * dz <= reach2) occ[((bx + a) * sy + (by + b)) * sz + (bz + c)] = 1; }
+    for (const [a, b, c] of offs) { const dx = a + 0.5 - fx, dy = b + 0.5 - fy, dz = c + 0.5 - fz; if (dx * dx + dy * dy + dz * dz <= reach2) occ[((bx + a) * sy + (by + b)) * sz + (bz + c)] |= bit; }
   }
   return { occ, org, shape, voxel, sy, sz };
 }
-function at(g, x, y, z) {                 // the voxel that holds a point (outside the box: its border voxel, which is empty)
+function at(g, x, y, z) {                 // the bits of the voxel that holds a point (outside the box: its border voxel, which is empty)
   let i = Math.floor((x - g.org[0]) / g.voxel), j = Math.floor((y - g.org[1]) / g.voxel), k = Math.floor((z - g.org[2]) / g.voxel);
   if (i < 0) i = 0; else if (i >= g.shape[0]) i = g.shape[0] - 1;
   if (j < 0) j = 0; else if (j >= g.shape[1]) j = g.shape[1] - 1;
   if (k < 0) k = 0; else if (k >= g.shape[2]) k = g.shape[2] - 1;
   return g.occ[(i * g.sy + j) * g.sz + k];
 }
-// The placements possible at one NZ (fit.py's fit_at): a tether is blocked when its end, a point on its
-// line or the glycine bonded to the NZ (tested exactly against the atoms around, without the lysine's own
-// side chain) meets the structure; at an open tether every orientation of the core is tested voxel by voxel.
-function fitAt(g, X, nz, near) {
-  const { p, R, M, clouds, D, unit, len, steps, total } = S, blocked = new Uint8Array(D);
+// The placements at one NZ (fit.py's fit_at), as the bits of the groups each placement runs into: the
+// tether's end, the points on its line and the glycine bonded to the NZ (tested exactly against the atoms
+// around, without the lysine's own side chain), then every orientation of the core voxel by voxel. A
+// placement is possible for a mask of groups when none of its bits is in the mask. `loosest` = the bits
+// every mask holds (the lysine's own chain): a placement that meets them is impossible for every mask,
+// and its test stops there.
+function fitAt(g, X, nz, near, nearBit, loosest) {
+  const { p, R, M, clouds, D, unit, len, steps } = S, blocked = new Uint8Array(D);
   const ax = new Float32Array(D), ay = new Float32Array(D), az = new Float32Array(D), fc2 = p.first_clash * p.first_clash;
   for (let d = 0; d < D; d++) {
     const ux = unit[3 * d], uy = unit[3 * d + 1], uz = unit[3 * d + 2], l = len[d];
     ax[d] = nz[0] + ux * l; ay[d] = nz[1] + uy * l; az[d] = nz[2] + uz * l;
-    if (at(g, ax[d], ay[d], az[d])) { blocked[d] = 1; continue; }
-    for (const s of steps) { if (!(s < l - 1.0)) break; if (at(g, nz[0] + ux * s, nz[1] + uy * s, nz[2] + uz * s)) { blocked[d] = 1; break; } }
-    if (blocked[d]) continue;
+    let b = at(g, ax[d], ay[d], az[d]);
+    for (const s of steps) { if (!(s < l - 1.0)) break; b |= at(g, nz[0] + ux * s, nz[1] + uy * s, nz[2] + uz * s); }
     const gx = nz[0] + ux * p.first, gy = nz[1] + uy * p.first, gz = nz[2] + uz * p.first;
-    for (let t = 0; t < near.length; t++) { const i = near[t], dx = X[3 * i] - gx, dy = X[3 * i + 1] - gy, dz = X[3 * i + 2] - gz; if (dx * dx + dy * dy + dz * dz < fc2) { blocked[d] = 1; break; } }
+    for (let t = 0; t < near.length; t++) { const i = near[t], dx = X[3 * i] - gx, dy = X[3 * i + 1] - gy, dz = X[3 * i + 2] - gz; if (dx * dx + dy * dy + dz * dz < fc2) b |= nearBit[t]; }
+    blocked[d] = b;
   }
-  const poss = new Uint8Array(D * R); let count = 0;
+  const bits = new Uint8Array(D * R).fill(255);
   for (let d = 0; d < D; d++) {
-    if (blocked[d]) continue;
+    if (blocked[d] & loosest) continue;
     const x0 = ax[d], y0 = ay[d], z0 = az[d];
     for (let r = 0; r < R; r++) {
-      const base = r * M * 3; let ok = 1;
-      for (let m = 0; m < M; m++) { const o = base + 3 * m; if (at(g, x0 + clouds[o], y0 + clouds[o + 1], z0 + clouds[o + 2])) { ok = 0; break; } }
-      if (ok) { poss[d * R + r] = 1; count++; }
+      const base = r * M * 3; let b = blocked[d];
+      for (let m = 0; m < M; m++) { const o = base + 3 * m; b |= at(g, x0 + clouds[o], y0 + clouds[o + 1], z0 + clouds[o + 2]); if (b & loosest) break; }
+      bits[d * R + r] = b;
     }
   }
-  return { fit: count / total, poss, ax, ay, az };
+  return { bits, ax, ay, az };
 }
+const share = (f, ok) => { let n = 0; for (let i = 0; i < f.bits.length; i++) if (ok(f.bits[i])) n++; return n / f.bits.length; };
 // A placement from the middle of the possible ones (fit.py's pose_of): the tether direction nearest to
 // their mean, the core turned away from the lysine. Rotation row by row + translation, as the pipeline writes it.
-function poseOf(f) {
+function poseOf(f, ok) {
   const { R, D, unit, len, centre, rot, anchor } = S, w = new Float32Array(D); let any = false, mx = 0, my = 0, mz = 0;
-  for (let d = 0; d < D; d++) { let c = 0; for (let r = 0; r < R; r++) c += f.poss[d * R + r]; w[d] = c; if (c) any = true; mx += unit[3 * d] * c; my += unit[3 * d + 1] * c; mz += unit[3 * d + 2] * c; }
+  for (let d = 0; d < D; d++) { let c = 0; for (let r = 0; r < R; r++) if (ok(f.bits[d * R + r])) c++; w[d] = c; if (c) any = true; mx += unit[3 * d] * c; my += unit[3 * d + 1] * c; mz += unit[3 * d + 2] * c; }
   if (!any) return null;
   const n = Math.hypot(mx, my, mz) || 1; mx /= n; my /= n; mz /= n;
   let best = -2, bd = -1;
   for (let d = 0; d < D; d++) { if (!w[d]) continue; const s = unit[3 * d] * mx + unit[3 * d + 1] * my + unit[3 * d + 2] * mz; if (s > best) { best = s; bd = d; } }
   const dx = unit[3 * bd] * len[bd], dy = unit[3 * bd + 1] * len[bd], dz = unit[3 * bd + 2] * len[bd]; let bs = -2, br = -1;
   for (let r = 0; r < R; r++) {
-    if (!f.poss[bd * R + r]) continue;
+    if (!ok(f.bits[bd * R + r])) continue;
     const x = dx + centre[3 * r], y = dy + centre[3 * r + 1], z = dz + centre[3 * r + 2], nn = Math.hypot(x, y, z) || 1, s = (x * mx + y * my + z * mz) / nn;
     if (s > bs) { bs = s; br = r; }
   }
@@ -751,21 +770,33 @@ onmessage = e => {
   try {
     if (m.type === "setup") { setup(m.sampler); return; }
     if (m.type !== "fit") return;
-    const { n, X, seq, side } = m.atoms, p = S.p, t0 = performance.now(), LIMIT = 6e7;
+    const { n, X, seq, side, asym } = m.atoms, p = S.p, t0 = performance.now(), LIMIT = 6e7, nG = m.nGroups || 1;
+    // one grid for the whole structure, a bit per chain, when the chains fit in a byte and the box is not
+    // too large; otherwise a grid around each lysine with two bits: its own chain and the rest
     const all = new Int32Array(n); for (let i = 0; i < n; i++) all[i] = i;
-    const g = makeGrid(X, all, p.clash, p.voxel, LIMIT);           // one grid for the whole model; a model too large for that gets a grid around each lysine
+    const bitOfG = new Uint8Array(n); if (nG <= 8) for (let i = 0; i < n; i++) bitOfG[i] = 1 << asym[i];
+    let allBits = 0; if (nG <= 8) for (let gi = 0; gi < nG; gi++) allBits |= 1 << gi;
+    const g = nG <= 8 ? makeGrid(X, all, bitOfG, p.clash, p.voxel, LIMIT) : null;
     const box = p.first + p.first_clash, half = p.tether[1] + S.reach + p.clash + 2 * p.voxel + 1;
     const results = [];
-    for (const [lseq, k] of m.lys) {
-      const z = [X[3 * k], X[3 * k + 1], X[3 * k + 2]], near = [], local = [];
+    for (const L of m.lys) {
+      const k = L.k, z = [X[3 * k], X[3 * k + 1], X[3 * k + 2]], near = [], local = [];
       for (let i = 0; i < n; i++) {
         const dx = Math.abs(X[3 * i] - z[0]), dy = Math.abs(X[3 * i + 1] - z[1]), dz = Math.abs(X[3 * i + 2] - z[2]);
-        if (dx < box && dy < box && dz < box && !(seq[i] === lseq && side[i])) near.push(i);
+        if (dx < box && dy < box && dz < box && !(seq[i] === L.seq && asym[i] === L.g && side[i])) near.push(i);
         if (!g && dx < half && dy < half && dz < half) local.push(i);
       }
-      const gl = g || makeGrid(X, Int32Array.from(local), p.clash, p.voxel, Infinity);
-      const f = fitAt(gl, X, z, near);
-      results.push({ seq: lseq, fit: f.fit, pose: poseOf(f) });
+      let gl = g, bitOf = bitOfG, own, complex;
+      if (g) { own = 1 << L.g; complex = allBits; }
+      else {
+        bitOf = new Uint8Array(n); for (let t = 0; t < local.length; t++) { const i = local[t]; bitOf[i] = asym[i] === L.g ? 1 : 2; }
+        gl = makeGrid(X, Int32Array.from(local), bitOf, p.clash, p.voxel, Infinity); own = 1; complex = 3;
+      }
+      const nearBit = new Uint8Array(near.length); for (let t = 0; t < near.length; t++) nearBit[t] = bitOf[near[t]];
+      const f = fitAt(gl, X, z, near, nearBit, own);
+      const inComplex = b => (b & complex) === 0, alone = b => (b & own) === 0, lost = b => (b & own) === 0 && (b & complex) !== 0;
+      const fit = share(f, inComplex), fitAlone = share(f, alone);
+      results.push({ id: L.id, fit, fit_alone: fitAlone, pose: poseOf(f, inComplex), pose_without: fitAlone - fit >= LOST_SHARE ? poseOf(f, lost) : null });
       postMessage({ type: "progress", done: results.length, total: m.lys.length });
     }
     postMessage({ type: "done", results, ms: performance.now() - t0 });
@@ -773,7 +804,7 @@ onmessage = e => {
 };
 </script>
 <script>
-const VERSION = "0.12.1";
+const VERSION = "0.13";
 const VIEW_LABELS = { "40S_solvent": "40S solvent side", "60S_solvent": "60S solvent side", "mRNA_entry": "mRNA entry side",
                       "mRNA_exit": "mRNA exit side", "top": "top", "bottom": "bottom",
                       "side_40S": "40S side", "side_60S": "60S side", "across_1": "edge-on, first side", "across_2": "edge-on, second side",
@@ -817,6 +848,15 @@ let lastSid = null;       // the structure shown before a protein, to come back 
 let fitState = null;      // the calculation in the browser: null, "running", "done", "failed"
 let fitWorkers = [], fitRun = 0;
 const PROTEIN_TINT = "#C4BFB6";   // a protein that is not a ribosomal protein: warm light grey, near no site colour
+// Any entry of the PDB, shown in place of a structure (v0.13): its chains mapped to UniProt (PDBe SIFTS),
+// the catalogue's sites placed on every mapped chain, the room for SUMO computed in the browser in the
+// structure as it is and on each lysine's own chain alone.
+let shownEntry = null;    // { id, title, method, resolution, url, chains: [{ label_asym, chain, entity, kind, protein, gene, description, seq, colour }], unp } or null
+let entryLys = new Map(); // "label_asym:label_seq" -> { fit, fit_alone, room, room_alone, pose, pose_without } of every lysine computed
+const browserFit = () => !!(shownProtein || shownEntry);   // the room for SUMO is the browser's own calculation here
+const CHAIN_TINTS = ["#C8B49C", "#9DAFC2", "#B5C4A8", "#C4B0C0", "#D9CBA3", "#B8CCD9", "#D8B4B4", "#CFCFCF", "#C9C0A8", "#A9BDB5"];   // pale tones per protein entity
+const NUCLEIC_TINT = "#E0E0E0";
+const chainName = c => `${c.gene || c.description || c.protein || "chain"} (${c.chain})`;
 const sumoPose = s => s.room_taken_by && s.pose_without ? s.pose_without : s.pose;   // where it would sit without what is in its way, else a placement that fits
 const modelPos = s => s.free_position != null ? s.free_position : s.position;   // the site's residue in the AlphaFold model (the catalogue numbers RPL7L1 differently)
 // The sites a SUMO is drawn at: the selected site, and in the modes "strong" and "all" the
@@ -923,6 +963,7 @@ function legendEntryOf(s, L) {           // the legend entry a site falls under 
 const siteHidden = (s, L) => { const k = legendEntryOf(s, L); return k != null && hidden.has(`site:${siteMode}:${k}`); };
 function hiddenChains() {                // label_asym ids of the chains that switched-off base entries stand for
   const out = new Set(), H = k => hidden.has("base:" + k), paler = meta.base_other ? meta.particles[0] : null;
+  if (shownEntry) { for (const c of meta.chains) if (H("ent:" + c.entity)) out.add(c.label_asym); return out; }
   for (const c of meta.chains) {
     if ((c.role === "rRNA" && H("rRNA")) || (c.role === "rp" && c.subunit && H(c.subunit + " proteins")) ||
         (paler && c.particle === paler && H(`${paler} ribosome (paler)`))) out.add(c.label_asym);
@@ -971,7 +1012,25 @@ function buildFreeScene(data, camera) {
   if (camera) { const f = camFactor(), t = camera.target; root.children.push({ kind: "camera", params: { target: t, up: camera.up, position: camera.position.map((v, i) => t[i] + (v - t[i]) / f) } }); }
   return { kind: "single", root, metadata: { version: template && template.metadata ? template.metadata.version : "1", title: `Free ${data.gene || data.accession} (AlphaFold DB model)` } };
 }
+// The scene of a PDB entry: every polymer chain as a cartoon in its molecule's tint (hidden molecules left
+// out), the sites as spheres in the current colouring, SUMOs where asked for.
+function buildEntryScene(camera) {
+  const e = shownEntry, L = currentLegend(), hc = hiddenChains();
+  const comps = meta.chains.filter(c => !hc.has(c.label_asym)).map(c => ({ kind: "component", params: { selector: [{ label_asym_id: c.label_asym }] }, custom: { rsv: "chain" },
+    children: [{ kind: "representation", params: { type: "cartoon" }, children: [{ kind: "color", params: { color: c.colour } }] }] }));
+  const own = sites.filter(s => s.x != null && !siteHidden(s, L) && !hc.has(s.label_asym)), el = s => ({ label_asym_id: s.label_asym, label_seq_id: s.label_seq });
+  const sitesComp = own.length ? { kind: "component", params: { selector: own.map(el) }, custom: { rsv: "sites" },
+    children: [{ kind: "representation", params: { type: "spacefill", size_factor: 1.8 }, children: [{ kind: "color", params: { color: UNSET } }, ...colourNodes(own.map(s => [el(s), siteColour(s)]))] }] } : null;
+  const whole = camera ? [] : [{ kind: "component", params: { selector: "polymer" }, children: [{ kind: "focus", params: {} }] }];   // the opening view frames every chain
+  const structure = { kind: "structure", params: { type: "model" }, children: comps.concat(sitesComp ? [sitesComp] : [], whole) };
+  const root = { kind: "root", children: [{ kind: "canvas", params: { background_color: "white" } },
+    { kind: "download", params: { url: e.url }, children: [{ kind: "parse", params: { format: "bcif" }, children: [structure] }] }] };
+  if (!hidden.has("base:SUMO")) for (const s of sumoSites()) root.children.push(sumoNode(sumoPose(s)));
+  if (camera) { const f = camFactor(), t = camera.target; root.children.push({ kind: "camera", params: { target: t, up: camera.up, position: camera.position.map((v, i) => t[i] + (v - t[i]) / f) } }); }
+  return { kind: "single", root, metadata: { version: "1", title: `PDB ${e.id}` } };
+}
 function buildScene(camera) {
+  if (shownEntry) return buildEntryScene(camera);
   if (freeOf && freeData.has(freeOf)) return buildFreeScene(freeData.get(freeOf), camera);
   const sc = structuredClone(template), nodes = [...walk(sc.root)];
   if (camera) {      // `camera` is the camera as it is to be seen; Mol* moves a MolViewSpec camera away from its target by camFactor()
@@ -1037,6 +1096,16 @@ function legendHtml(L, withBase) {
     .concat(withBase && showPartners ? meta.partners.map(q => [q.label, q.colour]) : [])
     .concat(nSumo ? [["SUMO", meta.sumo.colour]] : []);
   const row = (list, prefix, labels = Object.assign({}, L.labels || {}, sumoLabel)) => list.length ? `<div class="keys">` + list.map(([k, c]) => `<span${sw(prefix ? `${prefix}:${k}` : null)}><span class="dot" style="background:${c}"></span>${esc(labels[k] || k)}</span>`).join("") + `</div>` : "";
+  if (shownEntry && withBase) {                          // a PDB entry: one entry per molecule (its chains), then the SUMO
+    const labels = Object.assign({}, L.labels || {}, sumoLabel), list = [], seenEnt = new Set();
+    for (const c of meta.chains) {
+      if (seenEnt.has(c.entity)) continue; seenEnt.add(c.entity);
+      const copies = meta.chains.filter(x => x.entity === c.entity).map(x => x.chain);
+      labels["ent:" + c.entity] = `${c.gene || c.description || c.protein || "chain"} (chain${copies.length > 1 ? "s" : ""} ${copies.join(", ")})`;
+      list.push(["ent:" + c.entity, c.colour]);
+    }
+    return h + row(keys, sitePrefix) + row(list, "base", labels) + row(nSumo ? [["SUMO", meta.sumo.colour]] : [], "base", labels);
+  }
   if (freeOf && withBase) {                             // the free protein: its tint or its confidence bands
     const tint = freeTint(freeOf);
     const pl = plddtOn ? PLDDT_BANDS.map(([b, lo], i) => [`pLDDT ${b}${i === 0 ? " (≥ 90)" : i === 3 ? " (< 50)" : ` (${lo}–${PLDDT_BANDS[i - 1][1]})`}`, FREE.style[b]]) : [["free protein (AlphaFold model)", tint]];
@@ -1046,7 +1115,7 @@ function legendHtml(L, withBase) {
 }
 function renderControls() {
   const siteCols = user ? user.cols.filter(c => c.site) : [], protCols = user ? user.cols.filter(c => c.protein) : [];
-  const roomWait = !!shownProtein && fitState !== "done";        // the room for SUMO on a protein is being computed (or failed): its controls wait
+  const roomWait = browserFit() && fitState !== "done";        // the room for SUMO on a protein is being computed (or failed): its controls wait
   const btn = ([id, label]) => `<button data-id="${esc(id)}" aria-pressed="${id === siteMode}"${roomWait && id === "room_free" ? ' disabled title="Being computed in your browser…"' : ""}>${esc(label)}</button>`;
   const groups = [...new Set(meta.modes.map(m => m.group || ""))];
   $("modes").innerHTML = groups.map(g => (groups.length > 1 ? `<span class="grp">${esc(GROUP_LABEL[g] || g)}</span>` : "") +
@@ -1360,8 +1429,11 @@ function pinLabel(r, site) {
       (l ? (l.fit != null ? `<br>Room for SUMO here: ${esc(l.room)}, ${pct1(l.fit)}` : `<br><span class="dim">Room for SUMO: being computed…</span>`) : `<br><span class="dim">Not a SUMO2/3 site.</span>`);
   } else {
     const who = chain ? (chain.gene || chain.description || chain.protein || "") : "";
-    html = `<b>${esc(r.comp)} ${r.auth_seq}</b> of ${esc(who)}${chain && chain.role !== "rp" && chain.kind === "protein" ? " (factor)" : ""}, chain ${esc(r.auth_asym)}` +
-      (multi() && chain ? ` <span class="dim">· ${esc(chain.particle)} ribosome</span>` : "") + `<br><span class="dim">Not a SUMO2/3 site.</span>`;
+    const l = shownEntry && r.comp === "LYS" ? entryLys.get(r.asym + ":" + r.seq) : null;
+    html = `<b>${esc(r.comp)} ${r.auth_seq}</b> of ${esc(who)}${chain && chain.role === "factor" ? " (factor)" : ""}, chain ${esc(r.auth_asym)}` +
+      (multi() && chain ? ` <span class="dim">· ${esc(chain.particle)} ribosome</span>` : "") + `<br><span class="dim">Not a SUMO2/3 site.</span>` +
+      (l ? `<br>Room for SUMO here: ${esc(l.room)}, ${pct1(l.fit)}${l.fit_alone !== l.fit ? ` · ${pct1(l.fit_alone)} on the chain alone` : ""}`
+         : shownEntry && r.comp === "LYS" ? `<br><span class="dim">Room for SUMO: ${fitState === "running" ? "being computed…" : "not computed for this lysine"}</span>` : "");
   }
   pin.innerHTML = html + `<button type="button" id="unpin" title="Remove the mark" aria-label="Remove the mark">×</button>`;
   pin.hidden = false;
@@ -1420,8 +1492,8 @@ function visibleSites() {
   rows.sort((a, b) => {
     let x = k === "user" ? userValue(a, uc) : a[k], y = k === "user" ? userValue(b, uc) : b[k];
     if (k === "label") { x = a.gene; y = b.gene; if (x === y) return (a.position - b.position) * sort.dir; }
-    if (k === "environment") { if (shownProtein) { x = a.fit_free; y = b.fit_free; } else { x = ENV_ORDER.indexOf(x); y = ENV_ORDER.indexOf(y); } }
-    if (k === "region") { x = REGION_ORDER.indexOf(x); y = REGION_ORDER.indexOf(y); }
+    if (k === "environment") { if (shownProtein) { x = a.fit_free; y = b.fit_free; } else if (shownEntry) { x = a.fit; y = b.fit; } else { x = ENV_ORDER.indexOf(x); y = ENV_ORDER.indexOf(y); } }
+    if (k === "region" && !shownEntry) { x = REGION_ORDER.indexOf(x); y = REGION_ORDER.indexOf(y); }
     if (x == null) return 1; if (y == null) return -1;
     return (x < y ? -1 : x > y ? 1 : a.gene.localeCompare(b.gene) || a.position - b.position) * sort.dir;
   });
@@ -1432,17 +1504,19 @@ function visibleSites() {
 const opened = s => s.environment === "exposed" && ["buried", "rRNA contact"].includes(s.environment_ref);
 const gained = s => s.x != null && !modelledEnv(s.environment_ref);
 function renderTable() {
-  const rows = visibleSites(), envCol = (meta.modes.find(m => m.id === "environment") || { legend: {} }).legend.colours || {}, uc = userCol(), pm = !!shownProtein;
+  const rows = visibleSites(), envCol = (meta.modes.find(m => m.id === "environment") || { legend: {} }).legend.colours || {}, uc = userCol(), pm = !!shownProtein, em = !!shownEntry;
   const roomCol = (meta.modes.find(m => m.id === "room_free") || { legend: {} }).legend.colours || {};
-  const mid = s => pm ? (s.room_free ? `<span class="dot" style="background:${roomCol[s.room_free] || "#bbb"}"></span>${esc(s.room_free)} <span class="dim">${pct1(s.fit_free)}</span>`
-                         : s.unplaced ? `<span class="dim">not placed</span>` : fitState === "running" ? `<span class="dim">computing…</span>` : "–")
+  const roomCell = (cls, fit, extra = "") => cls ? `<span class="dot" style="background:${roomCol[cls] || "#bbb"}"></span>${esc(cls)} <span class="dim">${pct1(fit)}${extra}</span>` : null;
+  const mid = s => pm ? (roomCell(s.room_free, s.fit_free) || (s.unplaced ? `<span class="dim">not placed</span>` : fitState === "running" ? `<span class="dim">computing…</span>` : "–"))
+                  : em ? (roomCell(s.room, s.fit, s.room_taken_by ? " · taken" : "") || (s.x == null ? `<span class="dim">not modelled</span>` : fitState === "running" ? `<span class="dim">computing…</span>` : "–"))
                      : `<span class="dot" style="background:${envCol[s.environment] || "#bbb"}"></span>${esc(s.environment)}`;
   document.querySelector("#tablewrap table").classList.toggle("protein", pm);
-  const th = document.querySelector('th[data-k="environment"]'), ta = th.querySelector("a");
-  th.firstChild.textContent = pm ? "Room for SUMO (model) " : "Environment "; ta.dataset.help = pm ? "room/browser" : "env/classes"; ta.href = "#help/" + ta.dataset.help;
+  const th = document.querySelector('th[data-k="environment"]'), ta = th.querySelector("a"), tr0 = document.querySelector('th[data-k="region"]');
+  th.firstChild.textContent = pm ? "Room for SUMO (model) " : em ? "Room for SUMO " : "Environment "; ta.dataset.help = pm || em ? "room/browser" : "env/classes"; ta.href = "#help/" + ta.dataset.help;
+  tr0.firstChild.textContent = em ? "Chain " : "Region ";
   $("rows").innerHTML = rows.map(s => `<tr data-i="${s.i}" class="${s.x == null ? "off" : ""}${selected === s.i ? " sel" : ""}"
       ${s.x == null ? (pm ? 'title="Not placed on the model: its sequence context was not found"' : 'title="Not modelled in this structure"') : ""}>
-      <td>${esc(s.gene)} K${s.position}${multi() ? `<span class="ptag">${esc(s.particle)}</span>` : ""}</td><td title="${esc(s.region)}">${esc(REGION_SHORT[s.region] || s.region)}</td>
+      <td>${esc(s.gene)} K${s.position}${multi() ? `<span class="ptag">${esc(s.particle)}</span>` : em ? `<span class="ptag">${esc(s.chain)}</span>` : ""}</td><td title="${esc(s.region)}">${esc(REGION_SHORT[s.region] || s.region)}</td>
       <td>${mid(s)}</td>
       <td class="num">${fmt(s.lfc_mg132)}</td><td class="num">${fmtQ(s.q_mg132)}</td><td class="num">${fmt(s.z_mg132, 2)}</td><td class="num">${fmt(s.z_hs, 2)}</td>
       ${uc ? `<td class="num">${esc(userValue(s, uc) ?? "–")}</td>` : ""}</tr>`).join("");
@@ -1453,6 +1527,7 @@ function renderTable() {
 
 function renderDetail(s) {
   if (shownProtein) return renderProteinDetail(s);
+  if (shownEntry) return renderEntryDetail(s);
   const rows = [
     ["Protein", `<a href="https://www.uniprot.org/uniprotkb/${esc(s.protein)}" target="_blank" rel="noopener">${esc(s.gene)} (${esc(s.protein)})</a>, ${s.subunit} subunit${multi() ? ` of the ${esc(s.particle)} ribosome` : ""}, chain ${esc(s.chain)}`],
     ["Environment", esc(s.environment) + (s.sasa_nz_complex != null ? ` · NZ surface ${fmt(s.sasa_nz_complex)} Å² in this structure, ${fmt(s.sasa_nz_free)} Å² in the free protein` : "")],
@@ -1530,6 +1605,38 @@ function renderProteinDetail(s) {
   $("detail").innerHTML = `<div class="name">${esc(s.gene)} K${s.position} <a class="hl" href="#help/structures/protein" data-help="structures/protein" title="Help: any protein from the AlphaFold DB">ⓘ</a></div><dl>` + rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("") + `</dl>`;
 }
 
+// The detail card of a site of a PDB entry: the chain and its mapping, how the site was placed, the room
+// for SUMO in the structure and on the chain alone (computed in the browser), the response.
+function renderEntryDetail(s) {
+  const e = shownEntry, ch = meta.chains.find(c => c.label_asym === s.label_asym) || {}, seg = s.segment || {};
+  const where = s.placed === "accession" ? `catalogue position ${s.position} is residue ${s.auth_seq ?? s.label_seq} of chain ${esc(s.chain)}, in the same sequence context`
+    : s.placed === "variant" ? `catalogue position ${s.position} is residue ${s.auth_seq ?? s.label_seq} of chain ${esc(s.chain)}; one residue of the sequence context differs (a variant)`
+    : `catalogue position ${s.position}, placed by its sequence context at residue ${s.auth_seq ?? s.label_seq} of chain ${esc(s.chain)}`;
+  const shown = sumoAt === siteKey(s);
+  const what = s.room_taken_by && s.pose_without ? "Show where a SUMO would sit without the other chains" : "Show a SUMO here";
+  const room = s.x == null ? `<span class="dim">not modelled in this entry</span>` : fitState === "running" ? `<span class="dim">being computed in your browser…</span>` : fitState === "failed" ? `<span class="dim">could not be computed</span>`
+    : s.fit != null ? `${esc(s.room)}: ${pct1(s.fit)} of the placements fit` + (s.fit_alone !== s.fit ? ` · ${pct1(s.fit_alone)} on the chain alone` : "") +
+      (s.room_taken_by ? ` · <b>room taken by the other chains</b>` : "") + (sumoPose(s) && meta.sumo ? ` <button class="linkbtn" id="sumobtn">${shown ? "Hide the SUMO" : what}</button>` : "") : "–";
+  const rows = [
+    ["Protein", `<a href="https://www.uniprot.org/uniprotkb/${esc(s.protein)}" target="_blank" rel="noopener">${esc(s.gene)} (${esc(s.protein)})</a>${ch.description ? ", " + esc(ch.description) : ""} · chain ${esc(s.chain)} of <a href="https://www.rcsb.org/structure/${esc(e.id)}" target="_blank" rel="noopener">PDB ${esc(e.id)}</a>` +
+                (seg.unp_start ? `, residues ${seg.unp_start}–${seg.unp_end} of the protein` : "")],
+    ["Placement", where + (s.catalogue_alias ? ` · also listed as ${esc(s.catalogue_alias)}` : "")],
+    [`Room for SUMO <a class="hl" href="#help/room/browser" data-help="room/browser" title="Help: room for SUMO computed in your browser">ⓘ</a>`, room],
+    ["MG132", `log2 FC ${fmt(s.lfc_mg132)}, q ${fmtQ(s.q_mg132)}${s.sig_mg132 ? "" : " (not significant)"}`],
+    ["Heat shock", `log2 FC ${fmt(s.lfc_hs)}, q ${fmtQ(s.q_hs)}${s.sig_hs ? "" : " (not significant)"}`],
+    ["Z-scores", `control ${fmt(s.z_ctrl, 2)} · MG132 ${fmt(s.z_mg132, 2)} · heat ${fmt(s.z_hs, 2)}`],
+  ];
+  const pl = placement.get(s.label);
+  if (pl) rows.push([`On the ribosome <a class="hl" href="#help/structures/sites" data-help="structures/sites" title="Help: one site in several structures">ⓘ</a>`,
+    `<span class="others">` + structures.map(x => `<a href="?s=${x.id}" data-goto="${x.id}" title="Open ${esc(x.short)} (${x.id}) at this site">${esc(x.short)}</a> ${esc(pl[x.id] ?? "protein absent")}`).join(" · ") + `</span>`]);
+  if (user) {
+    const a = user.site.get(s.label_asym + ":" + s.label_seq) || {}, b = user.protein.get(s.label_asym) || {};
+    const vals = user.cols.map(c => [c.name, a[c.name] ?? b[c.name]]).filter(([, v]) => v != null);
+    if (vals.length) rows.push(["Your data", vals.map(([k, v]) => `${esc(k)} ${esc(v)}`).join(" · ")]);
+  }
+  $("detail").innerHTML = `<div class="name">${esc(s.gene)} K${s.position} <span class="ptag">chain ${esc(s.chain)}</span> <a class="hl" href="#help/structures/entry" data-help="structures/entry" title="Help: any entry of the PDB">ⓘ</a></div><dl>` + rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("") + `</dl>`;
+}
+
 // When a SUMO fits: the class of the site and one chip per stage of the ribosome's life, coloured by
 // the room there (a tooltip names what takes or encloses the lysine).
 const WIN_COLOUR = { room: "#44AA99", taken: "#999933", tight: "#DDCC77", none: "#332288", unresolved: "#DDDDDD", absent: "#FFFFFF", "n/a": "#F3F0EA" };
@@ -1599,6 +1706,15 @@ const sinfo = entry => `<a class="hl" href="#help/stats/${entry}" data-help="sta
 function fillFilterMenus() {
   const present = k => v => sites.some(s => s[k] === v), keep = id => { const el = $(id), v = el.dataset.v || ""; el.value = [...el.options].some(o => o.value === v) ? v : ""; delete el.dataset.v; };
   for (const id of ["fregion", "fmore"]) $(id).dataset.v = $(id).value;
+  if (shownEntry) {                                    // a PDB entry: the chains as regions, the room in the structure
+    const regs = [...new Set(sites.map(s => s.region))];
+    $("fregion").innerHTML = `<option value="">whole structure</option>` + regs.map(r => `<option value="${esc(r)}">${esc(r)}</option>`).join("");
+    $("fenv").hidden = true; $("fenv").value = "";
+    $("fmore").innerHTML = `<option value="">any site</option>` +
+      (sites.some(s => s.room) ? `<option value="room:room">room for SUMO</option><option value="room:tight">· tight</option><option value="room:none">· no room</option>` : "") +
+      (sites.some(s => s.room_taken_by) ? `<option value="taken">room taken by the other chains</option>` : "");
+    keep("fregion"); keep("fmore"); return;
+  }
   if (shownProtein) {                                  // a protein from the AlphaFold DB: no regions or environments, the room on the model instead
     $("fregion").innerHTML = `<option value="">whole protein</option>`; $("fenv").hidden = true; $("fenv").value = "";
     $("fmore").innerHTML = `<option value="">any site</option>` +
@@ -1644,6 +1760,13 @@ function accessTable(comparison) {
 }
 function renderStats() {
   if (stats.kind === "state") return renderStateStats();
+  if (stats.kind === "entry") {
+    const e = shownEntry;
+    $("statssub").textContent = `PDB ${e.id}: ${sites.length} catalogue site${sites.length === 1 ? "" : "s"} on its chains`;
+    $("scontent").innerHTML = `<h3>An entry of the PDB</h3>
+      <p class="lead">The statistics of this window are computed on the structures of the ribosome by the analysis pipeline. For an entry opened from the PDB the viewer computes one thing itself, in your browser: the room for a SUMO at the lysines, in the structure as it is and on each lysine's own chain alone — in the table, the site details and the tooltip of a lysine. <button class="linkbtn" data-goto="${refId()}">Open the mature 80S</button></p>`;
+    return;
+  }
   if (stats.kind === "protein") {
     const p = shownProtein;
     $("statssub").textContent = `${p.gene} (${p.acc}): ${sites.length} catalogue site${sites.length === 1 ? "" : "s"} on the AlphaFold DB model`;
@@ -2016,7 +2139,7 @@ const SORT_KEYS = ["label", "region", "environment", "lfc_mg132", "q_mg132", "z_
 let urlReady = false, lastCam = null, syncTimer = null, camBusy = false;   // camBusy: a structure is loading, the camera is not its own yet
 function readUrlState() {
   const p = new URLSearchParams(location.search), cam = (p.get("cam") || "").split(",").map(Number);
-  const st = {}; for (const k of ["s", "p", "colour", "partners", "q", "region", "env", "filter", "sig", "sort", "site", "ribosome", "sumo", "view", "free", "plddt", "focus", "hide", "sumos"]) st[k] = p.get(k);
+  const st = {}; for (const k of ["s", "p", "e", "colour", "partners", "q", "region", "env", "filter", "sig", "sort", "site", "ribosome", "sumo", "view", "free", "plddt", "focus", "hide", "sumos"]) st[k] = p.get(k);
   st.cam = cam.length === 9 && cam.every(Number.isFinite) ? cam : null;
   return st;
 }
@@ -2038,7 +2161,7 @@ function cameraParam() {
 }
 function stateQuery() {
   const out = [], put = (k, v) => out.push(k + "=" + encodeURIComponent(v).replace(/%3A/g, ":").replace(/%2C/g, ",").replace(/%20/g, "+"));
-  if (shownProtein) put("p", shownProtein.acc); else if (!entry.reference) put("s", sid);
+  if (shownProtein) put("p", shownProtein.acc); else if (shownEntry) put("e", sid); else if (!entry.reference) put("s", sid);
   if (siteMode !== "mg132" && !siteMode.startsWith("user:")) put("colour", siteMode);
   if (!showPartners && meta.partners.length) put("partners", "off");
   if ($("q").value.trim()) put("q", $("q").value.trim());
@@ -2205,20 +2328,26 @@ function modelAtoms(entryId) {
   const sts = viewer.plugin.managers.structure.hierarchy.current.structures.filter(st => st.cell.obj && st.cell.obj.data);
   const st = sts.find(x => String(x.cell.obj.data.model.entryId || "").toUpperCase() === entryId.toUpperCase()) || sts.find(x => !/1WM3/i.test(String(x.cell.obj.data.model.entryId || "")));
   if (!st) return null;
-  const structure = st.cell.obj.data, n = structure.elementCount;
-  const X = new Float32Array(3 * n), seq = new Int32Array(n), side = new Uint8Array(n), b = new Float32Array(n), lys = [], ca = [];
+  const structure = st.cell.obj.data, n = structure.elementCount, chainIdx = new Map(meta.chains.map((c, i) => [c.label_asym, i]));
+  const X = new Float32Array(3 * n), seq = new Int32Array(n), side = new Uint8Array(n), b = new Float32Array(n), asym = new Int32Array(n), lys = [], ca = [], auth = new Map();
   const loc = S.StructureElement.Location.create(structure); let k = 0;
   for (const unit of structure.units) {
     const conf = unit.conformation, el = unit.elements; loc.unit = unit;
-    for (let i = 0; i < el.length; i++, k++) {
+    for (let i = 0; i < el.length; i++) {
       const e = el[i]; loc.element = e;
-      X[3 * k] = conf.x(e); X[3 * k + 1] = conf.y(e); X[3 * k + 2] = conf.z(e);
+      if (SP.entity.type(loc) !== "polymer" || SP.atom.type_symbol(loc) === "H") continue;        // as the pipeline: polymer heavy atoms
+      const alt = SP.atom.label_alt_id(loc); if (alt && alt !== "A" && alt !== "1") continue;        // one alternative conformation
+      const a = SP.chain.label_asym_id(loc), ci = chainIdx.has(a) ? chainIdx.get(a) : (chainIdx.size ? -1 : 0); if (ci < 0) continue;
+      X[3 * k] = conf.x(e); X[3 * k + 1] = conf.y(e); X[3 * k + 2] = conf.z(e); asym[k] = ci;
       const rs = SP.residue.label_seq_id(loc), nm = SP.atom.label_atom_id(loc); seq[k] = rs; b[k] = SP.atom.B_iso_or_equiv(loc);
-      if (SP.atom.label_comp_id(loc) === "LYS") { if (nm === "NZ") lys.push([rs, k]); if (nm === "CB" || nm === "CG" || nm === "CD" || nm === "CE" || nm === "NZ") side[k] = 1; }
+      if (SP.atom.label_comp_id(loc) === "LYS") { if (nm === "NZ") { lys.push({ asym: a, seq: rs, k, g: ci }); auth.set(a + ":" + rs, SP.residue.auth_seq_id(loc)); } if (nm === "CB" || nm === "CG" || nm === "CD" || nm === "CE" || nm === "NZ") side[k] = 1; }
       if (nm === "CA") ca.push([rs, Math.round(b[k] * 10) / 10]);
+      k++;
     }
   }
-  return { n: k, X, seq, side, b, lys, ca };
+  const sph = structure.boundary && structure.boundary.sphere;
+  return { n: k, X: X.subarray(0, 3 * k), seq: seq.subarray(0, k), side: side.subarray(0, k), asym: asym.subarray(0, k), b, lys, ca, auth,
+           centre: sph ? [sph.center[0], sph.center[1], sph.center[2]] : null, radius: sph ? sph.radius : null };
 }
 const roomClass = f => f == null ? null : f >= FIT.room ? "room" : f >= FIT.none ? "tight" : "none";
 function fitProgress(done, total) {
@@ -2226,52 +2355,75 @@ function fitProgress(done, total) {
   $("fitmsg").textContent = `Room for SUMO · ${done} of ${total} lysines`; $("fitprog").style.width = (total ? 100 * done / total : 0) + "%";
 }
 function fitStop() { for (const w of fitWorkers) w.terminate(); fitWorkers = []; fitRun++; }
-// Room for SUMO at every lysine of the model, in worker threads (the port of the pipeline's fit in
-// #fitworker), with a progress bar; the room-related controls wait for it (renderControls), then the
-// lysines and the sites get their share, class and a placement to draw a SUMO at.
-async function fitProtein(data, atoms) {
-  fitStop(); const run = fitRun, lys = data.lysines.map(l => [l.position, l.atom]);
-  fitState = "running"; renderControls(); fitProgress(0, lys.length);
+// The fit in worker threads (the port of the pipeline's fit in #fitworker): the lysines are dealt out to
+// the workers, each builds its own grid; progress is reported as the sum. Resolves to the results.
+async function runFit(atoms, lys, nGroups, onProgress) {
+  if (!SAMPLER) SAMPLER = await (await fetch(`data/${SAMPLER_FILE}`)).json();
+  const url = URL.createObjectURL(new Blob([$("fitworker").textContent], { type: "text/javascript" }));
+  const nW = Math.max(1, Math.min(3, (navigator.hardwareConcurrency || 2) - 1, lys.length)), done = new Array(nW).fill(0), mine = [];
   try {
-    if (!SAMPLER) SAMPLER = await (await fetch(`data/${SAMPLER_FILE}`)).json();
-    if (run !== fitRun) return;
-    const url = URL.createObjectURL(new Blob([$("fitworker").textContent], { type: "text/javascript" }));
-    const nW = Math.max(1, Math.min(3, (navigator.hardwareConcurrency || 2) - 1, lys.length)), done = new Array(nW).fill(0), t0 = performance.now();
     const parts = await Promise.all(Array.from({ length: nW }, (_, w) => new Promise((resolve, reject) => {
-      const worker = new Worker(url); fitWorkers.push(worker);
+      const worker = new Worker(url); fitWorkers.push(worker); mine.push(worker);
       worker.onmessage = e => {
         const m = e.data;
-        if (m.type === "progress") { done[w] = m.done; if (run === fitRun) fitProgress(done.reduce((a, b) => a + b, 0), lys.length); }
+        if (m.type === "progress") { done[w] = m.done; onProgress(done.reduce((a, b) => a + b, 0), lys.length); }
         else if (m.type === "done") resolve(m.results); else if (m.type === "error") reject(new Error(m.message));
       };
       worker.onerror = e => reject(new Error(e.message || "a worker thread failed"));
       worker.postMessage({ type: "setup", sampler: SAMPLER });
-      worker.postMessage({ type: "fit", atoms: { n: atoms.n, X: atoms.X, seq: atoms.seq, side: atoms.side }, lys: lys.filter((_, i) => i % nW === w) });
+      worker.postMessage({ type: "fit", atoms: { n: atoms.n, X: atoms.X, seq: atoms.seq, side: atoms.side, asym: atoms.asym }, lys: lys.filter((_, i) => i % nW === w), nGroups });
     })));
-    URL.revokeObjectURL(url);
-    if (run !== fitRun) return;
-    for (const w of fitWorkers) w.terminate(); fitWorkers = [];
-    for (const r of parts.flat()) { const l = data.lysines.find(x => x.position === r.seq); if (!l) continue; l.fit = Math.round(r.fit * 1e4) / 1e4; l.room = roomClass(l.fit); l.pose = r.pose; }
-    for (const s of sites) { const l = !s.unplaced && data.lysines.find(x => x.position === modelPos(s)); if (l && l.fit != null) { s.fit_free = l.fit; s.room_free = l.room; } }
-    fitState = "done";
+    return parts.flat();
+  } finally { URL.revokeObjectURL(url); for (const w of mine) w.terminate(); fitWorkers = fitWorkers.filter(w => !mine.includes(w)); }
+}
+// Room for SUMO at the lysines of the model or entry on the stage, with the progress bar; the room-related
+// controls wait for it (renderControls); `apply(results)` writes the shares, classes and placements into
+// the lysines and the sites, then the controls, table, details and (where they show it) the scene follow.
+async function fitInBrowser(atoms, lys, nGroups, apply) {
+  fitStop(); const run = fitRun;
+  fitState = "running"; renderControls(); fitProgress(0, lys.length); const t0 = performance.now();
+  try {
+    const results = await runFit(atoms, lys, nGroups, (d, t) => { if (run === fitRun) fitProgress(d, t); });
+    if (run !== fitRun) return false;
+    apply(results); fitState = "done";
     $("fitmsg").textContent = `Room for SUMO computed for ${lys.length} lysines in ${((performance.now() - t0) / 1000).toFixed(1)} s`; $("fitprog").style.width = "100%";
-    setTimeout(() => { if (fitState === "done" && run + 0 === fitRun) $("fitbar").hidden = true; }, 4000);
+    setTimeout(() => { if (fitState === "done" && run === fitRun) $("fitbar").hidden = true; }, 4000);
     renderControls(); fillFilterMenus(); renderTable(); if (selected != null) renderDetail(sites[selected]);
-    if (siteMode === "room_free" || (sumos !== "selected" && sumos !== "off")) applyScene(true);
+    if (siteMode === "room_free" || siteMode === "room" || (sumos !== "selected" && sumos !== "off")) applyScene(true);
+    return true;
   } catch (e) {
-    if (run !== fitRun) return;
-    for (const w of fitWorkers) w.terminate(); fitWorkers = [];
+    if (run !== fitRun) return false;
     fitState = "failed"; console.error(e);
     const bar = $("fitbar"); bar.hidden = false; bar.classList.add("failed"); bar.querySelector(".pbar").hidden = true;
     $("fitmsg").textContent = "Room for SUMO could not be computed: " + e.message;
     renderControls(); renderTable(); if (selected != null) renderDetail(sites[selected]);
+    return false;
   }
 }
-function leaveProtein() {                // a structure takes the place of the protein
-  if (!shownProtein) return;
-  fitStop(); shownProtein = null; fitState = null;
+const round4 = v => Math.round(v * 1e4) / 1e4;
+function fitProtein(data, atoms) {       // the free protein: one group, every lysine
+  const lys = data.lysines.map(l => ({ id: l.position, seq: l.position, k: l.atom, g: 0 }));
+  return fitInBrowser(atoms, lys, 1, results => {
+    for (const r of results) { const l = data.lysines.find(x => x.position === r.id); if (!l) continue; l.fit = round4(r.fit); l.room = roomClass(l.fit); l.pose = r.pose; }
+    for (const s of sites) { const l = !s.unplaced && data.lysines.find(x => x.position === modelPos(s)); if (l && l.fit != null) { s.fit_free = l.fit; s.room_free = l.room; } }
+  });
+}
+function fitEntry(atoms, lys) {          // a PDB entry: one group per chain; room in the structure and on the chain alone
+  return fitInBrowser(atoms, lys, meta.chains.length, results => {
+    for (const r of results) entryLys.set(r.id, { fit: round4(r.fit), fit_alone: round4(r.fit_alone), room: roomClass(r.fit), room_alone: roomClass(r.fit_alone), pose: r.pose, pose_without: r.pose_without });
+    for (const s of sites) {
+      const rec = s.x != null && entryLys.get(s.label_asym + ":" + s.label_seq); if (!rec) continue;
+      s.fit = rec.fit; s.fit_alone = rec.fit_alone; s.room = rec.room; s.room_free = rec.room_alone;
+      s.room_taken_by = rec.room !== "room" && rec.room_alone === "room" ? "a partner" : null;     // the pipeline's rule: what gives room when taken away
+      s.pose = rec.pose; s.pose_without = s.room_taken_by ? rec.pose_without : null;
+    }
+  });
+}
+function leaveProtein() {                // a structure takes the place of the protein or the PDB entry
+  if (!shownProtein && !shownEntry) return;
+  fitStop(); shownProtein = null; shownEntry = null; fitState = null; entryLys = new Map();
   $("fitbar").hidden = true; $("protinfo").hidden = true; $("protq").value = "";
-  const o = $("structure").querySelector("optgroup[data-protein]"); if (o) o.remove();
+  for (const o of $("structure").querySelectorAll("optgroup[data-extra]")) o.remove();
   document.querySelector("#tablewrap table").classList.remove("protein"); $("fenv").hidden = false;
 }
 const loadProtein = (query, opts) => loadProtein_(query, opts).catch(e => {
@@ -2285,22 +2437,24 @@ async function loadProtein_(query, opts = {}) {
   const seq = ++loadSeq, st = opts.state || null;
   const busy = t => { $("busy").hidden = false; $("busy").textContent = t; };
   const json = async (u, what) => { const r = await fetch(u).catch(() => { throw new Error(what + " could not be reached"); }); if (!r.ok) throw new Error(`${what} answered ${r.status}`); return r.json(); };
-  const fields = "accession,gene_primary,protein_name,length,organism_id";
+  const fields = "accession,gene_primary,protein_name,length,organism_id,xref_pdb";
+  const pdbOf = e => (e.uniProtKBCrossReferences || []).filter(x => x.database === "PDB").map(x => { const pr = Object.fromEntries((x.properties || []).map(q => [q.key, q.value])); const res = parseFloat(pr.Resolution); return { id: x.id, method: pr.Method || "", resolution: isFinite(res) ? res : null, chains: pr.Chains || "" }; })
+    .sort((a, b) => (a.resolution ?? 99) - (b.resolution ?? 99) || a.id.localeCompare(b.id));
   const nameOf = e => (e.proteinDescription && ((e.proteinDescription.recommendedName || {}).fullName || ((e.proteinDescription.submissionNames || [])[0] || {}).fullName) || {}).value || "";
   const geneOf = e => (((e.genes || [])[0] || {}).geneName || {}).value || "";
   // 1. the protein: the accession as given, else the reviewed human entry of that gene
   busy(`Looking up ${query} at UniProt…`);
-  let acc, gene = "", name = "", length = null, others = [];
+  let acc, gene = "", name = "", length = null, others = [], pdb = [];
   if (ACC_RE.test(query)) {
     acc = query.toUpperCase().replace(/-\d+$/, "");
     const e = await json(`https://rest.uniprot.org/uniprotkb/${acc}.json?fields=${fields}`, "UniProt").catch(() => null);
-    if (e) { gene = geneOf(e); name = nameOf(e); length = (e.sequence || {}).length || null; }
+    if (e) { gene = geneOf(e); name = nameOf(e); length = (e.sequence || {}).length || null; pdb = pdbOf(e); }
   } else {
     const q = encodeURIComponent(query.replace(/[^\w.-]/g, "")), base = `https://rest.uniprot.org/uniprotkb/search?fields=${fields}&format=json&size=6&query=`;
     let r = await json(base + `gene_exact:${q}+AND+organism_id:9606+AND+reviewed:true`, "UniProt");
     if (!r.results.length) r = await json(base + `(gene:${q}*+OR+protein_name:${q})+AND+organism_id:9606+AND+reviewed:true`, "UniProt");
     if (!r.results.length) throw new Error(`UniProt has no reviewed human protein named ${query}`);
-    const e = r.results[0]; acc = e.primaryAccession; gene = geneOf(e); name = nameOf(e); length = (e.sequence || {}).length || null;
+    const e = r.results[0]; acc = e.primaryAccession; gene = geneOf(e); name = nameOf(e); length = (e.sequence || {}).length || null; pdb = pdbOf(e);
     others = r.results.slice(1).map(x => [x.primaryAccession, geneOf(x) || x.primaryAccession]);
   }
   if (seq !== loadSeq) return;
@@ -2314,10 +2468,10 @@ async function loadProtein_(query, opts = {}) {
   if (!catalogue) { busy("Loading the catalogue of sites…"); catalogue = catalogueIndex(await json(`data/${CAT.file}`, "the catalogue of sites")); }
   if (seq !== loadSeq) return;
   const p = { acc, gene: gene || m.gene || acc, name: name || m.uniprotDescription || "", entry: m.entryId, version: m.latestVersion, seq: m.uniprotSequence, start: m.uniprotStart, end: m.uniprotEnd,
-              url: m.bcifUrl, n_residues: m.uniprotEnd - m.uniprotStart + 1, plddt_mean: m.globalMetricValue, length: length || m.uniprotSequence.length };
+              url: m.bcifUrl, n_residues: m.uniprotEnd - m.uniprotStart + 1, plddt_mean: m.globalMetricValue, length: length || m.uniprotSequence.length, pdb };
   const placed = placeCatalogue(p), nPlaced = placed.filter(s => !s.unplaced).length;
   // 4. the protein takes the place of the structure
-  leaveProtein(); if (sid && !String(sid).startsWith("p:")) lastSid = sid;
+  leaveProtein();
   shownProtein = p; meta = proteinMeta(p); sites = placed; stats = { kind: "protein" }; template = null; sid = "p:" + acc;
   entry = { id: sid, short: p.gene, group: "Protein", state: `${p.name || p.gene}: the protein alone, as predicted`, label: `${p.gene} (${acc}), AlphaFold DB model ${p.entry} v${p.version}`,
             reference: false, precursor: false, particles: ["1"], sites: sites.length, modelled: 0, holds: "" };
@@ -2333,15 +2487,23 @@ async function loadProtein_(query, opts = {}) {
     const so = /^(-?)(\w+)$/.exec(st.sort || ""); if (so && SORT_KEYS.includes(so[2])) sort = { k: so[2], dir: so[1] ? -1 : 1 };
   }
   if (!siteMode.startsWith("user:") && !meta.modes.some(x => x.id === siteMode)) siteMode = "mg132";
-  $("structure").insertAdjacentHTML("beforeend", `<optgroup data-protein label="Any protein (AlphaFold DB)"><option value="${esc(sid)}">${esc(p.gene)} (${esc(acc)})</option></optgroup>`);
+  $("structure").insertAdjacentHTML("beforeend", `<optgroup data-extra label="Any protein (AlphaFold DB)"><option value="${esc(sid)}">${esc(p.gene)} (${esc(acc)})</option></optgroup>`);
   $("structure").value = sid; $("protq").value = p.gene;
   const afLink = `<a href="https://alphafold.ebi.ac.uk/entry/${esc(acc)}" target="_blank" rel="noopener">${esc(p.entry)}</a>`;
   $("structinfo").innerHTML = `${esc(p.name || p.gene)}. AlphaFold DB model ${afLink} (version ${p.version}): the protein alone, as predicted; ${p.n_residues} residues, mean confidence ${fmt(p.plddt_mean, 0)}.` +
     (p.length && p.end < p.length ? ` The model covers residues ${p.start}–${p.end} of ${p.length}.` : "");
   $("footstruct").innerHTML = `${esc(p.gene)} (${esc(acc)}), AlphaFold DB model ${afLink}`;
   $("protinfo").hidden = false;
-  $("protinfo").innerHTML = `${sites.length} site${sites.length === 1 ? "" : "s"} of ${esc(p.gene)} in the catalogue` + (sites.length ? `, ${nPlaced} placed on the model` : "") + "." +
-    (others.length ? ` Other matches: ${others.map(([a, g]) => `<a data-prot="${esc(a)}" href="?p=${esc(a)}">${esc(g)}</a>`).join(", ")}.` : "");
+  $("protinfo").innerHTML = `<div>${sites.length} site${sites.length === 1 ? "" : "s"} of ${esc(p.gene)} in the catalogue` + (sites.length ? `, ${nPlaced} placed on the model` : "") + "." +
+    (others.length ? ` Other matches: ${others.map(([a, g]) => `<a data-prot="${esc(a)}" href="?p=${esc(a)}">${esc(g)}</a>`).join(", ")}.` : "") + `</div>` +
+    (pdb.length ? `<details><summary>In the PDB: ${pdb.length} structure${pdb.length === 1 ? "" : "s"} with this protein <a class="hl" href="#help/structures/entry" data-help="structures/entry" title="Help: any entry of the PDB">ⓘ</a></summary><div class="pdbl">` +
+      pdb.map(x => `<div><a data-entry="${esc(x.id)}" href="?e=${esc(x.id)}" title="Open PDB ${esc(x.id)} with the sites of all its proteins">${esc(x.id)}</a>${esc(x.method)}${x.resolution != null ? `, ${x.resolution.toFixed(1)} Å` : ""} <span class="dim">· ${esc(x.chains.replace(/=/g, " "))}</span></div>`).join("") + `</div></details>` : `<div class="dim">No structure of this protein in the PDB.</div>`) +
+    `<div id="cpx" class="dim"></div>`;
+  fetch(`https://www.ebi.ac.uk/intact/complex-ws/search/${acc}`).then(r => r.ok ? r.json() : null).then(d => {        // curated complexes the protein is part of (composition, mostly without coordinates)
+    if (!d || seq !== loadSeq || !$("cpx")) return;
+    const names = (d.elements || []).map(x => x.complexName || x.complexAC).filter(Boolean).map(x => x.length > 48 ? x.slice(0, 46) + "…" : x);
+    $("cpx").innerHTML = d.size ? `Complex Portal: <a href="https://www.ebi.ac.uk/complexportal/complex/search?query=${esc(acc)}" target="_blank" rel="noopener">${d.size} curated complex${d.size === 1 ? "" : "es"}</a>` + (names.length ? ` · ${names.slice(0, 3).map(esc).join(" · ")}${names.length > 3 ? " · …" : ""}` : "") : "";
+  }).catch(() => {});
   $("partnerswrap").hidden = true; $("views").classList.add("off"); $("views").innerHTML = "";
   $("freebar").hidden = false;
   $("freebar").innerHTML = `<span><b>${esc(p.gene)}</b> <span class="dim">· ${esc(p.entry)}, AlphaFold DB v${p.version}, mean pLDDT ${fmt(p.plddt_mean, 1)}</span></span>` +
@@ -2364,7 +2526,7 @@ async function loadProtein_(query, opts = {}) {
   const atoms = modelAtoms(p.entry), data = freeData.get(acc);
   if (atoms) {
     data.residues = atoms.ca;
-    data.lysines = atoms.lys.map(([pos, k]) => ({ position: pos, atom: k, plddt: Math.round(atoms.b[k] * 10) / 10, x: Math.round(atoms.X[3 * k] * 10) / 10, y: Math.round(atoms.X[3 * k + 1] * 10) / 10, z: Math.round(atoms.X[3 * k + 2] * 10) / 10, fit: null, room: null, pose: null }));
+    data.lysines = atoms.lys.map(({ seq: pos, k }) => ({ position: pos, atom: k, plddt: Math.round(atoms.b[k] * 10) / 10, x: Math.round(atoms.X[3 * k] * 10) / 10, y: Math.round(atoms.X[3 * k + 1] * 10) / 10, z: Math.round(atoms.X[3 * k + 2] * 10) / 10, fit: null, room: null, pose: null }));
     for (const s of sites) {
       if (s.unplaced) continue;
       const l = data.lysines.find(x => x.position === modelPos(s));
@@ -2379,6 +2541,171 @@ async function loadProtein_(query, opts = {}) {
   urlReady = true; syncSoon(300);
   if (atoms && data.lysines.length) fitProtein(data, atoms).then(() => { if (seq !== loadSeq) return; if (st && st.sumo === "1" && t && freePose(t)) { sumoAt = siteKey(t); renderDetail(t); applyScene(true); } });
   else { fitState = "done"; renderControls(); }
+  if (st && st.focus === "1" && t) setTimeout(() => { if (seq === loadSeq) setFocus(true); }, 500);
+}
+
+// ---- any entry of the PDB ---------------------------------------------------------------------
+// A PDB code in the box, or a structure chosen from a protein's list: the entry's molecules and the
+// UniProt mapping of its chains come from PDBe (SIFTS), the coordinates from the PDB as for the ribosome
+// scenes, the sites from the catalogue, placed on every mapped chain by sequence context as the pipeline
+// does; then the room for SUMO is computed in the browser, chain by chain (fitEntry).
+const PDB_RE = /^[1-9][A-Z0-9]{3}$/i;
+const POLYMER_KIND = { "polypeptide(L)": "protein", "polypeptide(D)": "protein", "polyribonucleotide": "rna", "polydeoxyribonucleotide": "dna", "polydeoxyribonucleotide/polyribonucleotide hybrid": "dna" };
+function entryMeta(e) {
+  const keep = ["mg132", "hs", "z_mg132", "z_ctrl", "z_hs", "room", "room_free"];
+  const modes = keep.map(id => refMeta.modes.find(m => m.id === id)).filter(Boolean).map(m => structuredClone(m));
+  const rm = modes.find(m => m.id === "room"), rf = modes.find(m => m.id === "room_free");
+  if (rm) { rm.legend.title = "Room for a SUMO at the lysine, in this entry as it is (computed in your browser)"; rm.legend.extra = { "not computed": UNSET }; }
+  if (rf) { rf.label = "Room on the chain alone"; rf.legend.title = "Room for a SUMO on the lysine's own chain, the other chains taken away"; rf.legend.extra = { "not computed": UNSET }; }
+  return { pdb_id: e.id, base: refMeta.base, radius: 100, particles: ["1"], sumo: refMeta.sumo, partners: [], chains: e.chains, modes,
+           views: [{ id: "default", target: [0, 0, 0], position: [0, 0, 300], up: [0, 1, 0] }] };
+}
+// The catalogue's sites on every chain of an entry that maps to a UniProt protein: a site goes to the
+// residue that carries its sequence context in the chain's sequence (the construct, numbered as the model
+// is), at the mapped position where the context agrees, elsewhere in the segment when the numbering
+// differs, with one substitution accepted at the mapped position. One row per chain copy.
+function placeEntrySites(e) {
+  const { c, q } = catalogue, out = [], quant = ["z_ctrl", "z_mg132", "z_hs", "lfc_mg132", "q_mg132", "lfc_hs", "q_hs"];
+  const mism = (a, b) => { let m = 0; for (let i = 0; i < Math.min(a.length, b.length); i++) { const x = a[i], y = b[i]; if (!(x === y || x === "_" || x === "X" || y === "_" || y === "X")) m++; } return m; };
+  for (const [acc, info] of Object.entries(e.unp || {})) {
+    const idx = catalogue.byAcc.get(acc) || []; if (!idx.length) continue;
+    const excl = (CAT.exclude || []).find(x => x.protein === acc);
+    for (const m of info.mappings || []) {
+      const ch = e.chains.find(x => x.label_asym === m.struct_asym_id); if (!ch || !ch.seq) continue;
+      const seq = ch.seq, off = m.unp_start - m.start.residue_number, lo = m.start.residue_number, hi = m.end.residue_number;
+      const ctxAt = pos => { let t = ""; for (let i = pos - 8; i <= pos + 6; i++) t += i >= 0 && i < seq.length ? seq[i] : "_"; return t; };
+      const isK = pos => pos >= 1 && pos <= seq.length && seq[pos - 1] === "K";
+      const at = new Map();
+      for (const i of idx) {
+        const u = c.position[i]; if ((excl && u <= excl.max_position) || u < m.unp_start || u > m.unp_end) continue;
+        const pos = u - off, mm = isK(pos) ? mism(c.ctx[i], ctxAt(pos)) : null; let hit = null, how = null;
+        if (mm === 0) { hit = pos; how = "accession"; }
+        else { const hits = []; for (let j = lo; j <= hi; j++) if (isK(j) && mism(c.ctx[i], ctxAt(j)) === 0) hits.push(j); if (hits.length === 1) { hit = hits[0]; how = "sequence context"; } else if (mm === 1) { hit = pos; how = "variant"; } }
+        if (hit == null) continue;
+        const s = { catalogue_protein: acc, protein: acc, gene: ch.gene || c.gene[i] || acc, position: u, ctx: c.ctx[i], particle: ch.label_asym, chain: ch.chain, label_asym: ch.label_asym, label_seq: hit, auth_seq: null,
+          subunit: "", region: chainName(ch), environment: null, x: null, y: null, z: null, fit: null, fit_alone: null, room: null, room_free: null, room_taken_by: null, pose: null, pose_without: null, placed: how,
+          segment: { unp_start: m.unp_start, unp_end: m.unp_end },
+          z_ctrl: c.z_ctrl[i], z_mg132: c.z_mg132[i], z_hs: c.z_hs[i], lfc_mg132: c.lfc_mg132[i], q_mg132: c.q_mg132[i], lfc_hs: c.lfc_hs[i], q_hs: c.q_hs[i],
+          sig_mg132: c.q_mg132[i] != null && c.q_mg132[i] < q, sig_hs: c.q_hs[i] != null && c.q_hs[i] < q };
+        const prev = at.get(hit);
+        if (prev) {                                     // two catalogue entries on one residue: one site
+          if (quant.every(k => prev[k] == null) && quant.some(k => s[k] != null)) { for (const k of quant) prev[k] = s[k]; prev.sig_mg132 = s.sig_mg132; prev.sig_hs = s.sig_hs; }
+          prev.catalogue_alias = [prev.catalogue_alias, `${s.gene} K${s.position}`].filter(Boolean).join("; "); continue;
+        }
+        at.set(hit, s); out.push(s);
+      }
+    }
+  }
+  out.sort((a, b) => a.label_asym.localeCompare(b.label_asym) || a.label_seq - b.label_seq);
+  for (const s of out) s.label = `${s.gene} K${s.position}`;
+  return out;
+}
+const loadEntry = (id, opts) => loadEntry_(id, opts).catch(e => {
+  $("busy").hidden = false; $("busy").textContent = `Could not show PDB ${String(id).toUpperCase()}: ${e.message}`;
+  if (sid) $("structure").value = sid;
+  console.error(e);
+});
+async function loadEntry_(id, opts = {}) {
+  id = String(id || "").trim().toUpperCase();
+  if (!PDB_RE.test(id)) throw new Error("not a PDB code");
+  if (!CAT || !SAMPLER_FILE) throw new Error("this copy of the data has no catalogue of sites");
+  const seq = ++loadSeq, st = opts.state || null, lid = id.toLowerCase(), pdbe = "https://www.ebi.ac.uk/pdbe/api/";
+  const busy = t => { $("busy").hidden = false; $("busy").textContent = t; };
+  const json = async (u, what) => { const r = await fetch(u).catch(() => { throw new Error(what + " could not be reached"); }); if (!r.ok) throw new Error(`${what} answered ${r.status}`); return r.json(); };
+  busy(`Fetching PDB entry ${id}…`);
+  const [mols, summ, expt, maps] = await Promise.all([
+    json(pdbe + `pdb/entry/molecules/${lid}`, "PDBe").catch(e => { throw new Error(/404/.test(e.message) ? `the PDB has no entry ${id}` : e.message); }),
+    json(pdbe + `pdb/entry/summary/${lid}`, "PDBe").catch(() => null), json(pdbe + `pdb/entry/experiment/${lid}`, "PDBe").catch(() => null),
+    json(pdbe + `mappings/uniprot_segments/${lid}`, "PDBe").catch(() => null)]);
+  if (seq !== loadSeq) return;
+  if (!catalogue) { busy("Loading the catalogue of sites…"); catalogue = catalogueIndex(await json(`data/${CAT.file}`, "the catalogue of sites")); }
+  if (seq !== loadSeq) return;
+  const ents = mols[lid] || [], s0 = (summ && summ[lid] && summ[lid][0]) || {}, ex = (expt && expt[lid] && expt[lid][0]) || {}, unp = (maps && maps[lid] && maps[lid].UniProt) || {};
+  const chains = []; let tint = 0;
+  for (const en of ents) {
+    const kind = POLYMER_KIND[en.molecule_type]; if (!kind) continue;
+    const asyms = en.in_struct_asyms || [], auths = en.in_chains || [], colour = kind === "protein" ? CHAIN_TINTS[tint++ % CHAIN_TINTS.length] : NUCLEIC_TINT;
+    for (let i = 0; i < asyms.length; i++) {
+      const a = asyms[i], hit = Object.entries(unp).find(([, v]) => (v.mappings || []).some(m => m.struct_asym_id === a)), acc = hit ? hit[0] : "";
+      const gi = acc ? catalogue.byAcc.get(acc) : null;
+      const gene = gi && gi.length ? catalogue.c.gene[gi[0]] : "";       // the catalogue's symbol; otherwise the molecule's name labels the chain (PDBe's gene list starts with synonyms)
+      let description = (en.molecule_name || [])[0] || "";
+      if (kind !== "protein" && /^(DNA|RNA)\b/.test(description)) description = kind.toUpperCase(); else if (description.length > 44) description = description.slice(0, 42) + "…";
+      const organism = ((en.source || [])[0] || {}).organism_scientific_name || "";
+      chains.push({ label_asym: a, chain: auths[i] || a, entity: String(en.entity_id), kind, role: kind === "protein" ? "protein" : "nucleic", particle: "1", protein: acc, gene,
+                    description, organism, seq: en.sequence || "", colour });
+    }
+  }
+  if (!chains.length) throw new Error(`entry ${id} has no polymer chains`);
+  const e = { id, title: s0.title || `PDB ${id}`, method: (s0.experimental_method || [])[0] || ex.experimental_method || "", resolution: isFinite(+ex.resolution) ? +ex.resolution : null,
+              url: `https://models.rcsb.org/${lid}.bcif`, chains, unp };
+  const placed = placeEntrySites(e);
+  // the entry takes the place of the structure
+  leaveProtein();
+  shownEntry = e; meta = entryMeta(e); sites = placed; stats = { kind: "entry" }; template = null; sid = id;
+  const resTxt = e.resolution != null ? `, ${e.resolution.toFixed(1)} Å` : "";
+  entry = { id, short: id, group: "PDB", state: e.title, label: `${e.title} (PDB ${id}; ${e.method}${resTxt})`, reference: false, precursor: false, particles: ["1"], sites: sites.length, modelled: 0, holds: "" };
+  selected = null; sumoAt = null; lastCam = null; camBusy = true; focusOn = false; unpin(false); freeOf = null; fitState = null;
+  sites.forEach((s, i) => s.i = i);
+  if (st) {
+    if (st.colour) siteMode = st.colour;
+    hidden = new Set((st.hide || "").split(",").filter(Boolean));
+    if (st.sumos) { const [mo, t] = st.sumos.split(":"); if (["off", "selected", "strong", "all"].includes(mo)) sumos = mo; if (t && isFinite(+t)) sumoThr = Math.min(1, Math.max(0, +t / 100)); }
+    const so = /^(-?)(\w+)$/.exec(st.sort || ""); if (so && SORT_KEYS.includes(so[2])) sort = { k: so[2], dir: so[1] ? -1 : 1 };
+  }
+  if (!siteMode.startsWith("user:") && !meta.modes.some(x => x.id === siteMode)) siteMode = "mg132";
+  $("structure").insertAdjacentHTML("beforeend", `<optgroup data-extra label="PDB entry"><option value="${esc(id)}">${esc(id)} · ${esc(e.title.length > 48 ? e.title.slice(0, 46) + "…" : e.title)}</option></optgroup>`);
+  $("structure").value = id; $("protq").value = id;
+  const seenEnt = new Set(), members = chains.filter(c => !seenEnt.has(c.entity) && seenEnt.add(c.entity)).map(c => {
+    const copies = chains.filter(x => x.entity === c.entity).map(x => x.chain);
+    const note = c.kind !== "protein" ? "" : !c.protein ? "no UniProt mapping" : c.organism && !/^Homo sapiens/.test(c.organism) ? c.organism : "";
+    return `${esc(c.gene || c.description || "chain")} (${copies.join(", ")})${note ? ` <span class="dim">${esc(note)}</span>` : ""}`; }).join(", ");
+  const pdbLink = `<a href="https://www.rcsb.org/structure/${esc(id)}" target="_blank" rel="noopener">PDB ${esc(id)}</a>`;
+  $("structinfo").innerHTML = `${esc(e.title)}. ${pdbLink}, ${esc(e.method)}${resTxt}. Molecules: ${members}.`;
+  $("footstruct").innerHTML = `${esc(e.title)} (${pdbLink}), fetched from the PDB by your browser`;
+  const withSites = new Set(sites.map(s => s.protein)).size, mapped = chains.filter(c => c.protein).length;
+  $("protinfo").hidden = false;
+  const human = chains.some(c => c.protein && /^Homo sapiens/.test(c.organism || "Homo sapiens"));
+  $("protinfo").innerHTML = `<div>${sites.length} catalogue site${sites.length === 1 ? "" : "s"} on ${withSites} protein${withSites === 1 ? "" : "s"} of this entry; ${mapped} of ${chains.length} chains map to a UniProt protein.` +
+    (!sites.length && mapped && !human ? ` <span class="dim">The catalogue covers human proteins; this entry's are not human.</span>` : "") + `</div>`;
+  $("partnerswrap").hidden = true; $("views").classList.add("off"); $("views").innerHTML = "";
+  $("freebar").hidden = false;
+  $("freebar").innerHTML = `<span><b>PDB ${esc(id)}</b> <span class="dim">· ${esc(e.method)}${resTxt} · ${chains.length} chain${chains.length === 1 ? "" : "s"}</span></span>` +
+    `<button class="linkbtn" id="backbtn">Back to the ribosome</button><a class="hl" href="#help/structures/entry" data-help="structures/entry" title="Help: any entry of the PDB">ⓘ</a>`;
+  fillFilterMenus(); fillHelpNumbers(); renderStats();
+  if (st) {
+    const choose = (el, v) => { $(el).value = v && [...$(el).options].some(o => o.value === v) ? v : ""; };
+    $("q").value = st.q || ""; choose("fmore", st.filter); choose("fsig", st.sig === "1" ? "mg132" : st.sig); choose("fregion", st.region); $("fenv").value = "";
+  }
+  if (opts.onData) opts.onData();
+  if (userRaw) { try { showUser(loadUserTable(userRaw.name, userRaw.text)); }
+                 catch (err) { showUser(null); $("userinfo").innerHTML = `<b>${esc(userRaw.name)}</b>: ${esc(err.message)}. <a href="#" id="clear">Remove</a>`; } }
+  $("detail").innerHTML = DETAIL_HINT;
+  renderTable(); renderControls();
+  const camera = st && st.cam ? { position: st.cam.slice(0, 3), target: st.cam.slice(3, 6), up: st.cam.slice(6, 9) } : null;
+  if (st) lastCam = st.cam ? ["cam", st.cam.join(",")] : null;
+  await applyScene(false, camera);
+  if (seq !== loadSeq) return;
+  camBusy = false;
+  // the atoms: where the sites are, which lysines there are
+  const atoms = modelAtoms(id);
+  if (atoms) {
+    if (atoms.centre) { meta.views[0].target = atoms.centre; meta.radius = atoms.radius || 100; }
+    const nz = new Map(atoms.lys.map(l => [l.asym + ":" + l.seq, l]));
+    for (const s of sites) { const l = nz.get(s.label_asym + ":" + s.label_seq); if (!l) continue; s.x = Math.round(atoms.X[3 * l.k] * 10) / 10; s.y = Math.round(atoms.X[3 * l.k + 1] * 10) / 10; s.z = Math.round(atoms.X[3 * l.k + 2] * 10) / 10; s.auth_seq = atoms.auth.get(s.label_asym + ":" + s.label_seq) ?? null; s.status = "resolved"; }
+    entry.modelled = sites.filter(s => s.x != null).length;
+  }
+  renderTable();
+  const keep = opts.site || (st && st.site ? { label: st.site, particle: st.ribosome } : null);
+  const t = keep && (sites.find(x => x.label === keep.label && x.x != null && (!keep.particle || x.particle === keep.particle)) || sites.find(x => x.label === keep.label));
+  if (t) { select(t.i, false); revealRow(t.i); }
+  urlReady = true; syncSoon(300);
+  if (atoms && atoms.lys.length) {                     // every lysine of a small entry; the sites' lysines of a large one
+    const siteAt = new Set(sites.filter(s => s.x != null).map(s => s.label_asym + ":" + s.label_seq));
+    const lys = (atoms.lys.length <= 400 ? atoms.lys : atoms.lys.filter(l => siteAt.has(l.asym + ":" + l.seq))).map(l => ({ id: l.asym + ":" + l.seq, seq: l.seq, k: l.k, g: l.g }));
+    if (lys.length) fitEntry(atoms, lys).then(ok => { if (ok && seq === loadSeq && st && st.sumo === "1" && t && sumoPose(t)) { sumoAt = siteKey(t); renderDetail(t); applyScene(true); } });
+    else { fitState = "done"; renderControls(); }
+  } else { fitState = "done"; renderControls(); }
   if (st && st.focus === "1" && t) setTimeout(() => { if (seq === loadSeq) setFocus(true); }, 500);
 }
 
@@ -2407,13 +2734,15 @@ async function main() {
                    loadUserText: (name, text) => { userRaw = { name, text }; setUser(loadUserTable(name, text)); }, buildScene, setView, select,
                    toggleSumo, get sumoAt() { return sumoAt; }, stateQuery, syncUrl, zoomTo, onStructureClick, get lastClick() { return lastClick; },
                    showFree, get freeOf() { return freeOf; }, siteColour, setFocus, updatePeek, get focusOn() { return focusOn; },
-                   loadProtein, get shownProtein() { return shownProtein; }, get freeData() { return freeData; }, get fitState() { return fitState; } };
+                   loadProtein, get shownProtein() { return shownProtein; }, get freeData() { return freeData; }, get fitState() { return fitState; },
+                   loadEntry, get shownEntry() { return shownEntry; }, get entryLys() { return entryLys; } };
   initHelp();
   initStats();
   await initInteraction();
   const st = readUrlState(), deep = location.hash;     // the address is rewritten once the page is set up
   const onData = () => { if (deep.startsWith("#help")) openHelp(deep.slice(6)); else if (deep === "#stats") openStats(); };
   if (st.p && CAT && SAMPLER_FILE) await loadProtein(st.p, { state: st, onData });
+  else if (st.e && CAT && SAMPLER_FILE) await loadEntry(st.e, { state: st, onData });
   else await loadStructure(st.s || refId(), { state: st, onData });
 
   // a camera move ends up in the address once it has come to rest
@@ -2434,9 +2763,12 @@ async function main() {
     catch (e) { window.prompt("Copy this link:", location.href); }
   });
 
-  $("structure").addEventListener("change", e => { if (!String(e.target.value).startsWith("p:")) loadStructure(e.target.value, { site: selected != null ? sites[selected] : null }); });
-  $("protform").addEventListener("submit", e => { e.preventDefault(); loadProtein($("protq").value, { site: selected != null ? sites[selected] : null }); });
-  $("protinfo").addEventListener("click", e => { const a = e.target.closest("a[data-prot]"); if (a) { e.preventDefault(); loadProtein(a.dataset.prot); } });
+  $("structure").addEventListener("change", e => { const v = String(e.target.value); if (!v.startsWith("p:") && !(shownEntry && v === sid)) loadStructure(v, { site: selected != null ? sites[selected] : null }); });
+  $("protform").addEventListener("submit", e => { e.preventDefault(); const q = $("protq").value.trim(), o = { site: selected != null ? sites[selected] : null }; if (PDB_RE.test(q)) loadEntry(q, o); else loadProtein(q, o); });
+  $("protinfo").addEventListener("click", e => {
+    const a = e.target.closest("a[data-prot]"); if (a) { e.preventDefault(); return loadProtein(a.dataset.prot); }
+    const b = e.target.closest("a[data-entry]"); if (b) { e.preventDefault(); loadEntry(b.dataset.entry, { site: selected != null ? sites[selected] : null }); }
+  });
   $("busy").addEventListener("click", () => { if (!/^Loading/.test($("busy").textContent)) $("busy").hidden = true; });
   $("partners").addEventListener("change", e => { showPartners = e.target.checked; syncUrl(); applyScene(); });
   $("modes").addEventListener("click", e => { const b = e.target.closest("button"); if (b && b.dataset.id !== siteMode) { siteMode = b.dataset.id; renderTable(); applyScene(); } });
@@ -2449,7 +2781,7 @@ async function main() {
   });
   $("rows").addEventListener("click", e => { const tr = e.target.closest("tr"); if (tr) select(+tr.dataset.i); });
   $("detail").addEventListener("click", e => { if (e.target.id === "sumobtn") toggleSumo(); if (e.target.id === "freebtn") showFree(freeOf === sites[selected].protein ? null : sites[selected].protein); });
-  $("freebar").addEventListener("click", e => { if (e.target.id === "backbtn") { if (shownProtein) loadStructure(lastSid || refId(), { site: selected != null ? sites[selected] : null }); else showFree(null); } });
+  $("freebar").addEventListener("click", e => { if (e.target.id === "backbtn") { if (browserFit()) loadStructure(lastSid || refId(), { site: selected != null ? sites[selected] : null }); else showFree(null); } });
   $("freebar").addEventListener("change", e => { if (e.target.id === "plddt") { plddtOn = e.target.checked; syncUrl(); applyScene(true); } });
 
   const readFile = f => f.text().then(t => { const u = loadUserTable(f.name, t); userRaw = { name: f.name, text: t }; setUser(u); }).catch(err => { $("userinfo").innerHTML = `Could not use <b>${esc(f.name)}</b>: ${esc(err.message)}. <a href="#" id="clear">Dismiss</a>`; });
