@@ -224,7 +224,7 @@
     <div class="block" id="sumoblock" hidden>
       <h2>SUMO at the sites <a class="hl" href="#help/room/sumos" data-help="room/sumos" title="Help: SUMO at the sites">ⓘ</a></h2>
       <div class="seg" id="sumomodes"><button data-sumos="off">none</button><button data-sumos="selected">selected site</button><button data-sumos="strong">strong sites</button><button data-sumos="all">all with room</button></div>
-      <label id="sumothr" class="note" hidden><input type="range" id="sumothrin" min="0" max="100" step="5" value="50" aria-label="Threshold"> above <span id="sumothrv">50</span> % <span id="sumothrscale">of the colour scale</span></label>
+      <label id="sumothr" class="note" hidden><input type="range" id="sumothrin" min="0" max="100" step="5" value="70" aria-label="Threshold"> above <span id="sumothrv">70</span> % <span id="sumothrscale">of the colour scale</span></label>
     </div>
     <div class="block" id="protblock" hidden>
       <h2>Colour the proteins by <a class="hl" href="#help/colour/proteins" data-help="colour/proteins" title="Help: protein colouring">ⓘ</a></h2>
@@ -329,7 +329,7 @@
               <tr><td>selected site, and a SUMO drawn at it</td><td><code>site</code> (and <code>ribosome</code> in the disome), <code>sumo</code></td></tr>
               <tr><td>the free protein of the selected site shown, coloured by confidence</td><td><code>free</code>, <code>plddt</code></td></tr>
               <tr><td>legend entries switched off</td><td><code>hide</code></td></tr>
-              <tr><td>SUMO at the sites: mode and threshold</td><td><code>sumos</code> (<code>off</code>, <code>strong:50</code>, <code>all</code>)</td></tr>
+              <tr><td>SUMO at the sites: mode and threshold</td><td><code>sumos</code> (<code>off</code>, <code>strong:70</code>, <code>all</code>)</td></tr>
               <tr><td>the view: a standard view, or the camera exactly as you turned and zoomed it; the focus on the selected site</td><td><code>view</code>, or <code>cam</code> (position, target and up direction); <code>focus</code></td></tr>
               <tr><td>an open Help entry or the Statistics window</td><td>the part after <code>#</code></td></tr></table>
             <p>What is at its default is left out, so the link of the opening view is the bare address. A camera move is written a moment after it has come to rest.</p>
@@ -474,7 +474,7 @@
             <p>The same placements are tested four times, each time with less of the structure: as it is; without the partners (factors, tRNA, mRNA); without the other ribosome of a disome; and on the lysine's own subunit alone. Each step can only add room, so the four shares in the detail card never decrease from one to the next; where a share does not change, the thing removed was not in the way, and the card leaves it out. When a site has no room in the structure as it is and gains room once something is taken away, that something is named: <i>room taken by its partners</i>, <i>by the other ribosome</i>, <i>by the other subunit</i>. If more than one is in the way, the first of these in that order whose removal gives room is named. A site that has no room even on its own subunit is enclosed by its own subunit, and nothing is named. The third menu above the table filters by it.</p>
             <p>A site whose room the other subunit takes can carry SUMO on a free subunit but not in the assembled ribosome: a SUMO there stands in the way of the subunits joining, or has to be removed first. The same holds for the factor or the neighbouring ribosome.</p></article>
           <article data-entry="sumos"><h3>SUMO at the sites</h3>
-            <p>The control <i>SUMO at the sites</i> under the colouring draws the SUMO2 core at many sites at once, each at a placement that fits (or, where the room is taken, where it would sit without what takes it); a site without any placement gets none, so what is drawn is what the structure can physically carry. <i>Selected site</i> is the default: a SUMO only where the detail card asked for one. <i>All with room</i> draws one at every site the table shows that has a placement, so the filters above the table restrict it. <i>Strong sites</i> keeps the sites above a threshold of a colour scale — the slider, 50 % by default — as the sites most likely to carry the modification. The scale is the colouring shown when it is a fold change or a Z-score (for MG132 and heat shock, 50 % is a log2 fold change of 4 among the significant sites; for a Z-score, a value above 0); with a class colouring, which has no scale, the MG132 fold change is used and the slider says so. At most <span data-s="sumo_max"></span> SUMOs are drawn, the strongest first. The legend entry counts them and, as every legend entry, hides and shows them. The link carries the mode (<code>sumos</code>).</p></article>
+            <p>The control <i>SUMO at the sites</i> under the colouring draws the SUMO2 core at many sites at once, each at a placement that fits (or, where the room is taken, where it would sit without what takes it); a site without any placement gets none, so what is drawn is what the structure can physically carry. <i>Selected site</i> is the default: a SUMO only where the detail card asked for one. <i>All with room</i> draws one at every site the table shows that has a placement, so the filters above the table restrict it. <i>Strong sites</i> keeps the sites above a threshold of a colour scale — the slider, 70 % by default — as the sites most likely to carry the modification. The scale is the colouring shown when it is a fold change or a Z-score (for MG132 and heat shock, 70 % is a log2 fold change of 5.6 among the significant sites; for a Z-score, a value above 0.6); with a class colouring, which has no scale, the MG132 fold change is used and the slider says so. At most <span data-s="sumo_max"></span> SUMOs are drawn, the strongest first. The legend entry counts them and, as every legend entry, hides and shows them. The link carries the mode (<code>sumos</code>).</p></article>
           <article data-entry="show"><h3>Showing a SUMO</h3>
             <p>In the detail card of a site with a possible placement, <i>Show a SUMO here</i> draws the core of SUMO2 in green at one of the placements that fit, one from the middle of the possible directions. It is an example, not a prediction: with <span data-n="sites"></span> sites and thousands of possible placements each, the picture shows where a SUMO can be, not where it is. The tether is not drawn, so the SUMO sits up to <span data-s="fit.tether.1"></span> Å from the lysine.</p>
             <p>For a site whose room is taken, the button draws the SUMO where it would sit without what is in its way; it then overlaps that partner, ribosome or subunit in the picture. One SUMO is drawn at a time; choosing another structure removes it.</p></article>
@@ -773,7 +773,7 @@ onmessage = e => {
 };
 </script>
 <script>
-const VERSION = "0.12";
+const VERSION = "0.12.1";
 const VIEW_LABELS = { "40S_solvent": "40S solvent side", "60S_solvent": "60S solvent side", "mRNA_entry": "mRNA entry side",
                       "mRNA_exit": "mRNA exit side", "top": "top", "bottom": "bottom",
                       "side_40S": "40S side", "side_60S": "60S side", "across_1": "edge-on, first side", "across_2": "edge-on, second side",
@@ -806,7 +806,7 @@ const freeData = new Map();   // accession -> data/free/<accession>.json
 const PLDDT_BANDS = [["very high", 90], ["confident", 70], ["low", 50], ["very low", -1]];
 const plddtBand = v => v == null ? null : PLDDT_BANDS.find(([, lo]) => v >= lo)[0];
 let sumoAt = null;        // key (label|particle) of the site at which a SUMO is drawn, or null
-let sumos = "selected", sumoThr = 0.5;   // SUMO at the sites: off / selected / strong (above sumoThr of the colour scale) / all with a placement
+let sumos = "selected", sumoThr = 0.7;   // SUMO at the sites: off / selected / strong (above sumoThr of the colour scale) / all with a placement
 const SUMO_MAX = 250;     // SUMOs drawn at most
 // Any protein from the AlphaFold DB, shown in place of a structure (v0.12): the protein, the reference's
 // meta.json (its colourings, base tones and SUMO node stand in), the catalogue of sites and the

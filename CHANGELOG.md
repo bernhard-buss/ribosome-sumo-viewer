@@ -5,6 +5,11 @@ minor number for new features, the patch number for smaller changes and fixes. T
 say what changed for the person using the viewer. This file is the only place the history is
 written; the Changelog page of the in-page help renders it.
 
+## 0.12.1 — 2026-10-17
+The threshold of *strong sites* (SUMO at the sites) starts at 70 % of the colour scale instead of
+50 %: a log2 fold change of 5.6 among the significant sites for MG132 and heat shock, a Z-score
+above 0.6. The slider still goes anywhere, and links with `sumos=strong:…` keep their own value.
+
 ## 0.12 — 2026-10-17
 Any protein from the AlphaFold DB. A box under the *Structure* menu takes a gene name or a
 UniProt accession and shows the predicted model of that human protein alone, with its SUMO2/3
