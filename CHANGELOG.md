@@ -5,6 +5,13 @@ minor number for new features, the patch number for smaller changes and fixes. T
 say what changed for the person using the viewer. This file is the only place the history is
 written; the Changelog page of the in-page help renders it.
 
+## 0.13.1 — 2026-10-17
+The description of a PDB entry is a summary — how many molecules and chains of which kinds, which
+proteins carry catalogue sites, what is unmapped or not human — with the full list of molecules
+folded away behind *All molecules*; a ribosome entry listed eighty. In the legend, the switches of
+an entry with more than twelve molecules fold away the same way. Entries whose chains PDBe has not
+yet mapped to UniProt (recent ones, such as 8GLP) now take the mapping from RCSB and get their sites.
+
 ## 0.13 — 2026-10-17
 Any entry of the PDB. A PDB code in the box under the *Structure* menu, or a code from the new list
 of a protein's experimental structures (from UniProt, with method, resolution and the chain covered),

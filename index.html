@@ -111,6 +111,8 @@
   #sumothr input:disabled { opacity: .45; }
   table.protein th:nth-child(2), table.protein td:nth-child(2) { display: none; }
   #protinfo details { margin-top: 3px; } #protinfo summary { cursor: pointer; }
+  details.imore { display: inline; } details.imore summary { display: inline; cursor: pointer; color: var(--accent); } details.imore[open] summary::after { content: ":"; }
+  .legend details.lmore { margin-top: 6px; } .legend details.lmore summary { cursor: pointer; } .legend details.lmore summary:hover { color: var(--ink); }
   .pdbl { max-height: 132px; overflow: auto; margin-top: 2px; padding-left: 10px; font-variant-numeric: tabular-nums; }
   .pdbl div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .pdbl a { font-weight: 600; margin-right: 4px; }
   #views.off button, #views.off { opacity: .45; pointer-events: none; }
@@ -804,7 +806,7 @@ onmessage = e => {
 };
 </script>
 <script>
-const VERSION = "0.13";
+const VERSION = "0.13.1";
 const VIEW_LABELS = { "40S_solvent": "40S solvent side", "60S_solvent": "60S solvent side", "mRNA_entry": "mRNA entry side",
                       "mRNA_exit": "mRNA exit side", "top": "top", "bottom": "bottom",
                       "side_40S": "40S side", "side_60S": "60S side", "across_1": "edge-on, first side", "across_2": "edge-on, second side",
@@ -1104,7 +1106,8 @@ function legendHtml(L, withBase) {
       labels["ent:" + c.entity] = `${c.gene || c.description || c.protein || "chain"} (chain${copies.length > 1 ? "s" : ""} ${copies.join(", ")})`;
       list.push(["ent:" + c.entity, c.colour]);
     }
-    return h + row(keys, sitePrefix) + row(list, "base", labels) + row(nSumo ? [["SUMO", meta.sumo.colour]] : [], "base", labels);
+    const mols = list.length > 12 ? `<details class="lmore"><summary>${list.length} molecules — click to switch them</summary>${row(list, "base", labels)}</details>` : row(list, "base", labels);
+    return h + row(keys, sitePrefix) + mols + row(nSumo ? [["SUMO", meta.sumo.colour]] : [], "base", labels);
   }
   if (freeOf && withBase) {                             // the free protein: its tint or its confidence bands
     const tint = freeTint(freeOf);
@@ -2613,14 +2616,34 @@ async function loadEntry_(id, opts = {}) {
   const busy = t => { $("busy").hidden = false; $("busy").textContent = t; };
   const json = async (u, what) => { const r = await fetch(u).catch(() => { throw new Error(what + " could not be reached"); }); if (!r.ok) throw new Error(`${what} answered ${r.status}`); return r.json(); };
   busy(`Fetching PDB entry ${id}…`);
-  const [mols, summ, expt, maps] = await Promise.all([
+  // the UniProt mapping of the chains: RCSB's alignments (one query; they cover new entries that SIFTS at
+  // PDBe has not mapped yet), PDBe's SIFTS segments as the fallback; names, kinds and organisms from PDBe
+  const gql = `{ entry(entry_id:"${id}"){ polymer_entities { entity_poly { pdbx_seq_one_letter_code_can } rcsb_polymer_entity_container_identifiers { entity_id asym_ids auth_asym_ids } rcsb_polymer_entity_align { reference_database_accession reference_database_name aligned_regions { entity_beg_seq_id ref_beg_seq_id length } } } } }`;
+  const rcsb = fetch("https://data.rcsb.org/graphql", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query: gql }) })
+    .then(r => r.ok ? r.json() : null).then(d => (d && d.data && d.data.entry && d.data.entry.polymer_entities) || null).catch(() => null);
+  const [mols, summ, expt, pents] = await Promise.all([
     json(pdbe + `pdb/entry/molecules/${lid}`, "PDBe").catch(e => { throw new Error(/404/.test(e.message) ? `the PDB has no entry ${id}` : e.message); }),
-    json(pdbe + `pdb/entry/summary/${lid}`, "PDBe").catch(() => null), json(pdbe + `pdb/entry/experiment/${lid}`, "PDBe").catch(() => null),
-    json(pdbe + `mappings/uniprot_segments/${lid}`, "PDBe").catch(() => null)]);
+    json(pdbe + `pdb/entry/summary/${lid}`, "PDBe").catch(() => null), json(pdbe + `pdb/entry/experiment/${lid}`, "PDBe").catch(() => null), rcsb]);
+  if (seq !== loadSeq) return;
+  const maps = pents && pents.some(pe => (pe.rcsb_polymer_entity_align || []).some(al => al.reference_database_name === "UniProt")) ? null
+             : await json(pdbe + `mappings/uniprot_segments/${lid}`, "PDBe").catch(() => null);
   if (seq !== loadSeq) return;
   if (!catalogue) { busy("Loading the catalogue of sites…"); catalogue = catalogueIndex(await json(`data/${CAT.file}`, "the catalogue of sites")); }
   if (seq !== loadSeq) return;
-  const ents = mols[lid] || [], s0 = (summ && summ[lid] && summ[lid][0]) || {}, ex = (expt && expt[lid] && expt[lid][0]) || {}, unp = (maps && maps[lid] && maps[lid].UniProt) || {};
+  const ents = mols[lid] || [], s0 = (summ && summ[lid] && summ[lid][0]) || {}, ex = (expt && expt[lid] && expt[lid][0]) || {};
+  let unp = {}, seqOf = {};
+  for (const pe of pents || []) {                       // RCSB: entity -> its chains, canonical sequence and UniProt alignments
+    const ids = pe.rcsb_polymer_entity_container_identifiers || {}, asyms = ids.asym_ids || [], auths = ids.auth_asym_ids || [];
+    seqOf[String(ids.entity_id)] = (pe.entity_poly || {}).pdbx_seq_one_letter_code_can || "";
+    for (const al of pe.rcsb_polymer_entity_align || []) {
+      if (al.reference_database_name !== "UniProt") continue;
+      const acc = al.reference_database_accession, u = unp[acc] || (unp[acc] = { mappings: [] });
+      for (const reg of al.aligned_regions || []) for (let i = 0; i < asyms.length; i++)
+        u.mappings.push({ entity_id: ids.entity_id, chain_id: auths[i] || asyms[i], struct_asym_id: asyms[i], start: { residue_number: reg.entity_beg_seq_id }, end: { residue_number: reg.entity_beg_seq_id + reg.length - 1 },
+                          unp_start: reg.ref_beg_seq_id, unp_end: reg.ref_beg_seq_id + reg.length - 1 });
+    }
+  }
+  if (!Object.keys(unp).length) unp = (maps && maps[lid] && maps[lid].UniProt) || {};
   const chains = []; let tint = 0;
   for (const en of ents) {
     const kind = POLYMER_KIND[en.molecule_type]; if (!kind) continue;
@@ -2633,7 +2656,7 @@ async function loadEntry_(id, opts = {}) {
       if (kind !== "protein" && /^(DNA|RNA)\b/.test(description)) description = kind.toUpperCase(); else if (description.length > 44) description = description.slice(0, 42) + "…";
       const organism = ((en.source || [])[0] || {}).organism_scientific_name || "";
       chains.push({ label_asym: a, chain: auths[i] || a, entity: String(en.entity_id), kind, role: kind === "protein" ? "protein" : "nucleic", particle: "1", protein: acc, gene,
-                    description, organism, seq: en.sequence || "", colour });
+                    description, organism, seq: en.sequence || seqOf[String(en.entity_id)] || "", colour });
     }
   }
   if (!chains.length) throw new Error(`entry ${id} has no polymer chains`);
@@ -2661,7 +2684,14 @@ async function loadEntry_(id, opts = {}) {
     const note = c.kind !== "protein" ? "" : !c.protein ? "no UniProt mapping" : c.organism && !/^Homo sapiens/.test(c.organism) ? c.organism : "";
     return `${esc(c.gene || c.description || "chain")} (${copies.join(", ")})${note ? ` <span class="dim">${esc(note)}</span>` : ""}`; }).join(", ");
   const pdbLink = `<a href="https://www.rcsb.org/structure/${esc(id)}" target="_blank" rel="noopener">PDB ${esc(id)}</a>`;
-  $("structinfo").innerHTML = `${esc(e.title)}. ${pdbLink}, ${esc(e.method)}${resTxt}. Molecules: ${members}.`;
+  const nEnt = seenEnt.size, kinds = [["protein", "protein"], ["rna", "RNA"], ["dna", "DNA"]].map(([k, w]) => { const n = new Set(chains.filter(c => c.kind === k).map(c => c.entity)).size; return n ? `${n} ${w}${n > 1 && k === "protein" ? "s" : ""}` : ""; }).filter(Boolean);
+  const siteGenes = [...placed.reduce((m, x) => m.set(x.gene, (m.get(x.gene) || 0) + 1), new Map())].sort((a, b) => b[1] - a[1]).map(([g]) => g);
+  const foreign = chains.filter(c => c.kind === "protein" && c.organism && !/^Homo sapiens/.test(c.organism)).length, unmapped = chains.filter(c => c.kind === "protein" && !c.protein).length;
+  const summary = `${nEnt} molecule${nEnt === 1 ? "" : "s"} in ${chains.length} chain${chains.length === 1 ? "" : "s"} (${kinds.join(", ")})` +
+    (siteGenes.length ? `; catalogue sites on ${siteGenes.length === 1 ? siteGenes[0] : siteGenes.length + " proteins: " + siteGenes.slice(0, 8).join(", ") + (siteGenes.length > 8 ? ` and ${siteGenes.length - 8} more` : "")}` : "; no catalogue site on its proteins") +
+    (unmapped ? `; ${unmapped} chain${unmapped === 1 ? "" : "s"} without UniProt mapping` : "") + (foreign ? `; ${foreign} chain${foreign === 1 ? "" : "s"} not human` : "") + ".";
+  $("structinfo").innerHTML = `${esc(e.title)}. ${pdbLink}, ${esc(e.method)}${resTxt}. ${summary}` +
+    (nEnt > 1 ? ` <details class="imore"><summary>All molecules</summary>${members}.</details>` : "");
   $("footstruct").innerHTML = `${esc(e.title)} (${pdbLink}), fetched from the PDB by your browser`;
   const withSites = new Set(sites.map(s => s.protein)).size, mapped = chains.filter(c => c.protein).length;
   $("protinfo").hidden = false;

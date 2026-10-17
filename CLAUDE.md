@@ -99,8 +99,10 @@
   button and `#sumoblock` (`renderControls`), `#fitbar` shows the progress; URL `p=`. `leaveProtein()` on
   a structure load, `lastSid` for *Back to the ribosome*. No statistics are computed in the page: the fit
   is a per-lysine geometric calculation, not a statistic, and it uses public data only.
-- Any entry of the PDB (v0.13): `loadEntry(id)`: PDBe `pdb/entry/molecules`, `summary`, `experiment` and
-  `mappings/uniprot_segments` (SIFTS) give the polymer chains (`e.chains`: label_asym, auth chain, entity,
+- Any entry of the PDB (v0.13): `loadEntry(id)`: PDBe `pdb/entry/molecules`, `summary`, `experiment` give
+  the polymer chains; the UniProt mapping comes from RCSB's GraphQL (`data.rcsb.org/graphql`,
+  `rcsb_polymer_entity_align`, one POST per entry — PDBe's SIFTS `mappings/uniprot_segments` returned 404
+  for recent entries such as 8GLP and is only the fallback); together they give the polymer chains (`e.chains`: label_asym, auth chain, entity,
   kind, UniProt accession, gene, entity sequence, tint per entity) and the UniProt segments;
   `placeEntrySites()` places the catalogue's sites on every mapped chain (offset = unp_start − start
   residue_number, then the same context rules), one row per chain copy (`particle` = label_asym, `region`
